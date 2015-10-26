@@ -80,7 +80,7 @@
 
     class Shape {
         constructor() {
-            //
+            this.isHovering = false;
         }
         draw(context) {
             //
@@ -90,6 +90,21 @@
         }
         get color() {
             return this._color;
+        }
+        set hoverColor(value) {
+            this._hoverColor = value;
+        }
+        get hoverColor() {
+            return this._hoverColor;
+        }
+        hitTest(x, y) {
+            //
+        }
+        hover() {
+            this.isHovering = true;
+        }
+        unhover() {
+            this.isHovering = false;
         }
     }
 
@@ -108,9 +123,18 @@
             context.translate(this.x, this.y);
             context.arc(0, 0, this.radius, Math.PI * 2, false);
             context.closePath();
-            context.fillStyle = this.color;
+            context.fillStyle = this.isHovering ? this.hoverColor : this.color;
             context.fill();
             context.restore();
+        }
+        hitTest(x, y) {
+            super.hitTest(x, y);
+
+            var _x = x - this.x;
+            var _y = y - this.y;
+
+            var length = Math.sqrt((_x * _x) + (_y * _y));
+            return length < this.radius;
         }
     }
 
@@ -119,6 +143,11 @@
             super();
             this.start = start;
             this.end   = end;
+
+            this.dx = this.end.x - this.start.x;
+            this.dy = this.end.y - this.start.y;
+            this.a  = this.dx * this.dx + this.dy * this.dy;
+            this.detectDistance = 10;
         } 
         draw(context) {
             super.draw(context);
@@ -128,9 +157,38 @@
             context.moveTo(this.start.x, this.start.y);
             context.lineTo(this.end.x, this.end.y);
             context.closePath();
-            context.strokeStyle = this.color;
+            context.strokeStyle = this.isHovering ? this.hoverColor : this.color;
             context.stroke();
             context.restore();
+        }
+        checkShotenPoint(px, py) {
+            if (this.a === 0) {
+                var _x = this.start.x - px;
+                var _y = this.start.y - py;
+                return Math.sqrt(_x * _x + _y * _y);
+            }
+
+            var b = this.dx * (this.start.x - px) + this.dy * (this.start.y - py);
+            var t = -(b / this.a);
+
+            if (t < 0.0) {
+                t = 0.0;
+            }
+            if (t > 1.0) {
+                t = 1.0;
+            }
+
+            var x = t * this.dx + this.start.x;
+            var y = t * this.dy + this.start.y;
+
+            var rx = x - px;
+            var ry = y - py;
+
+            return Math.sqrt(rx * rx + ry * ry);
+        }
+        hitTest(x, y) {
+            var distance  = this.checkShotenPoint(x, y);
+            return distance < this.detectDistance;
         }
     }
 
@@ -159,6 +217,15 @@
 
             this.shapes.splice(index, 1);
         }
+        hover(x, y) {
+            this.shapes.forEach((shape, i) => {
+                if (shape.hitTest(x, y)) {
+                    shape.hover();
+                    return;
+                }
+                shape.unhover();
+            });
+        }
     }
 
     class Renderer {
@@ -169,6 +236,7 @@
             this.element.height = height;
         }
         render(scene) {
+            this.context.clearRect(0, 0, this.element.width, this.element.height);
             scene.shapes.forEach(function (shape, i) {
                 shape.draw(this.context);
             }, this);
@@ -177,24 +245,37 @@
 
 
     // debug
+    var scene = new Scene();
     var renderer = new Renderer(300, 300);
     document.body.appendChild(renderer.element);
+    renderer.element.addEventListener('mousemove', function (e) {
+        var rect = this.getBoundingClientRect();
+        var x = e.clientX - rect.left;
+        var y = e.clientY - rect.top;
+        scene.hover(x, y);
+    }, false);
 
-    var scene = new Scene();
 
     var dot = new Dot(50, 50);
     dot.color = 'red';
+    dot.hoverColor = 'orange';
     var dot2 = new Dot(50, 80);
     dot2.color = 'blue';
+    dot2.hoverColor = 'orange';
 
     var edge = new Edge(new Point(10, 10), new Point(20, 120));
+    edge.color = 'green';
+    edge.hoverColor = 'orange';
 
     scene.add(dot);
     scene.add(dot2);
     scene.add(edge);
 
 
-    renderer.render(scene);
+    (function loop() {
+        renderer.render(scene);
+        requestAnimationFrame(loop);
+    }());
 
 
 
