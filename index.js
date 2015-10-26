@@ -2,6 +2,70 @@
     'use strict';
 
     /**
+     * An event dispatcher
+     */
+    class Dispatcher {
+        constructor() {
+            this._listeners = {};
+        }
+        addListener(type, listener) {
+            if (!(listener instanceof Listener)) {
+                return;
+            }
+
+            if (!this._listeners[type]) {
+                this._listeners[type] = [];
+            }
+
+            this._listeners[type].push(listener);
+        }
+        removeListener(type, listener) {
+            var listeners = this._listeners[type];
+            if (!listeners) {
+                return;
+            }
+
+            var index = -1;
+            var hasListener = listeners.some((l, i) => {
+                if (l === listener) {
+                    index = i;
+                    return true;
+                }
+            });
+
+            if (!hasListener) {
+                return;
+            }
+
+            listeners.splice(index, 1);
+        }
+        dispatch(type) {
+            var listeners = this._listeners[type];
+            if (!listeners) {
+                return;
+            }
+
+            listeners.forEach((listener, i) => {
+                listener.fire();
+            });
+        }
+    }
+
+    /**
+     * Event listener
+     *
+     * @param {Function} func callback function from an event.
+     */
+    class Listener {
+        constructor(func) {
+            this._func = func;
+        }
+        fire() {
+            this._func();
+        }
+    }
+
+    /**
      * @para {Number} x
      * @para {Number} y
      */
@@ -11,6 +75,204 @@
             this.y = y || 0;
         }
     }
+
+    /**
+     * Shape base class.
+     */
+    class Shape {
+        constructor() {
+            this.isHovering = false;
+            this.dispatcher = new Dispatcher();
+        }
+        addListener(type, listener) {
+            this.dispatcher.addListener(type, listener);
+        }
+        removeListener(type, listener) {
+            this.dispatcher.removeListener(type, listener);
+        }
+        draw(context) {
+            //
+        }
+        set color(value) {
+            this._color = value;
+        }
+        get color() {
+            return this._color;
+        }
+        set hoverColor(value) {
+            this._hoverColor = value;
+        }
+        get hoverColor() {
+            return this._hoverColor;
+        }
+        hitTest(x, y) {
+            return false;
+        }
+        hover() {
+            this.isHovering = true;
+        }
+        unhover() {
+            this.isHovering = false;
+        }
+        click() {
+            this.dispatcher.dispatch('click');
+        }
+    }
+
+    /**
+     * A represent dot.
+     */
+    class Dot extends Shape {
+        constructor(x, y, radius) {
+            super();
+            this.x = x || 0;
+            this.y = y || 0;
+            this.radius = radius || 5;
+        }
+        draw(context) {
+            super.draw(context);
+
+            context.save();
+            context.beginPath();
+            context.translate(this.x, this.y);
+            context.arc(0, 0, this.radius, Math.PI * 2, false);
+            context.closePath();
+            context.fillStyle = this.isHovering ? this.hoverColor : this.color;
+            context.fill();
+            context.restore();
+        }
+        hitTest(x, y) {
+            super.hitTest(x, y);
+
+            var _x = x - this.x;
+            var _y = y - this.y;
+
+            var length = Math.sqrt((_x * _x) + (_y * _y));
+            return length < this.radius;
+        }
+    }
+
+    /**
+     * A represent edge.
+     */
+    class Edge extends Shape {
+        constructor(start, end) {
+            super();
+            this.start = start;
+            this.end   = end;
+
+            this.dx = this.end.x - this.start.x;
+            this.dy = this.end.y - this.start.y;
+            this.a  = this.dx * this.dx + this.dy * this.dy;
+            this.detectDistance = 10;
+        } 
+        draw(context) {
+            super.draw(context);
+            
+            context.save();
+            context.beginPath();
+            context.moveTo(this.start.x, this.start.y);
+            context.lineTo(this.end.x, this.end.y);
+            context.closePath();
+            context.strokeStyle = this.isHovering ? this.hoverColor : this.color;
+            context.stroke();
+            context.restore();
+        }
+        checkShotenPoint(px, py) {
+            if (this.a === 0) {
+                var _x = this.start.x - px;
+                var _y = this.start.y - py;
+                return Math.sqrt(_x * _x + _y * _y);
+            }
+
+            var b = this.dx * (this.start.x - px) + this.dy * (this.start.y - py);
+            var t = -(b / this.a);
+
+            if (t < 0.0) {
+                t = 0.0;
+            }
+            if (t > 1.0) {
+                t = 1.0;
+            }
+
+            var x = t * this.dx + this.start.x;
+            var y = t * this.dy + this.start.y;
+
+            var rx = x - px;
+            var ry = y - py;
+
+            return Math.sqrt(rx * rx + ry * ry);
+        }
+        hitTest(x, y) {
+            var distance  = this.checkShotenPoint(x, y);
+            return distance < this.detectDistance;
+        }
+    }
+
+    /**
+     * A represent scene for the canvas.
+     */
+    class Scene {
+        constructor() {
+            this.shapes = [];
+        }
+        add(shape) {
+            if (!(shape instanceof Shape)) {
+                return;
+            }
+            this.shapes.push(shape);
+        }
+        remove(shape) {
+            var index = -1;
+            var hasShape = this.shapes.some(function (s, i) {
+                if (s === shape) {
+                    index = i;
+                    return true;
+                }
+            });
+
+            if (!hasShape) {
+                return;
+            }
+
+            this.shapes.splice(index, 1);
+        }
+        hover(x, y) {
+            this.shapes.forEach((shape, i) => {
+                if (shape.hitTest(x, y)) {
+                    shape.hover();
+                    return;
+                }
+                shape.unhover();
+            });
+        }
+        click(x, y) {
+            this.shapes.forEach((shape, i) => {
+                if (shape.hitTest(x, y)) {
+                    shape.click();
+                }
+            });
+        }
+    }
+
+    /**
+     * Canvas 2D renderer
+     */
+    class Renderer {
+        constructor(width, height) {
+            this.element = document.createElement('canvas');
+            this.context = this.element.getContext('2d');
+            this.element.width  = width;
+            this.element.height = height;
+        }
+        render(scene) {
+            this.context.clearRect(0, 0, this.element.width, this.element.height);
+            scene.shapes.forEach(function (shape, i) {
+                shape.draw(this.context);
+            }, this);
+        }
+    }
+
 
     class NodeRenderer {
         constructor(node, point) {
@@ -78,170 +340,6 @@
         }
     }
 
-    class Shape {
-        constructor() {
-            this.isHovering = false;
-        }
-        draw(context) {
-            //
-        }
-        set color(value) {
-            this._color = value;
-        }
-        get color() {
-            return this._color;
-        }
-        set hoverColor(value) {
-            this._hoverColor = value;
-        }
-        get hoverColor() {
-            return this._hoverColor;
-        }
-        hitTest(x, y) {
-            //
-        }
-        hover() {
-            this.isHovering = true;
-        }
-        unhover() {
-            this.isHovering = false;
-        }
-    }
-
-    class Dot extends Shape {
-        constructor(x, y, radius) {
-            super();
-            this.x = x || 0;
-            this.y = y || 0;
-            this.radius = radius || 5;
-        }
-        draw(context) {
-            super.draw(context);
-
-            context.save();
-            context.beginPath();
-            context.translate(this.x, this.y);
-            context.arc(0, 0, this.radius, Math.PI * 2, false);
-            context.closePath();
-            context.fillStyle = this.isHovering ? this.hoverColor : this.color;
-            context.fill();
-            context.restore();
-        }
-        hitTest(x, y) {
-            super.hitTest(x, y);
-
-            var _x = x - this.x;
-            var _y = y - this.y;
-
-            var length = Math.sqrt((_x * _x) + (_y * _y));
-            return length < this.radius;
-        }
-    }
-
-    class Edge extends Shape {
-        constructor(start, end) {
-            super();
-            this.start = start;
-            this.end   = end;
-
-            this.dx = this.end.x - this.start.x;
-            this.dy = this.end.y - this.start.y;
-            this.a  = this.dx * this.dx + this.dy * this.dy;
-            this.detectDistance = 10;
-        } 
-        draw(context) {
-            super.draw(context);
-            
-            context.save();
-            context.beginPath();
-            context.moveTo(this.start.x, this.start.y);
-            context.lineTo(this.end.x, this.end.y);
-            context.closePath();
-            context.strokeStyle = this.isHovering ? this.hoverColor : this.color;
-            context.stroke();
-            context.restore();
-        }
-        checkShotenPoint(px, py) {
-            if (this.a === 0) {
-                var _x = this.start.x - px;
-                var _y = this.start.y - py;
-                return Math.sqrt(_x * _x + _y * _y);
-            }
-
-            var b = this.dx * (this.start.x - px) + this.dy * (this.start.y - py);
-            var t = -(b / this.a);
-
-            if (t < 0.0) {
-                t = 0.0;
-            }
-            if (t > 1.0) {
-                t = 1.0;
-            }
-
-            var x = t * this.dx + this.start.x;
-            var y = t * this.dy + this.start.y;
-
-            var rx = x - px;
-            var ry = y - py;
-
-            return Math.sqrt(rx * rx + ry * ry);
-        }
-        hitTest(x, y) {
-            var distance  = this.checkShotenPoint(x, y);
-            return distance < this.detectDistance;
-        }
-    }
-
-    class Scene {
-        constructor() {
-            this.shapes = [];
-        }
-        add(shape) {
-            if (!(shape instanceof Shape)) {
-                return;
-            }
-            this.shapes.push(shape);
-        }
-        remove(shape) {
-            var index = -1;
-            var hasShape = this.shapes.some(function (s, i) {
-                if (s === shape) {
-                    index = i;
-                    return true;
-                }
-            });
-
-            if (!hasShape) {
-                return;
-            }
-
-            this.shapes.splice(index, 1);
-        }
-        hover(x, y) {
-            this.shapes.forEach((shape, i) => {
-                if (shape.hitTest(x, y)) {
-                    shape.hover();
-                    return;
-                }
-                shape.unhover();
-            });
-        }
-    }
-
-    class Renderer {
-        constructor(width, height) {
-            this.element = document.createElement('canvas');
-            this.context = this.element.getContext('2d');
-            this.element.width  = width;
-            this.element.height = height;
-        }
-        render(scene) {
-            this.context.clearRect(0, 0, this.element.width, this.element.height);
-            scene.shapes.forEach(function (shape, i) {
-                shape.draw(this.context);
-            }, this);
-        }
-    }
 
 
     // debug
@@ -254,11 +352,21 @@
         var y = e.clientY - rect.top;
         scene.hover(x, y);
     }, false);
+    renderer.element.addEventListener('click', function (e) {
+        var rect = this.getBoundingClientRect();
+        var x = e.clientX - rect.left;
+        var y = e.clientY - rect.top;
+        scene.click(x, y);
+    }, false);
 
 
     var dot = new Dot(50, 50);
     dot.color = 'red';
     dot.hoverColor = 'orange';
+    dot.addListener('click', new Listener(() => {
+        alert('dot');
+    }));
+
     var dot2 = new Dot(50, 80);
     dot2.color = 'blue';
     dot2.hoverColor = 'orange';
