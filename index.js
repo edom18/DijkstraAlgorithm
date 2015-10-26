@@ -76,6 +76,30 @@
         }
     }
 
+    class Decorator {
+        constructor(shape) {
+            this._shape = shape;
+        }
+        decorate(context) {
+            //
+        }
+    }
+
+    class NormalDecorator extends Decorator {
+        decorate(context) {
+            context.strokeStyle = this._shape.strokeColor;
+            context.fillStyle   = this._shape.color;
+        }
+    }
+
+    class HoverDecorator extends Decorator {
+        decorate(context) {
+            context.fillStyle   = this._shape.hoverColor;
+            context.strokeStyle = this._shape.strokeColor;
+            context.scale(1.2, 1.2);
+        }
+    }
+
     /**
      * Shape base class.
      */
@@ -83,12 +107,26 @@
         constructor() {
             this.isHovering = false;
             this.dispatcher = new Dispatcher();
+
+            this.color       = 'black';
+            this.strokeColor = 'rgba(0, 0, 0, 0)';
+
+            this.normalDecorator = new NormalDecorator(this);
+            this.hoverDecorator  = new HoverDecorator(this);
         }
         addListener(type, listener) {
             this.dispatcher.addListener(type, listener);
         }
         removeListener(type, listener) {
             this.dispatcher.removeListener(type, listener);
+        }
+        decorate(context) {
+            if (this.isHovering) {
+                this.hoverDecorator.decorate(context);
+            }
+            else {
+                this.normalDecorator.decorate(context);
+            }
         }
         draw(context) {
             //
@@ -104,6 +142,12 @@
         }
         get hoverColor() {
             return this._hoverColor;
+        }
+        set strokeColor(value) {
+            this._strokeColor = value;
+        }
+        get strokeColor() {
+            return this._strokeColor;
         }
         hitTest(x, y) {
             return false;
@@ -135,10 +179,13 @@
             context.save();
             context.beginPath();
             context.translate(this.x, this.y);
+            this.decorate(context);
             context.arc(0, 0, this.radius, Math.PI * 2, false);
             context.closePath();
-            context.fillStyle = this.isHovering ? this.hoverColor : this.color;
+
             context.fill();
+            context.stroke();
+
             context.restore();
         }
         hitTest(x, y) {
@@ -165,17 +212,24 @@
             this.dy = this.end.y - this.start.y;
             this.a  = this.dx * this.dx + this.dy * this.dy;
             this.detectDistance = 10;
+
+            this.strokeColor = 'black';
+            this.color       = 'rgba(0, 0, 0, 0)';
         } 
         draw(context) {
             super.draw(context);
             
             context.save();
             context.beginPath();
-            context.moveTo(this.start.x, this.start.y);
-            context.lineTo(this.end.x, this.end.y);
+            context.translate(this.start.x, this.start.y);
+            this.decorate(context);
+            context.moveTo(0, 0);
+            context.lineTo(this.dx, this.dy);
             context.closePath();
-            context.strokeStyle = this.isHovering ? this.hoverColor : this.color;
+
+            context.fill();
             context.stroke();
+
             context.restore();
         }
         checkShotenPoint(px, py) {
