@@ -263,6 +263,33 @@
         }
     }
 
+    class Text extends Shape {
+        constructor(x, y, text) {
+            super();
+            this.text = text;
+            this.x = x;
+            this.y = y;
+        }
+        draw(context) {
+            super.draw(context);
+
+            context.save();
+            context.translate(this.x, this.y);
+            this.decorate(context);
+            context.fillText(this.text, this.x, this.y);
+            context.restore();
+        }
+        set text(value) {
+            this._text = value;
+        }
+        get text() {
+            return this._text;
+        }
+        hitTest(x, y) {
+            return false;
+        }
+    }
+
     /**
      * A represent scene for the canvas.
      */
@@ -385,6 +412,9 @@
     edge.hoverColor = 'orange';
 
     scene.add(edge);
+
+    var text = new Text(50, 50, 'hoge');
+    scene.add(text);
 
     (function loop() {
         renderer.render(scene);
