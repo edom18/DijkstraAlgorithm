@@ -273,30 +273,6 @@
         }
     }
 
-
-    class NodeRenderer {
-        constructor(node, point) {
-            this.node = node;
-            this.point = point;
-            this.color = '#2af';
-            this.element = document.createElement('div');
-            this.element.classList.add('node');
-            this.update();
-        }
-        render() {
-            this.update();
-            if (!this.element.parentNode) {
-                document.body.appendChild(this.element);
-            }
-        }
-        update() {
-            this.element.style.left = `${this.point.x}px`;
-            this.element.style.top = `${this.point.y}px`;
-            this.element.style.background = this.color;
-        }
-    }
-
-
     /**
      * ノード
      */
@@ -311,32 +287,23 @@
         }
     }
 
-    class Node {
-        constructor(id) {
-            this.model = new NodeModel();
+    class Node extends Dot {
+        constructor(id, point) {
+            super(point.x, point.y, 15);
+
+            this.model    = new NodeModel();
             this.model.id = id;
-            this.renderer = new NodeRenderer(this, new Point());
         }
         addNode(node, cost) {
             this.model.edgesTo.push(node);
             this.model.edgesCost.push(cost);
         }
-        render() {
-            this.renderer.render();
-        }
         get point() {
-            return this.renderer.point;
+            return new Point(this.x, this.y);
         }
         set point(value) {
-            this.renderer.point = value;
-            this.renderer.update();
-        }
-        get color () {
-            return this.renderer.color;
-        }
-        set color(value) {
-            this.renderer.color = value;
-            this.renderer.update();
+            this.x = value.x;
+            this.y = value.y;
         }
     }
 
@@ -344,7 +311,7 @@
 
     // debug
     var scene = new Scene();
-    var renderer = new Renderer(300, 300);
+    var renderer = new Renderer(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.element);
     renderer.element.addEventListener('mousemove', function (e) {
         var rect = this.getBoundingClientRect();
@@ -359,26 +326,11 @@
         scene.click(x, y);
     }, false);
 
-
-    var dot = new Dot(50, 50);
-    dot.color = 'red';
-    dot.hoverColor = 'orange';
-    dot.addListener('click', new Listener(() => {
-        alert('dot');
-    }));
-
-    var dot2 = new Dot(50, 80);
-    dot2.color = 'blue';
-    dot2.hoverColor = 'orange';
-
     var edge = new Edge(new Point(10, 10), new Point(20, 120));
     edge.color = 'green';
     edge.hoverColor = 'orange';
 
-    scene.add(dot);
-    scene.add(dot2);
     scene.add(edge);
-
 
     (function loop() {
         renderer.render(scene);
@@ -393,13 +345,6 @@
 
 
     function createNodes() {
-        var node1 = new Node(1); // start
-        var node2 = new Node(2); // top
-        var node3 = new Node(3); // center
-        var node4 = new Node(4); // bottom-left
-        var node5 = new Node(5); // bottom-right
-        var node6 = new Node(6); // goal
-
         var node1Point = new Point(10, 150);
         var node2Point = new Point(80, 10);
         var node3Point = new Point(100, 160);
@@ -407,24 +352,19 @@
         var node5Point = new Point(150, 310);
         var node6Point = new Point(200, 140);
 
-        node1.point = node1Point;
-        node1.render();
+        var node1 = new Node(1, node1Point); // start
+        var node2 = new Node(2, node2Point); // top
+        var node3 = new Node(3, node3Point); // center
+        var node4 = new Node(4, node4Point); // bottom-left
+        var node5 = new Node(5, node5Point); // bottom-right
+        var node6 = new Node(6, node6Point); // goal
 
-        node2.point = node2Point;
-        node2.render();
-
-        node3.point = node3Point;
-        node3.render();
-
-        node4.point = node4Point;
-        node4.render();
-
-        node5.point = node5Point;
-        node5.render();
-
-        node6.point = node6Point;
-        node6.render();
-
+        scene.add(node1);
+        scene.add(node2);
+        scene.add(node3);
+        scene.add(node4);
+        scene.add(node5);
+        scene.add(node6);
         
         // Connect each nodes.
         node1.addNode(node2, 5);
