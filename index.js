@@ -87,16 +87,15 @@
 
     class NormalDecorator extends Decorator {
         decorate(context) {
-            context.strokeStyle = this._shape.strokeColor;
             context.fillStyle   = this._shape.color;
+            context.strokeStyle = this._shape.strokeColor;
         }
     }
 
     class HoverDecorator extends Decorator {
         decorate(context) {
             context.fillStyle   = this._shape.hoverColor;
-            context.strokeStyle = this._shape.strokeColor;
-            context.scale(1.2, 1.2);
+            context.strokeStyle = this._shape.hoverStrokeColor;
         }
     }
 
@@ -110,6 +109,7 @@
 
             this.color       = 'black';
             this.strokeColor = 'rgba(0, 0, 0, 0)';
+            this.hoverStrokeColor = 'rgba(0, 0, 0, 0)';
 
             this.normalDecorator = new NormalDecorator(this);
             this.hoverDecorator  = new HoverDecorator(this);
@@ -148,6 +148,12 @@
         }
         get strokeColor() {
             return this._strokeColor;
+        }
+        set hoverStrokeColor(value) {
+            this._hoverStrokeColor = value;
+        }
+        get hoverStrokeColor() {
+            return this._hoverStrokeColor;
         }
         hitTest(x, y) {
             return false;
@@ -213,8 +219,9 @@
             this.a  = this.dx * this.dx + this.dy * this.dy;
             this.detectDistance = 10;
 
-            this.strokeColor = 'black';
             this.color       = 'rgba(0, 0, 0, 0)';
+            this.strokeColor = 'black';
+            this.hoverStrokeColor = 'orange';
         } 
         draw(context) {
             super.draw(context);
