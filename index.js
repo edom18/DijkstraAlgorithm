@@ -4,14 +4,101 @@
     /**
      * ノード
      */
-    class NodeModel {
+    class NodeModel extends Model {
         constructor() {
+            super();
+
             this.edgesTo      = [];
             this.edgesCost    = [];
             this.done         = false;
             this.cost         = -1;
             this.id           = -1;
             this.previousNode = null;
+
+            this._type = null;
+        }
+    }
+
+    class EdgeModel extends Model {
+        constructor(nodeA, nodeB) {
+            super();
+
+            this._nodeA = nodeA;
+            this._nodeB = nodeB;
+            this._cost  = 1;
+
+            this._id = EdgeModelManager.getInstance().generateId(nodeA, nodeB);
+        }
+        get id() {
+            return this._id;
+        }
+    }
+
+    class EdgeModelManager {
+        constructor() {
+            this._edges = [];
+        }
+        static getInstance() {
+            if (!this._instance) {
+                this._instance = new EdgeModelManager();
+            }
+            return this._instance;
+        }
+        create(nodeA, nodeB) {
+            var id = this.generateId(nodeA, nodeB);
+            var model = this.fetch(id);
+            if (!model) {
+                model = new EdgeModel(nodeA, nodeB);
+                this.add(model);
+            }
+
+            return model;
+        }
+        add(model) {
+            this._edges.push(model);
+        }
+        remove(model) {
+            var index = -1;
+            var hasEdge = this._edges.some((edge, i) => {
+                if (model.id === edge.id) {
+                    index = i;
+                    return true;
+                }
+            });
+
+            if (hasEdge) {
+                this._edges.splice(index, 1);
+            }
+        }
+        generateId(nodeA, nodeB) {
+            var idA = +nodeA.model.id;
+            var idB = +nodeB.model.id;
+
+            var id = '';
+            if (idA < idB) {
+                id = `${idA}-${idB}`;
+            }
+            else {
+                id = `${idB}-${idA}`;
+            }
+
+            return id;
+        }
+        fetch(id) {
+            var model = null;
+            this._edges.some((edge, i) => {
+                if (edge.id === id) {
+                    model = edge;
+                    return true;
+                }
+            });
+            return model;
+        }
+        contains(id) {
+            var isContains = this._edges.some((edge, i) => {
+
+            });
+            return isContains;
         }
     }
 
@@ -69,8 +156,18 @@
     }());
 
 
+    var node1Point = new Point(10, 150);
+    var node2Point = new Point(80, 10);
+    var node1 = new Node(1, node1Point); // start
+    var node2 = new Node(2, node2Point); // top
 
+    var m = EdgeModelManager.getInstance().create(node1, node2);
+    m.addListener(new Listener('hoge', () => {
+        console.log('fuga');
+    }));
+    var m2 = EdgeModelManager.getInstance().create(node1, node2);
 
+    m.dispatch('hoge');
 
 
 
@@ -96,6 +193,30 @@
         scene.add(node4);
         scene.add(node5);
         scene.add(node6);
+
+        EdgeModelManager.getInstance().create(node1, node2);
+        EdgeModelManager.getInstance().create(node1, node3);
+        EdgeModelManager.getInstance().create(node1, node4);
+
+        EdgeModelManager.getInstance().create(node2, node1);
+        EdgeModelManager.getInstance().create(node2, node3);
+        EdgeModelManager.getInstance().create(node2, node6);
+
+        EdgeModelManager.getInstance().create(node3, node1);
+        EdgeModelManager.getInstance().create(node3, node2);
+        EdgeModelManager.getInstance().create(node3, node4);
+        EdgeModelManager.getInstance().create(node3, node5);
+
+        EdgeModelManager.getInstance().create(node4, node1);
+        EdgeModelManager.getInstance().create(node4, node3);
+        EdgeModelManager.getInstance().create(node4, node5);
+
+        EdgeModelManager.getInstance().create(node5, node3);
+        EdgeModelManager.getInstance().create(node5, node4);
+        EdgeModelManager.getInstance().create(node5, node6);
+
+        EdgeModelManager.getInstance().create(node6, node2);
+        EdgeModelManager.getInstance().create(node6, node5);
         
         // Connect each nodes.
         node1.addNode(node2, 5);

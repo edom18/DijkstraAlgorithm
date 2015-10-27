@@ -8,18 +8,20 @@
         constructor() {
             this._listeners = {};
         }
-        addListener(type, listener) {
+        addListener(listener) {
             if (!(listener instanceof Listener)) {
                 return;
             }
 
+            var type = listener.type;
             if (!this._listeners[type]) {
                 this._listeners[type] = [];
             }
 
             this._listeners[type].push(listener);
         }
-        removeListener(type, listener) {
+        removeListener(listener) {
+            var type = listener.type;
             var listeners = this._listeners[type];
             if (!listeners) {
                 return;
@@ -57,11 +59,15 @@
      * @param {Function} func callback function from an event.
      */
     class Listener {
-        constructor(func) {
+        constructor(type, func) {
+            this._type = type;
             this._func = func;
         }
         fire() {
             this._func();
+        }
+        get type() {
+            return this._type;
         }
     }
 
