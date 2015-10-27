@@ -41,14 +41,14 @@
 
             listeners.splice(index, 1);
         }
-        dispatch(type) {
+        dispatch(type, context) {
             var listeners = this._listeners[type];
             if (!listeners) {
                 return;
             }
 
             listeners.forEach((listener, i) => {
-                listener.fire();
+                listener.fire(context);
             });
         }
     }
@@ -63,8 +63,8 @@
             this._type = type;
             this._func = func;
         }
-        fire() {
-            this._func();
+        fire(context) {
+            this._func(context);
         }
         get type() {
             return this._type;
@@ -120,11 +120,11 @@
             this.normalDecorator = new NormalDecorator(this);
             this.hoverDecorator  = new HoverDecorator(this);
         }
-        addListener(type, listener) {
-            this.dispatcher.addListener(type, listener);
+        addListener(listener) {
+            this.dispatcher.addListener(listener);
         }
-        removeListener(type, listener) {
-            this.dispatcher.removeListener(type, listener);
+        removeListener(listener) {
+            this.dispatcher.removeListener(listener);
         }
         decorate(context) {
             if (this.isHovering) {
@@ -171,7 +171,7 @@
             this.isHovering = false;
         }
         click() {
-            this.dispatcher.dispatch('click');
+            this.dispatcher.dispatch('click', this);
         }
     }
 
@@ -215,10 +215,11 @@
      * A represent edge.
      */
     class Edge extends Shape {
-        constructor(start, end) {
+        constructor(model) {
             super();
-            this.start = start;
-            this.end   = end;
+            this._model = model;
+            this.start = this._model.nodeA.point;
+            this.end   = this._model.nodeB.point;
 
             this.dx = this.end.x - this.start.x;
             this.dy = this.end.y - this.start.y;

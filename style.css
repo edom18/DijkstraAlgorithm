@@ -13,3 +13,13 @@
     border-radius: 15px;
     border: solid 1px #666;
 }
+
+#inspector {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    padding: 15px;
+    width: 250px;
+    border: solid 1px #999;
+}

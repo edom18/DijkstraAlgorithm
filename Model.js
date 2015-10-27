@@ -5,6 +5,10 @@
     class Model {
         constructor() {
             this._dispatcher = new Dispatcher();
+            this._type = '';
+        }
+        get type() {
+            return this._type;
         }
         addListener(type, listener) {
             this._dispatcher.addListener(type, listener);
@@ -17,7 +21,120 @@
         }
     }
 
+    /**
+     * ノード
+     */
+    class NodeModel extends Model {
+        constructor() {
+            super();
+
+            this.edgesTo      = [];
+            this.edgesCost    = [];
+            this.done         = false;
+            this.cost         = -1;
+            this.id           = -1;
+            this.previousNode = null;
+
+            this._type = 'node';
+        }
+    }
+
+    class EdgeModel extends Model {
+        constructor(nodeA, nodeB) {
+            super();
+
+            this._nodeA = nodeA;
+            this._nodeB = nodeB;
+            this._cost  = 1;
+
+            this._id = EdgeModelManager.getInstance().generateId(nodeA, nodeB);
+
+            this._type = 'edge';
+        }
+        get id() {
+            return this._id;
+        }
+        get nodeA() {
+            return this._nodeA;
+        }
+        get nodeB() {
+            return this._nodeB;
+        }
+    }
+
+    class EdgeModelManager {
+        constructor() {
+            this._edges = [];
+        }
+        static getInstance() {
+            if (!this._instance) {
+                this._instance = new EdgeModelManager();
+            }
+            return this._instance;
+        }
+        create(nodeA, nodeB) {
+            var id = this.generateId(nodeA, nodeB);
+            var model = this.fetch(id);
+            if (!model) {
+                model = new EdgeModel(nodeA, nodeB);
+                this.add(model);
+            }
+
+            return model;
+        }
+        add(model) {
+            this._edges.push(model);
+        }
+        remove(model) {
+            var index = -1;
+            var hasEdge = this._edges.some((edge, i) => {
+                if (model.id === edge.id) {
+                    index = i;
+                    return true;
+                }
+            });
+
+            if (hasEdge) {
+                this._edges.splice(index, 1);
+            }
+        }
+        generateId(nodeA, nodeB) {
+            var idA = +nodeA.model.id;
+            var idB = +nodeB.model.id;
+
+            var id = '';
+            if (idA < idB) {
+                id = `${idA}-${idB}`;
+            }
+            else {
+                id = `${idB}-${idA}`;
+            }
+
+            return id;
+        }
+        fetch(id) {
+            var model = null;
+            this._edges.some((edge, i) => {
+                if (edge.id === id) {
+                    model = edge;
+                    return true;
+                }
+            });
+            return model;
+        }
+        contains(id) {
+            var isContains = this._edges.some((edge, i) => {
+
+            });
+            return isContains;
+        }
+    }
+
     // Exports.
-    namespace.Model = Model;
+    namespace.Model            = Model;
+    namespace.NodeModel        = NodeModel;
+    namespace.EdgeModel        = EdgeModel;
+    namespace.Model            = Model;
+    namespace.EdgeModelManager = EdgeModelManager;
 
 }(window));

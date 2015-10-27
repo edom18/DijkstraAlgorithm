@@ -1,107 +1,6 @@
 (function () {
     'use strict';
 
-    /**
-     * ノード
-     */
-    class NodeModel extends Model {
-        constructor() {
-            super();
-
-            this.edgesTo      = [];
-            this.edgesCost    = [];
-            this.done         = false;
-            this.cost         = -1;
-            this.id           = -1;
-            this.previousNode = null;
-
-            this._type = null;
-        }
-    }
-
-    class EdgeModel extends Model {
-        constructor(nodeA, nodeB) {
-            super();
-
-            this._nodeA = nodeA;
-            this._nodeB = nodeB;
-            this._cost  = 1;
-
-            this._id = EdgeModelManager.getInstance().generateId(nodeA, nodeB);
-        }
-        get id() {
-            return this._id;
-        }
-    }
-
-    class EdgeModelManager {
-        constructor() {
-            this._edges = [];
-        }
-        static getInstance() {
-            if (!this._instance) {
-                this._instance = new EdgeModelManager();
-            }
-            return this._instance;
-        }
-        create(nodeA, nodeB) {
-            var id = this.generateId(nodeA, nodeB);
-            var model = this.fetch(id);
-            if (!model) {
-                model = new EdgeModel(nodeA, nodeB);
-                this.add(model);
-            }
-
-            return model;
-        }
-        add(model) {
-            this._edges.push(model);
-        }
-        remove(model) {
-            var index = -1;
-            var hasEdge = this._edges.some((edge, i) => {
-                if (model.id === edge.id) {
-                    index = i;
-                    return true;
-                }
-            });
-
-            if (hasEdge) {
-                this._edges.splice(index, 1);
-            }
-        }
-        generateId(nodeA, nodeB) {
-            var idA = +nodeA.model.id;
-            var idB = +nodeB.model.id;
-
-            var id = '';
-            if (idA < idB) {
-                id = `${idA}-${idB}`;
-            }
-            else {
-                id = `${idB}-${idA}`;
-            }
-
-            return id;
-        }
-        fetch(id) {
-            var model = null;
-            this._edges.some((edge, i) => {
-                if (edge.id === id) {
-                    model = edge;
-                    return true;
-                }
-            });
-            return model;
-        }
-        contains(id) {
-            var isContains = this._edges.some((edge, i) => {
-
-            });
-            return isContains;
-        }
-    }
-
     class Node extends Dot {
         constructor(id, point) {
             super(point.x, point.y, 15);
@@ -141,9 +40,21 @@
         scene.click(x, y);
     }, false);
 
-    var edge = new Edge(new Point(10, 10), new Point(20, 120));
+
+    var ins = new Inspector();
+
+    var node1Point = new Point(10, 150);
+    var node2Point = new Point(80, 10);
+    var node1 = new Node(1, node1Point); // start
+    var node2 = new Node(2, node2Point); // top
+
+    var edgeModel = EdgeModelManager.getInstance().create(node1, node2);
+    var edge = new Edge(edgeModel);
     edge.color = 'green';
     edge.hoverColor = 'orange';
+    edge.addListener(new Listener('click', () => {
+        ins.selectedItem = edgeModel;
+    }));
 
     scene.add(edge);
 
@@ -154,20 +65,6 @@
         renderer.render(scene);
         setTimeout(loop, 16);
     }());
-
-
-    var node1Point = new Point(10, 150);
-    var node2Point = new Point(80, 10);
-    var node1 = new Node(1, node1Point); // start
-    var node2 = new Node(2, node2Point); // top
-
-    var m = EdgeModelManager.getInstance().create(node1, node2);
-    m.addListener(new Listener('hoge', () => {
-        console.log('fuga');
-    }));
-    var m2 = EdgeModelManager.getInstance().create(node1, node2);
-
-    m.dispatch('hoge');
 
 
 
@@ -186,6 +83,13 @@
         var node4 = new Node(4, node4Point); // bottom-left
         var node5 = new Node(5, node5Point); // bottom-right
         var node6 = new Node(6, node6Point); // goal
+    node1.addListener(new Listener('click', (target) => {
+        ins.selectedItem = target.model;
+    }));
+    node2.addListener(new Listener('click', (target) => {
+        ins.selectedItem = target.model;
+    }));
+
 
         scene.add(node1);
         scene.add(node2);
