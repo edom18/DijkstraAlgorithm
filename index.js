@@ -1,15 +1,13 @@
 (function () {
     'use strict';
 
-    // TODO: Dotを継承しないようにする
     class Node {
         constructor(id, point) {
             var radius = 15;
 
             this.shape = new Dot(point, radius);
 
-            this.model    = new NodeModel();
-            this.model.id = id;
+            this.model = NodeModelManager.getInstance().create(id);
 
             this._dispatcher = new Dispatcher();
         }
@@ -48,7 +46,31 @@
         set point(value) {
             this.shape.point = point;
         }
-    }
+         addToScene(scene) {
+             scene.add(this.shape);
+         }
+     }
+ 
+     class Edge {
+         constructor(model) {
+             this._model = model;
+             var nodeA = model.nodeA;
+             var nodeB = model.nodeB;
+ 
+             this.shape = new Line(nodeA.point, nodeB.point);
+ 
+             var x = (nodeA.point.x + nodeB.point.x) / 2;
+             x += 10;
+             var y = (nodeA.point.y + nodeB.point.y) / 2;
+             y += 10;
+ 
+             this.text  = new Text(new Point(x, y), model.cost);
+         }
+         addToScene(scene) {
+             scene.add(this.shape);
+             scene.add(this.text);
+         }
+     }
 
 
 
@@ -122,11 +144,11 @@
     function main() {
         var nodes = createNodes();
         EdgeModelManager.getInstance().edges.forEach((edgeModel, i) => {
-            var line = new Line(edgeModel.nodeA.point, edgeModel.nodeB.point);
-            scene.add(line);
+            var edge = new Edge(edgeModel);
+            edge.addToScene(scene);
         });
         nodes.forEach((node, i) => {
-            scene.add(node.shape);
+            node.addToScene(scene);
         });
         dijkstraSearch(nodes);
     }
