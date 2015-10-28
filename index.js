@@ -98,21 +98,6 @@
         var node5 = new Node(5, node5Point); // bottom-right
         var node6 = new Node(6, node6Point); // goal
 
-    // node1.addListener(new Listener('click', (target) => {
-    //     ins.selectedItem = target.model;
-    // }));
-    // node2.addListener(new Listener('click', (target) => {
-    //     ins.selectedItem = target.model;
-    // }));
-
-
-        scene.add(node1);
-        scene.add(node2);
-        scene.add(node3);
-        scene.add(node4);
-        scene.add(node5);
-        scene.add(node6);
-
         // Connect each nodes.
         node1.addNode(node2, 5);
         node1.addNode(node3, 4);
@@ -135,6 +120,13 @@
 
     function main() {
         var nodes = createNodes();
+        nodes.forEach((node, i) => {
+            scene.add(node);
+        });
+        EdgeModelManager.getInstance().edges.forEach((edgeModel, i) => {
+            var edge = new Edge(edgeModel);
+            scene.add(edge);
+        });
         dijkstraSearch(nodes);
     }
 
