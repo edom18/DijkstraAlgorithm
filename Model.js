@@ -106,6 +106,9 @@
             }
             return this._instance;
         }
+        get edges() {
+            return this._edges;
+        }
         create(nodeA, nodeB) {
             var id = this.generateId(nodeA, nodeB);
             var model = this.fetch(id);
