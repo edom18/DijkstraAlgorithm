@@ -11,16 +11,19 @@
             this.model.id = id;
         }
         addNode(targetNode, cost) {
-            var edgeModel = EdgeModelManager.getInstance().create(this, targetNode);
+            var edgeModel = this.createEdge(targetNode);
             edgeModel.cost = cost;
-            this.connect(edgeModel);
-            // targetNode.connect(edgeModel);
-
-            this.model.edgesTo.push(targetNode);
-            this.model.edgesCost.push(cost);
+            
+            targetNode.connect(this);
         }
-        connect(edgeModel) {
-            this.model.edges.push(edgeModel);
+        createEdge(targetNode) {
+            var edgeModel = EdgeModelManager.getInstance().create(this, targetNode);
+            this.model.addEdge(edgeModel);
+            return edgeModel;
+        }
+        connect(connectedNode) {
+            var edgeModel = EdgeModelManager.getInstance().create(this, connectedNode);
+            this.model.addEdge(edgeModel);
         }
         get point() {
             return new Point(this.x, this.y);
@@ -53,20 +56,20 @@
 
     var ins = new Inspector();
 
-    var node1Point = new Point(10, 150);
-    var node2Point = new Point(80, 10);
-    var node1 = new Node(1, node1Point); // start
-    var node2 = new Node(2, node2Point); // top
+    // var node1Point = new Point(10, 150);
+    // var node2Point = new Point(80, 10);
+    // var node1 = new Node(1, node1Point); // start
+    // var node2 = new Node(2, node2Point); // top
 
-    var edgeModel = EdgeModelManager.getInstance().create(node1, node2);
-    var edge = new Edge(edgeModel);
-    edge.color = 'green';
-    edge.hoverColor = 'orange';
-    edge.addListener(new Listener('click', () => {
-        ins.selectedItem = edgeModel;
-    }));
+    // var edgeModel = EdgeModelManager.getInstance().create(node1, node2);
+    // var edge = new Edge(edgeModel);
+    // edge.color = 'green';
+    // edge.hoverColor = 'orange';
+    // edge.addListener(new Listener('click', () => {
+    //     ins.selectedItem = edgeModel;
+    // }));
 
-    scene.add(edge);
+    // scene.add(edge);
 
     var text = new Text(50, 50, 'hoge');
     scene.add(text);
@@ -95,12 +98,12 @@
         var node5 = new Node(5, node5Point); // bottom-right
         var node6 = new Node(6, node6Point); // goal
 
-    node1.addListener(new Listener('click', (target) => {
-        ins.selectedItem = target.model;
-    }));
-    node2.addListener(new Listener('click', (target) => {
-        ins.selectedItem = target.model;
-    }));
+    // node1.addListener(new Listener('click', (target) => {
+    //     ins.selectedItem = target.model;
+    // }));
+    // node2.addListener(new Listener('click', (target) => {
+    //     ins.selectedItem = target.model;
+    // }));
 
 
         scene.add(node1);
@@ -110,54 +113,20 @@
         scene.add(node5);
         scene.add(node6);
 
-        EdgeModelManager.getInstance().create(node1, node2);
-        EdgeModelManager.getInstance().create(node1, node3);
-        EdgeModelManager.getInstance().create(node1, node4);
-
-        EdgeModelManager.getInstance().create(node2, node1);
-        EdgeModelManager.getInstance().create(node2, node3);
-        EdgeModelManager.getInstance().create(node2, node6);
-
-        EdgeModelManager.getInstance().create(node3, node1);
-        EdgeModelManager.getInstance().create(node3, node2);
-        EdgeModelManager.getInstance().create(node3, node4);
-        EdgeModelManager.getInstance().create(node3, node5);
-
-        EdgeModelManager.getInstance().create(node4, node1);
-        EdgeModelManager.getInstance().create(node4, node3);
-        EdgeModelManager.getInstance().create(node4, node5);
-
-        EdgeModelManager.getInstance().create(node5, node3);
-        EdgeModelManager.getInstance().create(node5, node4);
-        EdgeModelManager.getInstance().create(node5, node6);
-
-        EdgeModelManager.getInstance().create(node6, node2);
-        EdgeModelManager.getInstance().create(node6, node5);
-        
         // Connect each nodes.
         node1.addNode(node2, 5);
         node1.addNode(node3, 4);
         node1.addNode(node4, 2);
         
-        node2.addNode(node1, 5);
         node2.addNode(node6, 6);
         node2.addNode(node3, 2);
         
-        node3.addNode(node2, 2);
-        node3.addNode(node1, 4);
         node3.addNode(node4, 3);
         node3.addNode(node5, 2);
         
-        node4.addNode(node1, 2);
-        node4.addNode(node3, 3);
         node4.addNode(node5, 6);
         
-        node5.addNode(node4, 6);
-        node5.addNode(node3, 2);
         node5.addNode(node6, 4);
-        
-        node6.addNode(node2, 6);
-        node6.addNode(node5, 4);
         
         return [
             node1, node2, node3, node4, node5, node6

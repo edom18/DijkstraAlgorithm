@@ -2,6 +2,9 @@
     'use strict';
 
 
+    /**
+     *  Base of model.
+     */
     class Model {
         constructor() {
             this._dispatcher = new Dispatcher();
@@ -29,14 +32,29 @@
             super();
 
             this.edges        = [];
-            this.edgesTo      = [];
-            this.edgesCost    = [];
             this.done         = false;
             this.cost         = -1;
             this.id           = -1;
             this.previousNode = null;
 
             this._type = 'node';
+        }
+
+        addEdge(edgeModel) {
+            if (this.containsEdge(edgeModel)) {
+                return;
+            }
+
+            this.edges.push(edgeModel);
+        }
+
+        containsEdge(edgeModel) {
+            var hasEdge = this.edges.some((edge, i) => {
+                if (edge === edgeModel) {
+                    return true;
+                }
+            });
+            return hasEdge;
         }
     }
 
