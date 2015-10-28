@@ -28,6 +28,7 @@
         constructor() {
             super();
 
+            this.edges        = [];
             this.edgesTo      = [];
             this.edgesCost    = [];
             this.done         = false;
@@ -51,6 +52,15 @@
 
             this._type = 'edge';
         }
+        getOppositeNodeBy(node) {
+            if (this._nodeA.model.id === node.model.id) {
+                return this._nodeB;
+            }
+            else if (this._nodeB.model.id === node.model.id) {
+                return this._nodeA;
+            }
+            return null;
+        }
         get id() {
             return this._id;
         }
@@ -59,6 +69,12 @@
         }
         get nodeB() {
             return this._nodeB;
+        }
+        set cost(value) {
+            this._cost = value;
+        }
+        get cost() {
+            return this._cost;
         }
     }
 
