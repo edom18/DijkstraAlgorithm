@@ -28,13 +28,13 @@
      * ノード
      */
     class NodeModel extends Model {
-        constructor() {
+        constructor(id) {
             super();
 
             this.edges        = [];
             this.done         = false;
             this.cost         = -1;
-            this.id           = -1;
+            this.id           = id;
             this.previousNode = null;
 
             this._type = 'node';
