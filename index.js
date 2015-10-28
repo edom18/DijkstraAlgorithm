@@ -2,13 +2,17 @@
     'use strict';
 
     // TODO: Dotを継承しないようにする
-    class Node extends Dot {
+    class Node {
         constructor(id, point) {
             var radius = 15;
-            super(point.x, point.y, radius);
+
+            this.shape = new Dot(point.x, point.y, radius);
 
             this.model    = new NodeModel();
             this.model.id = id;
+
+
+            this._dispatcher = new Dispatcher();
         }
         addNode(targetNode, cost) {
             var edgeModel = this.createEdge(targetNode);
@@ -25,12 +29,26 @@
             var edgeModel = EdgeModelManager.getInstance().create(this, connectedNode);
             this.model.addEdge(edgeModel);
         }
+        addListener(listener) {
+            this._dispatcher.addListener(listener);
+        }
+        removeListener(listener) {
+            this._dispatcher.removeListener(listener);
+        }
+
+        get color() {
+            return this.shapre.color;
+        }
+        set color(value) {
+            this.shape.color = value;
+        }
+
         get point() {
-            return new Point(this.x, this.y);
+            return new Point(this.shape.x, this.shape.y);
         }
         set point(value) {
-            this.x = value.x;
-            this.y = value.y;
+            this.shape.x = value.x;
+            this.shape.y = value.y;
         }
     }
 
@@ -55,21 +73,6 @@
 
 
     var ins = new Inspector();
-
-    // var node1Point = new Point(10, 150);
-    // var node2Point = new Point(80, 10);
-    // var node1 = new Node(1, node1Point); // start
-    // var node2 = new Node(2, node2Point); // top
-
-    // var edgeModel = EdgeModelManager.getInstance().create(node1, node2);
-    // var edge = new Edge(edgeModel);
-    // edge.color = 'green';
-    // edge.hoverColor = 'orange';
-    // edge.addListener(new Listener('click', () => {
-    //     ins.selectedItem = edgeModel;
-    // }));
-
-    // scene.add(edge);
 
     var text = new Text(50, 50, 'hoge');
     scene.add(text);
@@ -120,12 +123,12 @@
 
     function main() {
         var nodes = createNodes();
-        nodes.forEach((node, i) => {
-            scene.add(node);
-        });
         EdgeModelManager.getInstance().edges.forEach((edgeModel, i) => {
             var edge = new Edge(edgeModel);
             scene.add(edge);
+        });
+        nodes.forEach((node, i) => {
+            scene.add(node.shape);
         });
         dijkstraSearch(nodes);
     }
