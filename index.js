@@ -6,11 +6,10 @@
         constructor(id, point) {
             var radius = 15;
 
-            this.shape = new Dot(point.x, point.y, radius);
+            this.shape = new Dot(point, radius);
 
             this.model    = new NodeModel();
             this.model.id = id;
-
 
             this._dispatcher = new Dispatcher();
         }
@@ -44,11 +43,10 @@
         }
 
         get point() {
-            return new Point(this.shape.x, this.shape.y);
+            return this.shape.point;
         }
         set point(value) {
-            this.shape.x = value.x;
-            this.shape.y = value.y;
+            this.shape.point = point;
         }
     }
 

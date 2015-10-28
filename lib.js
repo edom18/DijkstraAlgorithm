@@ -179,18 +179,23 @@
      * A represent dot.
      */
     class Dot extends Shape {
-        constructor(x, y, radius) {
+        constructor(point, radius) {
             super();
-            this.x = x || 0;
-            this.y = y || 0;
+            this._point = point;
             this.radius = radius || 5;
+        }
+        set point(value) {
+            this._point = point;
+        }
+        get point() {
+            return this._point;
         }
         draw(context) {
             super.draw(context);
 
             context.save();
             context.beginPath();
-            context.translate(this.x, this.y);
+            context.translate(this.point.x, this.point.y);
             this.decorate(context);
             context.arc(0, 0, this.radius, Math.PI * 2, false);
             context.closePath();
@@ -203,8 +208,8 @@
         hitTest(x, y) {
             super.hitTest(x, y);
 
-            var _x = x - this.x;
-            var _y = y - this.y;
+            var _x = x - this.point.x;
+            var _y = y - this.point.y;
 
             var length = Math.sqrt((_x * _x) + (_y * _y));
             return length < this.radius;
