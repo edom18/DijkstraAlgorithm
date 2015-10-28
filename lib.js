@@ -337,11 +337,14 @@
         }
         hover(x, y) {
             this.shapes.forEach((shape, i) => {
+                shape.unhover();
+            });
+
+            this.shapes.some((shape, i) => {
                 if (shape.hitTest(x, y)) {
                     shape.hover();
-                    return;
+                    return true;
                 }
-                shape.unhover();
             });
         }
         click(x, y) {
