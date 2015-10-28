@@ -219,12 +219,11 @@
     /**
      * A represent edge.
      */
-    class Edge extends Shape {
-        constructor(model) {
+    class Line extends Shape {
+        constructor(start, end) {
             super();
-            this._model = model;
-            this.start = this._model.nodeA.point;
-            this.end   = this._model.nodeB.point;
+            this.start = start;
+            this.end   = end;
 
             this.dx = this.end.x - this.start.x;
             this.dy = this.end.y - this.start.y;
@@ -379,7 +378,7 @@
     namespace.Point      = Point;
     namespace.Shape      = Shape;
     namespace.Dot        = Dot;
-    namespace.Edge       = Edge;
+    namespace.Line       = Line;
     namespace.Text       = Text;
     namespace.Scene      = Scene;
     namespace.Renderer   = Renderer;

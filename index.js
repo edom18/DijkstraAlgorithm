@@ -122,8 +122,8 @@
     function main() {
         var nodes = createNodes();
         EdgeModelManager.getInstance().edges.forEach((edgeModel, i) => {
-            var edge = new Edge(edgeModel);
-            scene.add(edge);
+            var line = new Line(edgeModel.nodeA.point, edgeModel.nodeB.point);
+            scene.add(line);
         });
         nodes.forEach((node, i) => {
             scene.add(node.shape);
