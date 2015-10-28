@@ -58,6 +58,55 @@
         }
     }
 
+    class NodeModelManager {
+        constructor() {
+            this._nodes = [];
+        }
+        static getInstance() {
+            if (!this._instance) {
+                this._instance = new NodeModelManager();
+            }
+            return this._instance;
+        }
+        get nodes() {
+            return this._nodes;
+        }
+        create(id) {
+            var model = this.fetch(id);
+            if (!model) {
+                model = new NodeModel(id);
+                this.add(model);
+            }
+            return model;
+        }
+        add(model) {
+            this._nodes.push(model);
+        }
+        remove(model) {
+            var index = -1;
+            var hasNode = this._nodes.some((node, i) => {
+                if (model.id === node.id) {
+                    index = i;
+                    return true;
+                }
+            });
+
+            if (hasNode) {
+                this._nodes.splice(index, 1);
+            }
+        }
+        fetch(id) {
+            var model = null;
+            this._nodes.some((node, i) => {
+                if (node.id === id) {
+                    model = node;
+                    return true;
+                }
+            });
+            return model;
+        }
+    }
+
     class EdgeModel extends Model {
         constructor(nodeA, nodeB) {
             super();
@@ -159,19 +208,13 @@
             });
             return model;
         }
-        contains(id) {
-            var isContains = this._edges.some((edge, i) => {
-
-            });
-            return isContains;
-        }
     }
 
     // Exports.
     namespace.Model            = Model;
     namespace.NodeModel        = NodeModel;
     namespace.EdgeModel        = EdgeModel;
-    namespace.Model            = Model;
+    namespace.NodeModelManager = NodeModelManager;
     namespace.EdgeModelManager = EdgeModelManager;
 
 }(window));
