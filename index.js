@@ -8,8 +8,6 @@
             this.shape = new Dot(point, radius);
 
             this.model = NodeModelManager.getInstance().create(id);
-
-            this._dispatcher = new Dispatcher();
         }
         addNode(targetNode, cost) {
             var edgeModel = this.createEdge(targetNode);
@@ -27,10 +25,10 @@
             this.model.addEdge(edgeModel);
         }
         addListener(listener) {
-            this._dispatcher.addListener(listener);
+            this.shape.addListener(listener);
         }
         removeListener(listener) {
-            this._dispatcher.removeListener(listener);
+            this.shape.removeListener(listener);
         }
 
         get color() {
@@ -65,6 +63,12 @@
             y += 10;
 
             this.text  = new Text(new Point(x, y), model.cost);
+        }
+        addListener(listener) {
+            this.shape.addListener(listener);
+        }
+        removeListener(listener) {
+            this.shape.removeListener(listener);
         }
         addToScene(scene) {
             scene.add(this.shape);
@@ -131,9 +135,15 @@
             EdgeModelManager.getInstance().edges.forEach((edgeModel, i) => {
                 var edge = new Edge(edgeModel);
                 edge.addToScene(this.scene);
+                edge.addListener(new Listener('click', (target) => {
+                    console.log(target);
+                }));
             });
             nodes.forEach((node, i) => {
                 node.addToScene(this.scene);
+                node.addListener(new Listener('click', (target) => {
+                    console.log(target);
+                }));
             });
             dijkstraSearch(nodes);
         }
