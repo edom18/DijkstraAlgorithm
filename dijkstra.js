@@ -58,18 +58,6 @@
                     node.model.previousNode = processNode;
                 }
             }
-
-            // for (var i = 0; i < processNode.model.edgesTo.length; i++) {
-            //     var node = processNode.model.edgesTo[i];
-            //     var cost = processNode.model.cost + processNode.model.edgesCost[i];
-
-            //     // コストが未設定 or コストの少ない経路がある場合はアップデート
-            //     var needsUpdate = (node.model.cost < 0) || (node.model.cost > cost);
-            //     if (needsUpdate) {
-            //         node.model.cost = cost;
-            //         node.model.previousNode = processNode;
-            //     }
-            // }
         }
         
         console.log('Has been done to search path.');
