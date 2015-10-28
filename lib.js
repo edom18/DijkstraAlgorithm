@@ -282,19 +282,18 @@
     }
 
     class Text extends Shape {
-        constructor(x, y, text) {
+        constructor(point, text) {
             super();
             this.text = text;
-            this.x = x;
-            this.y = y;
+            this._point = point;
         }
         draw(context) {
             super.draw(context);
 
             context.save();
-            context.translate(this.x, this.y);
+            context.translate(this._point.x, this._point.y);
             this.decorate(context);
-            context.fillText(this.text, this.x, this.y);
+            context.fillText(this.text, 0, 0);
             context.restore();
         }
         set text(value) {
