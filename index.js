@@ -72,33 +72,51 @@
          }
      }
 
+     class Application {
+         constructor() {
+             this.scene     = new Scene();
+             this.renderer  = new Renderer(window.innerWidth, window.innerHeight);
+             this.inspector = new Inspector();
 
+             document.body.appendChild(this.renderer.element);
+             this.setupEvents();
+         }
+         static getInstance() {
+             if (!this._instance) {
+                 this._instance = new Application();
+             }
+             return this._instance;
+         }
 
-    // debug
-    var scene = new Scene();
-    var renderer = new Renderer(window.innerWidth, window.innerHeight);
-    document.body.appendChild(renderer.element);
-    renderer.element.addEventListener('mousemove', function (e) {
-        var rect = this.getBoundingClientRect();
-        var x = e.clientX - rect.left;
-        var y = e.clientY - rect.top;
-        scene.hover(x, y);
-    }, false);
-    renderer.element.addEventListener('click', function (e) {
-        var rect = this.getBoundingClientRect();
-        var x = e.clientX - rect.left;
-        var y = e.clientY - rect.top;
-        scene.click(x, y);
-    }, false);
+         setupEvents() {
+             this.renderer.element.addEventListener('mousemove', this.mousemoveHandler.bind(this), false);
+             this.renderer.element.addEventListener('click',     this.clickHandler.bind(this),     false);
+         }
 
+         mousemoveHandler(evt) {
+             var rect = evt.target.getBoundingClientRect();
+             var x = evt.clientX - rect.left;
+             var y = evt.clientY - rect.top;
+             this.scene.hover(x, y);
+         }
 
-    var ins = new Inspector();
+         clickHandler(evt) {
+             var rect = evt.target.getBoundingClientRect();
+             var x = evt.clientX - rect.left;
+             var y = evt.clientY - rect.top;
+             this.scene.click(x, y);
+         }
 
-    var text = new Text(50, 50, 'hoge');
-    scene.add(text);
+         runLoop() {
+            this.renderer.render(this.scene);
+         }
+     }
+
+     var app = Application.getInstance();
+
 
     (function loop() {
-        renderer.render(scene);
+        app.runLoop();
         setTimeout(loop, 100);
     }());
 
@@ -145,10 +163,10 @@
         var nodes = createNodes();
         EdgeModelManager.getInstance().edges.forEach((edgeModel, i) => {
             var edge = new Edge(edgeModel);
-            edge.addToScene(scene);
+            edge.addToScene(app.scene);
         });
         nodes.forEach((node, i) => {
-            node.addToScene(scene);
+            node.addToScene(app.scene);
         });
         dijkstraSearch(nodes);
     }
