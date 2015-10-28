@@ -8,6 +8,8 @@
             this.shape = new Dot(point, radius);
 
             this.model = NodeModelManager.getInstance().create(id);
+
+            this._dispatcher = new Dispatcher();
         }
         addNode(targetNode, cost) {
             var edgeModel = this.createEdge(targetNode);
@@ -25,7 +27,11 @@
             this.model.addEdge(edgeModel);
         }
         addListener(listener) {
-            this.shape.addListener(listener);
+            var type = listener.type;
+            this.shape.addListener(new Listener(type, (target) => {
+                this._dispatcher.dispatch(type, this);
+            }));
+            this._dispatcher.addListener(listener);
         }
         removeListener(listener) {
             this.shape.removeListener(listener);
@@ -51,7 +57,7 @@
 
     class Edge {
         constructor(model) {
-            this._model = model;
+            this.model = model;
             var nodeA = model.nodeA;
             var nodeB = model.nodeB;
 
@@ -63,9 +69,15 @@
             y += 10;
 
             this.text  = new Text(new Point(x, y), model.cost);
+
+            this._dispatcher = new Dispatcher();
         }
         addListener(listener) {
-            this.shape.addListener(listener);
+            var type = listener.type;
+            this.shape.addListener(new Listener(type, (target) => {
+                this._dispatcher.dispatch(type, this);
+            }));
+            this._dispatcher.addListener(listener);
         }
         removeListener(listener) {
             this.shape.removeListener(listener);
@@ -136,13 +148,13 @@
                 var edge = new Edge(edgeModel);
                 edge.addToScene(this.scene);
                 edge.addListener(new Listener('click', (target) => {
-                    console.log(target);
+                    this.inspector.selectedItem = target.model;
                 }));
             });
             nodes.forEach((node, i) => {
                 node.addToScene(this.scene);
                 node.addListener(new Listener('click', (target) => {
-                    console.log(target);
+                    this.inspector.selectedItem = target.model;
                 }));
             });
             dijkstraSearch(nodes);
