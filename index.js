@@ -80,11 +80,11 @@
             EdgeManager.getInstance().edges.forEach((edge, i) => {
                 var nodeA = this.fetchNodeViewById(edge.nodeA.id);
                 var nodeB = this.fetchNodeViewById(edge.nodeB.id);
-                // var edge = new EdgeView(edge);
-                // edge.addToScene(this.scene);
-                // edge.addListener(new Listener('click', (target) => {
-                //     this.inspector.selectedItem = target.model;
-                // }));
+                var edge = new EdgeView(edge, nodeA, nodeB);
+                edge.addToScene(this.scene);
+                edge.addListener(new Listener('click', (target) => {
+                    this.inspector.selectedItem = target.model;
+                }));
             });
             this.nodeViews.forEach((nodeView, i) => {
                 nodeView.addToScene(this.scene);

@@ -59,12 +59,10 @@
     }
 
     class EdgeView extends View {
-        constructor(model) {
+        constructor(model, nodeA, nodeB) {
             super();
             
             this.model = model;
-            var nodeA = model.nodeA;
-            var nodeB = model.nodeB;
 
             this.shape = new Line(nodeA.point, nodeB.point);
 
