@@ -92,7 +92,15 @@
                     this.inspector.selectedItem = target.model;
                 }));
             });
-            dijkstraSearch(this.getNodes(), 0, 5);
+
+            this.searchBtn = document.getElementById('searchBtn');
+            this.searchBtn.addEventListener('click', this.searchHandler.bind(this), false);
+        }
+
+        searchHandler() {
+            var startNode = 0;
+            var goalNode  = 5;
+            dijkstraSearch(this.getNodes(), startNode, goalNode);
         }
 
         setupEvents() {
