@@ -48,14 +48,14 @@
 
             for (var i = 0; i < processNode.model.edges.length; i++) {
                 var edge = processNode.model.edges[i];
-                var _node = edge.getOppositeNodeBy(processNode.model);
+                var oppositeNode = edge.getOppositeNodeBy(processNode.model);
                 var cost = processNode.model.cost + edge.cost;
 
                 // コストが未設定 or コストの少ない経路がある場合はアップデート
-                var needsUpdate = (_node.cost < 0) || (_node.cost > cost);
+                var needsUpdate = (oppositeNode.cost < 0) || (oppositeNode.cost > cost);
                 if (needsUpdate) {
-                    _node.cost = cost;
-                    _node.previousNode = processNode.model;
+                    oppositeNode.cost = cost;
+                    oppositeNode.previousNode = processNode.model;
                 }
             }
         }
