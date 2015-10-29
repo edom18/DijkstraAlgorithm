@@ -21,12 +21,12 @@
          * Create nodes (as demo)
          */
         createNodes() {
-            var node1Point = new Point(10, 150);
-            var node2Point = new Point(80, 10);
-            var node3Point = new Point(100, 160);
-            var node4Point = new Point(60, 300);
-            var node5Point = new Point(150, 310);
-            var node6Point = new Point(200, 140);
+            var node1Point = new Point(30, 150);
+            var node2Point = new Point(200, 10);
+            var node3Point = new Point(180, 160);
+            var node4Point = new Point(100, 300);
+            var node5Point = new Point(210, 310);
+            var node6Point = new Point(350, 140);
 
             var node1 = new NodeView(1, node1Point); // start
             var node2 = new NodeView(2, node2Point); // top
