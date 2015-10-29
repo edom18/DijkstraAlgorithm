@@ -73,11 +73,8 @@
         console.log('=====================');
         var path = 'Goal -> ';
         var currentNode = goalNodeView.model;
-        var selectedColor = '#fa2';
         while(true) {
-            // currentNode.color = selectedColor;
-            
-            currentNode.adoption = true;
+            currentNode.set('adoption', true);
 
             var nextNode = currentNode.previousNode;
             if (!nextNode) {
@@ -94,4 +91,5 @@
 
     // Exports
     namespace.dijkstraSearch = dijkstraSearch;
+
 }(window));
