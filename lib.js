@@ -230,7 +230,7 @@
             this.dx = this.end.x - this.start.x;
             this.dy = this.end.y - this.start.y;
             this.a  = this.dx * this.dx + this.dy * this.dy;
-            this.detectDistance = 10;
+            this.detectDistance = 20;
 
             this.color       = 'rgba(0, 0, 0, 0)';
             this.strokeColor = 'black';
