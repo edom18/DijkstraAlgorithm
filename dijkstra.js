@@ -13,11 +13,11 @@
             node.model.clear()
         });
 
-        var startNode = nodes[startId];
-        var goalNode  = nodes[goalId];
+        var startNodeView = nodes[startId];
+        var goalNodeView  = nodes[goalId];
         
         // start node is first node
-        startNode.model.cost = 0;
+        startNodeView.model.cost = 0;
         
         while (true) {
 
@@ -66,16 +66,19 @@
         console.log('Has been done to search path.');
         console.log(nodes);
 
-        console.log('Shoten cost is ' + goalNode.model.cost);
+        console.log('Shoten cost is ' + goalNodeView.model.cost);
 
         console.log('Shoten path');
         
         console.log('=====================');
         var path = 'Goal -> ';
-        var currentNode = goalNode.model;
+        var currentNode = goalNodeView.model;
         var selectedColor = '#fa2';
         while(true) {
             // currentNode.color = selectedColor;
+            
+            currentNode.adoption = true;
+
             var nextNode = currentNode.previousNode;
             if (!nextNode) {
                 path += ' Start';
