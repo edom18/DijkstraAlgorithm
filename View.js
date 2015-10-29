@@ -50,7 +50,7 @@
         constructor(id, point) {
             super();
 
-            var radius = 15;
+            var radius = 10;
 
             this.shape = new Dot(point, radius);
 
