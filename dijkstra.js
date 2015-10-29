@@ -77,10 +77,15 @@
             currentNode.set('adoption', true);
 
             var nextNode = currentNode.previousNode;
+
             if (!nextNode) {
                 path += ' Start';
                 break;
             }
+
+            var adoptionEdge = EdgeManager.getInstance().fetchByNode(currentNode, nextNode);
+            adoptionEdge.set('adoption', true);
+
             path += nextNode.id + ' -> ';
             currentNode = nextNode;
         }

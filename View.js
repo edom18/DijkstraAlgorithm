@@ -1,6 +1,9 @@
 (function (namespace) {
     'use strict';
 
+    /**
+     * Vew base class
+     */
     class View {
         constructor(id, point) {
             this.shape       = new Shape();
@@ -22,8 +25,27 @@
         addToScene(scene) {
             scene.add(this.shape);
         }
+
+        get color() {
+            return this.shapre.color;
+        }
+        set color(value) {
+            this.shape.color = value;
+        }
+
+        get strokeColor() {
+            return this.shapre.strokeColor;
+        }
+        set strokeColor(value) {
+            this.shape.strokeColor = value;
+        }
     }
 
+    /**
+     * Node view class
+     *
+     * Represent node view.
+     */
     class NodeView extends View {
         constructor(id, point) {
             super();
@@ -43,13 +65,6 @@
             }));
         }
 
-        get color() {
-            return this.shapre.color;
-        }
-        set color(value) {
-            this.shape.color = value;
-        }
-
         get point() {
             return this.shape.point;
         }
@@ -58,11 +73,24 @@
         }
     }
 
+    /**
+     * Edge view class
+     * 
+     * Represent edge
+     */
     class EdgeView extends View {
         constructor(model, nodeA, nodeB) {
             super();
             
             this.model = model;
+            this.model.addListener(new Listener('change', (target) => {
+                if (this.model.adoption) {
+                    this.strokeColor = 'red';
+                }
+                else {
+                    this.strokeColor = 'blue';
+                }
+            }));
 
             this.shape = new Line(nodeA.point, nodeB.point);
 

@@ -22,6 +22,10 @@
         dispatch(type) {
             this._dispatcher.dispatch(type);
         }
+        set(key, value) {
+            this[key] = value;
+            this._dispatcher.dispatch('change', this);
+        }
     }
 
     /**
@@ -37,11 +41,6 @@
             this.clear();
 
             this._type = 'node';
-        }
-
-        set(key, value) {
-            this[key] = value;
-            this._dispatcher.dispatch('change', this);
         }
 
         clear() {
@@ -83,7 +82,7 @@
             return this._nodes;
         }
         create(id) {
-            var model = this.fetch(id);
+            var model = this.fetchById(id);
             if (!model) {
                 model = new Node(id);
                 this.add(model);
@@ -106,7 +105,7 @@
                 this._nodes.splice(index, 1);
             }
         }
-        fetch(id) {
+        fetchById(id) {
             var model = null;
             this._nodes.some((node, i) => {
                 if (node.id === id) {
@@ -126,10 +125,13 @@
             this._nodeB = nodeB;
             this._cost  = 1;
 
+            this.adoption = false;
+
             this._id = EdgeManager.getInstance().generateId(nodeA, nodeB);
 
             this._type = 'edge';
         }
+
         getOppositeNodeBy(node) {
             if (this._nodeA.id === node.id) {
                 return this._nodeB;
@@ -139,6 +141,7 @@
             }
             return null;
         }
+
         get id() {
             return this._id;
         }
@@ -180,7 +183,7 @@
 
         create(nodeA, nodeB) {
             var id = this.generateId(nodeA, nodeB);
-            var model = this.fetch(id);
+            var model = this.fetchById(id);
             if (!model) {
                 model = new Edge(nodeA, nodeB);
                 this.add(model);
@@ -221,7 +224,8 @@
 
             return id;
         }
-        fetch(id) {
+
+        fetchById(id) {
             var model = null;
             this._edges.some((edge, i) => {
                 if (edge.id === id) {
@@ -230,6 +234,11 @@
                 }
             });
             return model;
+        }
+
+        fetchByNode(nodeA, nodeB) {
+            var id = this.generateId(nodeA, nodeB);
+            return this.fetchById(id);
         }
     }
 
