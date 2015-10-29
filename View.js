@@ -105,8 +105,8 @@
         }
 
         changeHandler(target, changedData) {
-            if (changeData.name === 'adoption') {
-                if (changeData.newValue) {
+            if (changedData.name === 'adoption') {
+                if (changedData.newValue) {
                     this.strokeColor = 'red';
                 }
                 else {
@@ -114,7 +114,7 @@
                 }
             }
 
-            if (changeData.name === 'cost') {
+            if (changedData.name === 'cost') {
                 this.text.text = this.model.cost;
             }
         }
