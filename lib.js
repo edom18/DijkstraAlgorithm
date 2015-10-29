@@ -41,14 +41,14 @@
 
             listeners.splice(index, 1);
         }
-        dispatch(type, context) {
+        dispatch(type, context, referData) {
             var listeners = this._listeners[type];
             if (!listeners) {
                 return;
             }
 
             listeners.forEach((listener, i) => {
-                listener.fire(context);
+                listener.fire(context, referData);
             });
         }
     }
@@ -63,8 +63,8 @@
             this._type = type;
             this._func = func;
         }
-        fire(context) {
-            this._func(context);
+        fire(context, referData) {
+            this._func(context, referData);
         }
         get type() {
             return this._type;
