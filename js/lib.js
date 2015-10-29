@@ -80,6 +80,16 @@
             this.x = x || 0;
             this.y = y || 0;
         }
+
+        add(point) {
+            this.x += point.x;
+            this.y += point.y;
+        }
+
+        sub(point) {
+            this.x -= point.x;
+            this.y -= point.y;
+        }
     }
 
     class Decorator {
