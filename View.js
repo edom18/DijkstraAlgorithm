@@ -12,8 +12,8 @@
         
         addListener(listener) {
             var type = listener.type;
-            this.shape.addListener(new Listener(type, (target) => {
-                this._dispatcher.dispatch(type, this);
+            this.shape.addListener(new Listener(type, (target, referData) => {
+                this._dispatcher.dispatch(type, this, referData);
             }));
             this._dispatcher.addListener(listener);
         }
@@ -55,14 +55,19 @@
             this.shape = new Dot(point, radius);
 
             this.model = NodeManager.getInstance().create(id);
-            this.model.addListener(new Listener('change', (target) => {
-                if (this.model.adoption) {
+            this._changeListener = new Listener('change', this.changeHandler.bind(this));
+            this.model.addListener(this._changeListener);
+        }
+
+        changeHandler(target, changedData) {
+            if (changedData.name === 'adoption') {
+                if (changedData.newValue) {
                     this.color = 'red';
                 }
                 else {
                     this.color = 'blue';
                 }
-            }));
+            }
         }
 
         get point() {
@@ -83,22 +88,11 @@
             super();
             
             this.model = model;
+            this._nodeA = nodeA;
+            this._nodeB = nodeB;
 
-            var x = (nodeA.point.x + nodeB.point.x) / 2;
-            x += 10;
-            var y = (nodeA.point.y + nodeB.point.y) / 2;
-            y += 10;
-
-            this.model.addListener(new Listener('change', (target) => {
-                if (this.model.adoption) {
-                    this.strokeColor = 'red';
-                }
-                else {
-                    this.strokeColor = 'blue';
-                }
-
-                this.text.text = this.model.cost;
-            }));
+            this._changeListener = new Listener('change', this.changeHandler.bind(this));
+            this.model.addListener(this._changeListener);
 
             this.shape = new Line(nodeA.point, nodeB.point);
 
@@ -109,6 +103,22 @@
 
             this.text  = new Text(new Point(x, y), model.cost);
         }
+
+        changeHandler(target, changedData) {
+            if (changeData.name === 'adoption') {
+                if (changeData.newValue) {
+                    this.strokeColor = 'red';
+                }
+                else {
+                    this.strokeColor = 'blue';
+                }
+            }
+
+            if (changeData.name === 'cost') {
+                this.text.text = this.model.cost;
+            }
+        }
+
         addToScene(scene) {
             scene.add(this.shape);
             scene.add(this.text);
