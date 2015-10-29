@@ -92,6 +92,9 @@
         }
     }
 
+
+    //////////////////////////////////////////////////
+
     class Decorator {
         constructor(shape) {
             this._shape = shape;
@@ -114,6 +117,8 @@
             context.strokeStyle = this._shape.hoverStrokeColor;
         }
     }
+
+    //////////////////////////////////////////////////
 
     /**
      * Shape base class.
