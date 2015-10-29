@@ -23,8 +23,17 @@
             this._dispatcher.dispatch(type);
         }
         set(key, value) {
+            var oldValue = this[key];
+            if (oldValue === value) {
+                return;
+            }
+
             this[key] = value;
-            this._dispatcher.dispatch('change', this);
+            this._dispatcher.dispatch('change', this, {
+                name: key,
+                newValue: value,
+                oldValue: oldValue
+            });
         }
     }
 
