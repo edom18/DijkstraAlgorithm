@@ -8,6 +8,7 @@
         constructor(id, point) {
             this.shape       = new Shape();
             this._dispatcher = new Dispatcher();
+            this._selected   = false;
         }
         
         addListener(listener) {
@@ -24,6 +25,13 @@
 
         addToScene(scene) {
             scene.add(this.shape);
+        }
+
+        set selected(value) {
+            this._selected = value;
+        }
+        get selected() {
+            return this._selected;
         }
 
         get color() {
