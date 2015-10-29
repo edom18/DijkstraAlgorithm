@@ -57,6 +57,10 @@
             this.set('cost', -1);
             this.set('adoption', false);
             this.set('previousNode', null);
+
+            this.edges.forEach((edge, i) => {
+                edge.clear();
+            });
         }
 
         addEdge(edge) {
@@ -134,11 +138,15 @@
             this._nodeB = nodeB;
             this._cost  = 1;
 
-            this.set('adoption', false);
+            this.clear();
 
             this._id = EdgeManager.getInstance().generateId(nodeA, nodeB);
 
             this._type = 'edge';
+        }
+
+        clear() {
+            this.set('adoption', false);
         }
 
         getOppositeNodeBy(node) {
