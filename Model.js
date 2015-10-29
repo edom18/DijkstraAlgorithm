@@ -39,6 +39,11 @@
             this._type = 'node';
         }
 
+        set(key, value) {
+            this[key] = value;
+            this._dispatcher.dispatch('change', this);
+        }
+
         clear() {
             this.done = false;
             this.cost = -1;

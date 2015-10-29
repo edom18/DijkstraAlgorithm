@@ -56,22 +56,43 @@
             ];
         }
 
+        fetchNodeViewById(id) {
+            var node = null;
+            var hasNode = this.nodeViews.some((n, i) => {
+                if (n.model.id === id) {
+                    node = n;
+                    return true;
+                }
+            });
+            return node;
+        }
+
+        getNodes() {
+            var nodes = [];
+            this.nodeViews.forEach((nodeView, i) => {
+                nodes.push(nodeView.model);
+            });
+            return nodes;
+        }
+
         launch() {
-            var nodes = this.createNodes();
-            // EdgeManager.getInstance().edges.forEach((edge, i) => {
-            //     var edge = new EdgeView(edge);
-            //     edge.addToScene(this.scene);
-            //     edge.addListener(new Listener('click', (target) => {
-            //         this.inspector.selectedItem = target.model;
-            //     }));
-            // });
-            nodes.forEach((node, i) => {
-                node.addToScene(this.scene);
-                node.addListener(new Listener('click', (target) => {
+            this.nodeViews = this.createNodes();
+            EdgeManager.getInstance().edges.forEach((edge, i) => {
+                var nodeA = this.fetchNodeViewById(edge.nodeA.id);
+                var nodeB = this.fetchNodeViewById(edge.nodeB.id);
+                // var edge = new EdgeView(edge);
+                // edge.addToScene(this.scene);
+                // edge.addListener(new Listener('click', (target) => {
+                //     this.inspector.selectedItem = target.model;
+                // }));
+            });
+            this.nodeViews.forEach((nodeView, i) => {
+                nodeView.addToScene(this.scene);
+                nodeView.addListener(new Listener('click', (target) => {
                     this.inspector.selectedItem = target.model;
                 }));
             });
-            dijkstraSearch(nodes, 0, 5);
+            dijkstraSearch(this.getNodes(), 0, 5);
         }
 
         setupEvents() {
