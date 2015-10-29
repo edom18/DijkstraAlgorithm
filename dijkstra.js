@@ -6,15 +6,18 @@
      *
      * @param {Array.<Node>} nodes
      */
-    function dijkstraSearch(nodes) {
+    function dijkstraSearch(nodes, startId, goalId) {
 
         // initialize costs
         nodes.forEach((node, i) => {
             node.model.clear()
         });
+
+        var startNode = nodes[startId];
+        var goalNode  = nodes[goalId];
         
         // start node is first node
-        nodes[0].model.cost = 0;
+        startNode.model.cost = 0;
         
         while (true) {
 
@@ -63,7 +66,6 @@
         console.log('Has been done to search path.');
         console.log(nodes);
 
-        var goalNode = nodes[5];
         console.log('Shoten cost is ' + goalNode.model.cost);
 
         console.log('Shoten path');

@@ -143,7 +143,7 @@
                     this.inspector.selectedItem = target.model;
                 }));
             });
-            dijkstraSearch(nodes);
+            dijkstraSearch(nodes, 0, 5);
         }
 
         setupEvents() {
