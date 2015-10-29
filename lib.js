@@ -119,6 +119,8 @@
 
             this.normalDecorator = new NormalDecorator(this);
             this.hoverDecorator  = new HoverDecorator(this);
+
+            this.zIndex = 0;
         }
         addListener(listener) {
             this.dispatcher.addListener(listener);
@@ -314,12 +316,18 @@
         constructor() {
             this.shapes = [];
         }
+
         add(shape) {
             if (!(shape instanceof Shape)) {
                 return;
             }
             this.shapes.push(shape);
+
+            this.shapes.sort((a, b) => {
+                return a.zIndex > b.zIndex;
+            });
         }
+
         remove(shape) {
             var index = -1;
             var hasShape = this.shapes.some(function (s, i) {
@@ -335,22 +343,34 @@
 
             this.shapes.splice(index, 1);
         }
+
+        each(func) {
+            for (var i = this.shapes.length - 1; i >= 0; i--) {
+                var stop = func(this.shapes[i], i);
+                if (stop) {
+                    break;
+                }
+            }
+        }
+
         hover(x, y) {
             this.shapes.forEach((shape, i) => {
                 shape.unhover();
             });
 
-            this.shapes.some((shape, i) => {
+            this.each((shape, i) => {
                 if (shape.hitTest(x, y)) {
                     shape.hover();
                     return true;
                 }
             });
         }
+
         click(x, y) {
-            this.shapes.forEach((shape, i) => {
+            this.each((shape, i) => {
                 if (shape.hitTest(x, y)) {
                     shape.click();
+                    return true;
                 }
             });
         }
