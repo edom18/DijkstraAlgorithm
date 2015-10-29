@@ -83,6 +83,12 @@
             super();
             
             this.model = model;
+
+            var x = (nodeA.point.x + nodeB.point.x) / 2;
+            x += 10;
+            var y = (nodeA.point.y + nodeB.point.y) / 2;
+            y += 10;
+
             this.model.addListener(new Listener('change', (target) => {
                 if (this.model.adoption) {
                     this.strokeColor = 'red';
@@ -90,6 +96,8 @@
                 else {
                     this.strokeColor = 'blue';
                 }
+
+                this.text.text = this.model.cost;
             }));
 
             this.shape = new Line(nodeA.point, nodeB.point);
