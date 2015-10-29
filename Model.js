@@ -31,13 +31,19 @@
         constructor(id) {
             super();
 
+            this.id = id;
             this.edges = [];
-            this.done  = false;
-            this.cost  = -1;
-            this.id    = id;
-            this.previousNode = null;
+
+            this.clear();
 
             this._type = 'node';
+        }
+
+        clear() {
+            this.done = false;
+            this.cost = -1;
+            this.adoption     = false;
+            this.previousNode = null;
         }
 
         addEdge(edge) {
