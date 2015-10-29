@@ -10,7 +10,7 @@
 
         // initialize costs
         nodes.forEach((node, i) => {
-            node.model.cost = -1;
+            node.model.clear()
         });
         
         // start node is first node
