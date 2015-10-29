@@ -65,7 +65,7 @@
                     this.color = 'red';
                 }
                 else {
-                    this.color = 'blue';
+                    this.color = 'black';
                 }
             }
         }
@@ -110,7 +110,7 @@
                     this.strokeColor = 'red';
                 }
                 else {
-                    this.strokeColor = 'blue';
+                    this.strokeColor = 'black';
                 }
             }
 
