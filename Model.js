@@ -27,7 +27,7 @@
     /**
      * ノード
      */
-    class NodeModel extends Model {
+    class Node extends Model {
         constructor(id) {
             super();
 
@@ -35,22 +35,22 @@
             this.done  = false;
             this.cost  = -1;
             this.id    = id;
-            this.previousNodeModel = null;
+            this.previousNode = null;
 
             this._type = 'node';
         }
 
-        addEdge(edgeModel) {
-            if (this.containsEdge(edgeModel)) {
+        addEdge(edge) {
+            if (this.containsEdge(edge)) {
                 return;
             }
 
-            this.edges.push(edgeModel);
+            this.edges.push(edge);
         }
 
-        containsEdge(edgeModel) {
-            var hasEdge = this.edges.some((edge, i) => {
-                if (edge === edgeModel) {
+        containsEdge(edge) {
+            var hasEdge = this.edges.some((ie, i) => {
+                if (ie === edge) {
                     return true;
                 }
             });
@@ -58,13 +58,13 @@
         }
     }
 
-    class NodeModelManager {
+    class NodeManager {
         constructor() {
             this._nodes = [];
         }
         static getInstance() {
             if (!this._instance) {
-                this._instance = new NodeModelManager();
+                this._instance = new NodeManager();
             }
             return this._instance;
         }
@@ -74,7 +74,7 @@
         create(id) {
             var model = this.fetch(id);
             if (!model) {
-                model = new NodeModel(id);
+                model = new Node(id);
                 this.add(model);
             }
             return model;
@@ -107,35 +107,35 @@
         }
     }
 
-    class EdgeModel extends Model {
-        constructor(nodeModelA, nodeModelB) {
+    class Edge extends Model {
+        constructor(nodeA, nodeB) {
             super();
 
-            this._nodeModelA = nodeModelA;
-            this._nodeModelB = nodeModelB;
+            this._nodeA = nodeA;
+            this._nodeB = nodeB;
             this._cost  = 1;
 
-            this._id = EdgeModelManager.getInstance().generateId(nodeModelA, nodeModelB);
+            this._id = EdgeManager.getInstance().generateId(nodeA, nodeB);
 
             this._type = 'edge';
         }
-        getOppositeNodeBy(nodeModel) {
-            if (this._nodeModelA.id === nodeModel.id) {
-                return this._nodeModelB;
+        getOppositeNodeBy(node) {
+            if (this._nodeA.id === node.id) {
+                return this._nodeB;
             }
-            else if (this._nodeModelB.id === nodeModel.id) {
-                return this._nodeModelA;
+            else if (this._nodeB.id === node.id) {
+                return this._nodeA;
             }
             return null;
         }
         get id() {
             return this._id;
         }
-        get nodeModelA() {
-            return this._nodeModelA;
+        get nodeA() {
+            return this._nodeA;
         }
-        get nodeModelB() {
-            return this._nodeModelB;
+        get nodeB() {
+            return this._nodeB;
         }
         set cost(value) {
             this._cost = value;
@@ -145,13 +145,13 @@
         }
     }
 
-    class EdgeModelManager {
+    class EdgeManager {
         constructor() {
             this._edges = [];
         }
         static getInstance() {
             if (!this._instance) {
-                this._instance = new EdgeModelManager();
+                this._instance = new EdgeManager();
             }
             return this._instance;
         }
@@ -159,19 +159,19 @@
             return this._edges;
         }
 
-        connect(nodeModelA, nodeModelB, cost) {
-            var edgeModel = this.create(nodeModelA, nodeModelB);
-            edgeModel.cost = cost;
+        connect(nodeA, nodeB, cost) {
+            var edge = this.create(nodeA, nodeB);
+            edge.cost = cost;
 
-            nodeModelA.addEdge(edgeModel);
-            nodeModelB.addEdge(edgeModel);
+            nodeA.addEdge(edge);
+            nodeB.addEdge(edge);
         }
 
-        create(nodeModelA, nodeModelB) {
-            var id = this.generateId(nodeModelA, nodeModelB);
+        create(nodeA, nodeB) {
+            var id = this.generateId(nodeA, nodeB);
             var model = this.fetch(id);
             if (!model) {
-                model = new EdgeModel(nodeModelA, nodeModelB);
+                model = new Edge(nodeA, nodeB);
                 this.add(model);
             }
 
@@ -196,9 +196,9 @@
             }
         }
 
-        generateId(nodeModelA, nodeModelB) {
-            var idA = +nodeModelA.id;
-            var idB = +nodeModelB.id;
+        generateId(nodeA, nodeB) {
+            var idA = +nodeA.id;
+            var idB = +nodeB.id;
 
             var id = '';
             if (idA < idB) {
@@ -223,10 +223,10 @@
     }
 
     // Exports.
-    namespace.Model            = Model;
-    namespace.NodeModel        = NodeModel;
-    namespace.EdgeModel        = EdgeModel;
-    namespace.NodeModelManager = NodeModelManager;
-    namespace.EdgeModelManager = EdgeModelManager;
+    namespace.Model       = Model;
+    namespace.Node        = Node;
+    namespace.Edge        = Edge;
+    namespace.NodeManager = NodeManager;
+    namespace.EdgeManager = EdgeManager;
 
 }(window));

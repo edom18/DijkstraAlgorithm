@@ -7,7 +7,7 @@
 
             this.shape = new Dot(point, radius);
 
-            this.model = NodeModelManager.getInstance().create(id);
+            this.model = NodeManager.getInstance().create(id);
 
             this._dispatcher = new Dispatcher();
         }
@@ -108,20 +108,20 @@
             var node6 = new NodeView(6, node6Point); // goal
 
             // Connect each nodes.
-            var edgeModelManager = EdgeModelManager.getInstance();
-            edgeModelManager.connect(node1.model, node2.model, 5);
-            edgeModelManager.connect(node1.model, node3.model, 4);
-            edgeModelManager.connect(node1.model, node4.model, 2);
+            var edgeManager = EdgeManager.getInstance();
+            edgeManager.connect(node1.model, node2.model, 5);
+            edgeManager.connect(node1.model, node3.model, 4);
+            edgeManager.connect(node1.model, node4.model, 2);
 
-            edgeModelManager.connect(node2.model, node3.model, 2);
-            edgeModelManager.connect(node2.model, node6.model, 6);
+            edgeManager.connect(node2.model, node3.model, 2);
+            edgeManager.connect(node2.model, node6.model, 6);
 
-            edgeModelManager.connect(node3.model, node4.model, 3);
-            edgeModelManager.connect(node3.model, node5.model, 2);
+            edgeManager.connect(node3.model, node4.model, 3);
+            edgeManager.connect(node3.model, node5.model, 2);
 
-            edgeModelManager.connect(node4.model, node5.model, 6);
+            edgeManager.connect(node4.model, node5.model, 6);
 
-            edgeModelManager.connect(node5.model, node6.model, 4);
+            edgeManager.connect(node5.model, node6.model, 4);
 
             return [
                 node1, node2, node3, node4, node5, node6
@@ -130,8 +130,8 @@
 
         launch() {
             var nodes = this.createNodes();
-            // EdgeModelManager.getInstance().edges.forEach((edgeModel, i) => {
-            //     var edge = new EdgeView(edgeModel);
+            // EdgeManager.getInstance().edges.forEach((edge, i) => {
+            //     var edge = new EdgeView(edge);
             //     edge.addToScene(this.scene);
             //     edge.addListener(new Listener('click', (target) => {
             //         this.inspector.selectedItem = target.model;
