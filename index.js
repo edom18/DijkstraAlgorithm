@@ -77,14 +77,16 @@
 
         launch() {
             this.nodeViews = this.createNodes();
+            this.edgeViews = [];
             EdgeManager.getInstance().edges.forEach((edge, i) => {
                 var nodeA = this.fetchNodeViewById(edge.nodeA.id);
                 var nodeB = this.fetchNodeViewById(edge.nodeB.id);
-                var edge = new EdgeView(edge, nodeA, nodeB);
-                edge.addToScene(this.scene);
-                edge.addListener(new Listener('click', (target) => {
+                var edgeView = new EdgeView(edge, nodeA, nodeB);
+                edgeView.addToScene(this.scene);
+                edgeView.addListener(new Listener('click', (target) => {
                     this.inspector.selectedItem = target.model;
                 }));
+                this.edgeViews.push(edgeView);
             });
             this.nodeViews.forEach((nodeView, i) => {
                 nodeView.addToScene(this.scene);
@@ -97,7 +99,18 @@
             this.searchBtn.addEventListener('click', this.searchHandler.bind(this), false);
         }
 
+        clear() {
+            this.nodeViews.forEach((nodeView, i) => {
+                nodeView.color = 'black';
+            });
+            this.edgeViews.forEach((edgeView, i) => {
+                edgeView.strokeColor = 'black';
+            });
+        }
+
         searchHandler() {
+            this.clear();
+
             var startNode = 0;
             var goalNode  = 5;
             dijkstraSearch(this.getNodes(), startNode, goalNode);
