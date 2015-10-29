@@ -44,10 +44,10 @@
         }
 
         clear() {
-            this.done = false;
-            this.cost = -1;
-            this.adoption     = false;
-            this.previousNode = null;
+            this.set('done', false);
+            this.set('cost', -1);
+            this.set('adoption', false);
+            this.set('previousNode', null);
         }
 
         addEdge(edge) {
@@ -125,7 +125,7 @@
             this._nodeB = nodeB;
             this._cost  = 1;
 
-            this.adoption = false;
+            this.set('adoption', false);
 
             this._id = EdgeManager.getInstance().generateId(nodeA, nodeB);
 
