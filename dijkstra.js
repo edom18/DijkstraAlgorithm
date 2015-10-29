@@ -47,15 +47,15 @@
             processNode.model.done = true;
 
             for (var i = 0; i < processNode.model.edges.length; i++) {
-                var edge = processNode.model.edges[i];
-                var node = edge.getOppositeNodeBy(processNode);
-                var cost = processNode.model.cost + edge.cost;
+                var edge      = processNode.model.edges[i];
+                var nodeModel = edge.getOppositeNodeBy(processNode.model);
+                var cost      = processNode.model.cost + edge.cost;
 
                 // コストが未設定 or コストの少ない経路がある場合はアップデート
-                var needsUpdate = (node.model.cost < 0) || (node.model.cost > cost);
+                var needsUpdate = (nodeModel.cost < 0) || (nodeModel.cost > cost);
                 if (needsUpdate) {
-                    node.model.cost = cost;
-                    node.model.previousNode = processNode;
+                    nodeModel.cost = cost;
+                    nodeModel.previousNodeModel = processNode.model;
                 }
             }
         }
@@ -70,17 +70,17 @@
         
         console.log('=====================');
         var path = 'Goal -> ';
-        var currentNode = goalNode;
+        var currentNodeModel = goalNode.model;
         var selectedColor = '#fa2';
         while(true) {
-            currentNode.color = selectedColor;
-            var nextNode = currentNode.model.previousNode;
-            if (!nextNode) {
+            // currentNodeModel.color = selectedColor;
+            var nextNodeModel = currentNodeModel.previousNodeModel;
+            if (!nextNodeModel) {
                 path += ' Start';
                 break;
             }
-            path += nextNode.model.id + ' -> ';
-            currentNode = nextNode;
+            path += nextNodeModel.id + ' -> ';
+            currentNodeModel = nextNodeModel;
         }
 
         console.log(path);

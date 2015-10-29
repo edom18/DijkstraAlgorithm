@@ -31,11 +31,11 @@
         constructor(id) {
             super();
 
-            this.edges        = [];
-            this.done         = false;
-            this.cost         = -1;
-            this.id           = id;
-            this.previousNode = null;
+            this.edges = [];
+            this.done  = false;
+            this.cost  = -1;
+            this.id    = id;
+            this.previousNodeModel = null;
 
             this._type = 'node';
         }
@@ -108,34 +108,34 @@
     }
 
     class EdgeModel extends Model {
-        constructor(nodeA, nodeB) {
+        constructor(nodeModelA, nodeModelB) {
             super();
 
-            this._nodeA = nodeA;
-            this._nodeB = nodeB;
+            this._nodeModelA = nodeModelA;
+            this._nodeModelB = nodeModelB;
             this._cost  = 1;
 
-            this._id = EdgeModelManager.getInstance().generateId(nodeA, nodeB);
+            this._id = EdgeModelManager.getInstance().generateId(nodeModelA, nodeModelB);
 
             this._type = 'edge';
         }
-        getOppositeNodeBy(node) {
-            if (this._nodeA.model.id === node.model.id) {
-                return this._nodeB;
+        getOppositeNodeBy(nodeModel) {
+            if (this._nodeModelA.id === nodeModel.id) {
+                return this._nodeModelB;
             }
-            else if (this._nodeB.model.id === node.model.id) {
-                return this._nodeA;
+            else if (this._nodeModelB.id === nodeModel.id) {
+                return this._nodeModelA;
             }
             return null;
         }
         get id() {
             return this._id;
         }
-        get nodeA() {
-            return this._nodeA;
+        get nodeModelA() {
+            return this._nodeModelA;
         }
-        get nodeB() {
-            return this._nodeB;
+        get nodeModelB() {
+            return this._nodeModelB;
         }
         set cost(value) {
             this._cost = value;
@@ -158,19 +158,30 @@
         get edges() {
             return this._edges;
         }
-        create(nodeA, nodeB) {
-            var id = this.generateId(nodeA, nodeB);
+
+        connect(nodeModelA, nodeModelB, cost) {
+            var edgeModel = this.create(nodeModelA, nodeModelB);
+            edgeModel.cost = cost;
+
+            nodeModelA.addEdge(edgeModel);
+            nodeModelB.addEdge(edgeModel);
+        }
+
+        create(nodeModelA, nodeModelB) {
+            var id = this.generateId(nodeModelA, nodeModelB);
             var model = this.fetch(id);
             if (!model) {
-                model = new EdgeModel(nodeA, nodeB);
+                model = new EdgeModel(nodeModelA, nodeModelB);
                 this.add(model);
             }
 
             return model;
         }
+
         add(model) {
             this._edges.push(model);
         }
+
         remove(model) {
             var index = -1;
             var hasEdge = this._edges.some((edge, i) => {
@@ -184,9 +195,10 @@
                 this._edges.splice(index, 1);
             }
         }
-        generateId(nodeA, nodeB) {
-            var idA = +nodeA.model.id;
-            var idB = +nodeB.model.id;
+
+        generateId(nodeModelA, nodeModelB) {
+            var idA = +nodeModelA.id;
+            var idB = +nodeModelB.id;
 
             var id = '';
             if (idA < idB) {
