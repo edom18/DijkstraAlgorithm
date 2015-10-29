@@ -12,12 +12,11 @@
             }, false);
         }
         set selectedItem(model) {
+            this._model = model;
             this._renderer = this.choiseRenderer(model);
             this.update();
         }
         choiseRenderer(model) {
-            this._model = model;
-
             if (model.type === 'edge') {
                 return new EdgeModelRenderer(model);
             }
