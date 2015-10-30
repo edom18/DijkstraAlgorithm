@@ -71,6 +71,23 @@
         }
     }
 
+    class ListenerIntercepter extends Listener {
+        constructor(listener, intercepter) {
+            super();
+            this._listener   = listener;
+            this._intercepter = intercepter;
+        }
+        fire(context, referData) {
+            this._intercepter(this._listener, context, referData);
+        }
+        get type() {
+            return this._listener.type;
+        }
+        get containsListener() {
+            return this._listener;
+        }
+    }
+
     /**
      * @para {Number} x
      * @para {Number} y
@@ -419,5 +436,6 @@
     namespace.Text       = Text;
     namespace.Scene      = Scene;
     namespace.Renderer   = Renderer;
+    namespace.ListenerIntercepter = ListenerIntercepter;
 
 }(window));
