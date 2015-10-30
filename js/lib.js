@@ -109,68 +109,17 @@
         }
     }
 
-
     //////////////////////////////////////////////////
 
-    class Decorator {
-        constructor(shape) {
-            this._shape = shape;
-        }
-        decorate(context) {
-            //
-        }
-    }
-
-    class NormalDecorator extends Decorator {
-        decorate(context) {
-            context.fillStyle   = this._shape.color;
-            context.strokeStyle = this._shape.strokeColor;
-        }
-    }
-
-    class HoverDecorator extends Decorator {
-        decorate(context) {
-            context.fillStyle   = this._shape.hoverColor;
-            context.strokeStyle = this._shape.hoverStrokeColor;
-        }
-    }
-
-    //////////////////////////////////////////////////
-
-    /**
-     * Shape base class.
-     */
-    class Shape {
+    class Appearance {
         constructor() {
-            this.isHovering = false;
-            this._dispatcher = new Dispatcher();
+            this._color       = 'black';
+            this._strokeColor = 'black';
 
-            this.color       = 'black';
-            this.strokeColor = 'rgba(0, 0, 0, 0)';
-            this.hoverStrokeColor = 'rgba(0, 0, 0, 0)';
+            this._hoverColor       = 'blue';
+            this._hoverStrokeColor = 'blue';
+        }
 
-            this.normalDecorator = new NormalDecorator(this);
-            this.hoverDecorator  = new HoverDecorator(this);
-
-            this.zIndex = 0;
-        }
-        addListener(listener) {
-            this._dispatcher.addListener(listener);
-        }
-        removeListener(listener) {
-            this._dispatcher.removeListener(listener);
-        }
-        decorate(context) {
-            if (this.isHovering) {
-                this.hoverDecorator.decorate(context);
-            }
-            else {
-                this.normalDecorator.decorate(context);
-            }
-        }
-        draw(context) {
-            //
-        }
         set color(value) {
             this._color = value;
         }
@@ -195,15 +144,113 @@
         get hoverStrokeColor() {
             return this._hoverStrokeColor;
         }
+    }
+
+    //////////////////////////////////////////////////
+
+    class Decorator {
+        constructor(shape) {
+            this._shape = shape;
+        }
+        decorate(context) {
+            //
+        }
+    }
+
+    class NormalDecorator extends Decorator {
+        decorate(context) {
+            context.fillStyle   = this._shape.appearnce.color;
+            context.strokeStyle = this._shape.appearnce.strokeColor;
+        }
+    }
+
+    class HoverDecorator extends Decorator {
+        decorate(context) {
+            context.fillStyle   = this._shape.appearnce.hoverColor;
+            context.strokeStyle = this._shape.appearnce.hoverStrokeColor;
+        }
+    }
+
+    //////////////////////////////////////////////////
+
+    /**
+     * Shape base class.
+     */
+    class Shape {
+        constructor(appearance) {
+            this.isHovering = false;
+            this._dispatcher = new Dispatcher();
+
+            this.appearnce = appearance || new Appearance();
+
+            // this.color       = 'black';
+            // this.strokeColor = 'rgba(0, 0, 0, 0)';
+            // this.hoverStrokeColor = 'rgba(0, 0, 0, 0)';
+
+            this.normalDecorator = new NormalDecorator(this);
+            this.hoverDecorator  = new HoverDecorator(this);
+
+            this.zIndex = 0;
+        }
+
+        addListener(listener) {
+            this._dispatcher.addListener(listener);
+        }
+
+        removeListener(listener) {
+            this._dispatcher.removeListener(listener);
+        }
+
+        decorate(context) {
+            if (this.isHovering) {
+                this.hoverDecorator.decorate(context);
+            }
+            else {
+                this.normalDecorator.decorate(context);
+            }
+        }
+
+        draw(context) {
+            //
+        }
+
+        // set color(value) {
+        //     this._color = value;
+        // }
+        // get color() {
+        //     return this._color;
+        // }
+        // set hoverColor(value) {
+        //     this._hoverColor = value;
+        // }
+        // get hoverColor() {
+        //     return this._hoverColor;
+        // }
+        // set strokeColor(value) {
+        //     this._strokeColor = value;
+        // }
+        // get strokeColor() {
+        //     return this._strokeColor;
+        // }
+        // set hoverStrokeColor(value) {
+        //     this._hoverStrokeColor = value;
+        // }
+        // get hoverStrokeColor() {
+        //     return this._hoverStrokeColor;
+        // }
+
         hitTest(x, y) {
             return false;
         }
+
         hover() {
             this.isHovering = true;
         }
+
         unhover() {
             this.isHovering = false;
         }
+
         click() {
             this._dispatcher.dispatch('click', this);
         }
@@ -213,8 +260,9 @@
      * A represent dot.
      */
     class Dot extends Shape {
-        constructor(point, radius) {
-            super();
+        constructor(point, radius, appearnce) {
+            super(appearnce);
+
             this._point = point;
             this.radius = radius || 5;
         }
@@ -254,8 +302,9 @@
      * A represent edge.
      */
     class Line extends Shape {
-        constructor(start, end) {
-            super();
+        constructor(start, end, appearnce) {
+            super(appearnce);
+
             this.start = start;
             this.end   = end;
 
@@ -264,9 +313,9 @@
             this.a  = this.dx * this.dx + this.dy * this.dy;
             this.detectDistance = 20;
 
-            this.color       = 'rgba(0, 0, 0, 0)';
-            this.strokeColor = 'black';
-            this.hoverStrokeColor = 'orange';
+            // this.color       = 'rgba(0, 0, 0, 0)';
+            // this.strokeColor = 'black';
+            // this.hoverStrokeColor = 'orange';
         } 
         draw(context) {
             super.draw(context);

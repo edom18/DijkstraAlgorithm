@@ -102,10 +102,10 @@
 
         clear() {
             this.nodeViews.forEach((nodeView, i) => {
-                nodeView.color = 'black';
+                nodeView.appearance.color = 'black';
             });
             this.edgeViews.forEach((edgeView, i) => {
-                edgeView.strokeColor = 'black';
+                edgeView.appearnce.strokeColor = 'black';
             });
         }
 
