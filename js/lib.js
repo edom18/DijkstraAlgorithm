@@ -332,11 +332,13 @@
     }
 
     class Text extends Shape {
-        constructor(point, text) {
-            super();
+        constructor(point, text, appearnce) {
+            super(appearnce);
+
             this.text = text;
             this._point = point;
         }
+
         draw(context) {
             super.draw(context);
 
@@ -346,12 +348,14 @@
             context.fillText(this.text, 0, 0);
             context.restore();
         }
+
         set text(value) {
             this._text = value;
         }
         get text() {
             return this._text;
         }
+
         hitTest(x, y) {
             return false;
         }
