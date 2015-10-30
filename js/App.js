@@ -90,9 +90,10 @@
             });
             this.nodeViews.forEach((nodeView, i) => {
                 nodeView.addToScene(this.scene);
-                nodeView.addListener(new Listener('click', (target) => {
+                var listener = new Listener('click', (target) => {
                     this.inspector.selectedItem = target.model;
-                }));
+                });
+                nodeView.addListener(listener);
             });
 
             this.searchBtn = document.getElementById('searchBtn');
