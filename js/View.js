@@ -45,20 +45,6 @@
             return this._selected;
         }
 
-        get color() {
-            return this.shapre.color;
-        }
-        set color(value) {
-            this.shape.color = value;
-        }
-
-        get strokeColor() {
-            return this.shapre.strokeColor;
-        }
-        set strokeColor(value) {
-            this.shape.strokeColor = value;
-        }
-
         set appearance(value) {
             this.shape.appearance = value;
         }
