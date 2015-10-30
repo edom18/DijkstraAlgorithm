@@ -39,10 +39,10 @@
         }
 
         set selected(value) {
-            this._selected = value;
+            this.shape.isSelected = value;
         }
         get selected() {
-            return this._selected;
+            return this.shape.isSelected;
         }
 
         set appearance(value) {
