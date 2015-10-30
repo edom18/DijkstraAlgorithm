@@ -159,15 +159,15 @@
 
     class NormalDecorator extends Decorator {
         decorate(context) {
-            context.fillStyle   = this._shape.appearnce.color;
-            context.strokeStyle = this._shape.appearnce.strokeColor;
+            context.fillStyle   = this._shape.appearance.color;
+            context.strokeStyle = this._shape.appearance.strokeColor;
         }
     }
 
     class HoverDecorator extends Decorator {
         decorate(context) {
-            context.fillStyle   = this._shape.appearnce.hoverColor;
-            context.strokeStyle = this._shape.appearnce.hoverStrokeColor;
+            context.fillStyle   = this._shape.appearance.hoverColor;
+            context.strokeStyle = this._shape.appearance.hoverStrokeColor;
         }
     }
 
@@ -181,7 +181,7 @@
             this.isHovering = false;
             this._dispatcher = new Dispatcher();
 
-            this.appearnce = appearance || new Appearance();
+            this.appearance = appearance || new Appearance();
 
             this.normalDecorator = new NormalDecorator(this);
             this.hoverDecorator  = new HoverDecorator(this);

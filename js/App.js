@@ -105,7 +105,7 @@
                 nodeView.appearance.color = 'black';
             });
             this.edgeViews.forEach((edgeView, i) => {
-                edgeView.appearnce.strokeColor = 'black';
+                edgeView.appearance.strokeColor = 'black';
             });
         }
 

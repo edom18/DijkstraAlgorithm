@@ -58,6 +58,13 @@
         set strokeColor(value) {
             this.shape.strokeColor = value;
         }
+
+        set appearance(value) {
+            this.shape.appearance = value;
+        }
+        get appearance() {
+            return this.shape.appearance;
+        }
     }
 
     /**
@@ -81,10 +88,10 @@
         changeHandler(target, changedData) {
             if (changedData.name === 'adoption') {
                 if (changedData.newValue) {
-                    this.color = 'red';
+                    this.appearance.color = 'red';
                 }
                 else {
-                    this.color = 'black';
+                    this.appearance.color = 'black';
                 }
             }
         }
@@ -126,10 +133,10 @@
         changeHandler(target, changedData) {
             if (changedData.name === 'adoption') {
                 if (changedData.newValue) {
-                    this.strokeColor = 'red';
+                    this.appearance.strokeColor = 'red';
                 }
                 else {
-                    this.strokeColor = 'black';
+                    this.appearance.strokeColor = 'black';
                 }
             }
 
