@@ -118,6 +118,23 @@
 
             this._hoverColor       = 'blue';
             this._hoverStrokeColor = 'blue';
+
+            this._selectedColor = 'orange';
+            this._selectedStrokeColor = 'red';
+        }
+
+        set selectedColor(value) {
+            this._selectedColor = value;
+        }
+        get selectedColor() {
+            return this._selectedColor;
+        }
+
+        set selectedStrokeColor(value) {
+            this._selectedStrokeColor = value;
+        }
+        get selectedStrokeColor() {
+            return this._selectedStrokeColor;
         }
 
         set color(value) {
@@ -171,6 +188,13 @@
         }
     }
 
+    class SelectedDecorator extends Decorator {
+        decorate(context) {
+            context.fillStyle   = this._shape.appearance.selectedColor;
+            context.strokeStyle = this._shape.appearance.selectedStrokeColor;
+        }
+    }
+
     //////////////////////////////////////////////////
 
     /**
@@ -179,12 +203,14 @@
     class Shape {
         constructor(appearance) {
             this.isHovering = false;
+            this.isSelected = false;
             this._dispatcher = new Dispatcher();
 
             this.appearance = appearance || new Appearance();
 
-            this.normalDecorator = new NormalDecorator(this);
-            this.hoverDecorator  = new HoverDecorator(this);
+            this.normalDecorator   = new NormalDecorator(this);
+            this.hoverDecorator    = new HoverDecorator(this);
+            this.selectedDecorator = new SelectedDecorator(this);
 
             this.zIndex = 0;
         }
@@ -200,6 +226,9 @@
         decorate(context) {
             if (this.isHovering) {
                 this.hoverDecorator.decorate(context);
+            }
+            else if (this.isSelected){
+                this.selectedDecorator.decorate(context);
             }
             else {
                 this.normalDecorator.decorate(context);
