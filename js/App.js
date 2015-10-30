@@ -8,7 +8,7 @@
             this.inspector = new Inspector();
 
             document.body.appendChild(this.renderer.element);
-            this.setupEvents();
+            this.setupDOMEvents();
         }
         static getInstance() {
             if (!this._instance) {
@@ -78,27 +78,13 @@
         launch() {
             this.nodeViews = this.createNodes();
             this.edgeViews = [];
-            EdgeManager.getInstance().edges.forEach((edge, i) => {
-                var nodeA = this.fetchNodeViewById(edge.nodeA.id);
-                var nodeB = this.fetchNodeViewById(edge.nodeB.id);
-                var edgeView = new EdgeView(edge, nodeA, nodeB);
-                edgeView.addToScene(this.scene);
-                edgeView.addListener(new Listener('click', (target) => {
-                    this.inspector.selectedItem = target.model;
-                }));
-                this.edgeViews.push(edgeView);
-            });
-            this.nodeViews.forEach((nodeView, i) => {
-                nodeView.addToScene(this.scene);
-                var listener = new Listener('click', (target) => {
-                    this.inspector.selectedItem = target.model;
-                });
-                nodeView.addListener(listener);
-            });
+
+            this.setupEvents();
 
             this.searchBtn = document.getElementById('searchBtn');
             this.searchBtn.addEventListener('click', this.searchHandler.bind(this), false);
         }
+
 
         clear() {
             this.nodeViews.forEach((nodeView, i) => {
@@ -117,9 +103,32 @@
             dijkstraSearch(this.getNodes(), startNode, goalNode);
         }
 
-        setupEvents() {
+        setupDOMEvents() {
             this.renderer.element.addEventListener('mousemove', this.mousemoveHandler.bind(this), false);
             this.renderer.element.addEventListener('click',     this.clickHandler.bind(this),     false);
+        }
+
+        setupEvents() {
+            EdgeManager.getInstance().edges.forEach((edge, i) => {
+                var nodeA = this.fetchNodeViewById(edge.nodeA.id);
+                var nodeB = this.fetchNodeViewById(edge.nodeB.id);
+                var edgeView = new EdgeView(edge, nodeA, nodeB);
+                edgeView.addToScene(this.scene);
+                edgeView.addListener(new Listener('click', (target) => {
+                    target.selected = true;
+                    this.inspector.selectedItem = target.model;
+                }));
+                this.edgeViews.push(edgeView);
+            });
+
+            this.nodeViews.forEach((nodeView, i) => {
+                nodeView.addToScene(this.scene);
+                var listener = new Listener('click', (target) => {
+                    target.selected = true;
+                    this.inspector.selectedItem = target.model;
+                });
+                nodeView.addListener(listener);
+            });
         }
 
         mousemoveHandler(evt) {
@@ -130,10 +139,21 @@
         }
 
         clickHandler(evt) {
+            this.unselect();
+
             var rect = evt.target.getBoundingClientRect();
             var x = evt.clientX - rect.left;
             var y = evt.clientY - rect.top;
             this.scene.click(x, y);
+        }
+
+        unselect() {
+            this.edgeViews.forEach((edgeView, i) => {
+                edgeView.selected = false;
+            });
+            this.nodeViews.forEach((nodeView, i) => {
+                nodeView.selected = false;
+            });
         }
 
         runLoop() {
