@@ -183,10 +183,6 @@
 
             this.appearnce = appearance || new Appearance();
 
-            // this.color       = 'black';
-            // this.strokeColor = 'rgba(0, 0, 0, 0)';
-            // this.hoverStrokeColor = 'rgba(0, 0, 0, 0)';
-
             this.normalDecorator = new NormalDecorator(this);
             this.hoverDecorator  = new HoverDecorator(this);
 
@@ -213,31 +209,6 @@
         draw(context) {
             //
         }
-
-        // set color(value) {
-        //     this._color = value;
-        // }
-        // get color() {
-        //     return this._color;
-        // }
-        // set hoverColor(value) {
-        //     this._hoverColor = value;
-        // }
-        // get hoverColor() {
-        //     return this._hoverColor;
-        // }
-        // set strokeColor(value) {
-        //     this._strokeColor = value;
-        // }
-        // get strokeColor() {
-        //     return this._strokeColor;
-        // }
-        // set hoverStrokeColor(value) {
-        //     this._hoverStrokeColor = value;
-        // }
-        // get hoverStrokeColor() {
-        //     return this._hoverStrokeColor;
-        // }
 
         hitTest(x, y) {
             return false;
@@ -312,10 +283,6 @@
             this.dy = this.end.y - this.start.y;
             this.a  = this.dx * this.dx + this.dy * this.dy;
             this.detectDistance = 20;
-
-            // this.color       = 'rgba(0, 0, 0, 0)';
-            // this.strokeColor = 'black';
-            // this.hoverStrokeColor = 'orange';
         } 
         draw(context) {
             super.draw(context);
