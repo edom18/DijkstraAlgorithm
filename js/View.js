@@ -9,18 +9,29 @@
             this.shape       = new Shape();
             this._dispatcher = new Dispatcher();
             this._selected   = false;
+            this._map = new Map();
         }
         
         addListener(listener) {
-            var type = listener.type;
-            this.shape.addListener(new Listener(type, (target, referData) => {
-                this._dispatcher.dispatch(type, this, referData);
-            }));
+            var intercepter = new ListenerIntercepter(listener, (context, referData) => {
+                this._dispatcher.dispatch(listener.type, this, referData);
+            });
+            this.shape.addListener(intercepter);
             this._dispatcher.addListener(listener);
+
+            this._map.set(listener, intercepter);
         }
         
         removeListener(listener) {
-            this.shape.removeListener(listener);
+            if (!this._map.has(listener)) {
+                return;
+            }
+
+            var intercepter = this._map.get(listener);
+            this._dispatcher.removeListener(listener);
+            this.shape.removeListener(intercepter);
+
+            this._map.delete(listener);
         }
 
         addToScene(scene) {
