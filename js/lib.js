@@ -143,7 +143,7 @@
     class Shape {
         constructor() {
             this.isHovering = false;
-            this.dispatcher = new Dispatcher();
+            this._dispatcher = new Dispatcher();
 
             this.color       = 'black';
             this.strokeColor = 'rgba(0, 0, 0, 0)';
@@ -155,10 +155,10 @@
             this.zIndex = 0;
         }
         addListener(listener) {
-            this.dispatcher.addListener(listener);
+            this._dispatcher.addListener(listener);
         }
         removeListener(listener) {
-            this.dispatcher.removeListener(listener);
+            this._dispatcher.removeListener(listener);
         }
         decorate(context) {
             if (this.isHovering) {
@@ -205,7 +205,7 @@
             this.isHovering = false;
         }
         click() {
-            this.dispatcher.dispatch('click', this);
+            this._dispatcher.dispatch('click', this);
         }
     }
 
