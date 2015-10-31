@@ -10,6 +10,9 @@
             this._dispatcher = new Dispatcher();
             this._type = '';
         }
+
+        clear() { }
+
         get type() {
             return this._type;
         }
@@ -47,12 +50,7 @@
             this.id = id;
             this.edges = [];
 
-            this.set('done', false);
-            this.set('cost', -1);
-            this.set('adoption', false);
-            this.set('previousNode', null);
-            this.set('isStart', false);
-            this.set('isGoal', false);
+            this.clear();
 
             this._type = 'node';
         }
@@ -94,6 +92,15 @@
             this.edges.forEach((edge, i) => {
                 edge.start();
             });
+        }
+
+        clear() {
+            this.set('done', false);
+            this.set('cost', -1);
+            this.set('adoption', false);
+            this.set('previousNode', null);
+            this.set('isStart', false);
+            this.set('isGoal', false);
         }
 
         addEdge(edge) {
@@ -176,6 +183,10 @@
             this._id = EdgeManager.getInstance().generateId(nodeA, nodeB);
 
             this._type = 'edge';
+        }
+
+        clear() {
+            this.set('adoption', false);
         }
 
         start() {
