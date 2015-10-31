@@ -83,7 +83,6 @@
                 return;
             }
 
-            this.clearEvents();
             this._element = value;
 
             this.setupElements();
@@ -201,7 +200,7 @@
         }
 
         setupEvents() {
-            this._costField.addEventListener('change', this.updateHandler, false);
+            this._costField.addEventListener('change', this.changeHandler, false);
         }
 
         render() {
