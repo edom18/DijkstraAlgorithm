@@ -47,7 +47,12 @@
             this.id = id;
             this.edges = [];
 
-            this.clear();
+            this.set('done', false);
+            this.set('cost', -1);
+            this.set('adoption', false);
+            this.set('previousNode', null);
+            this.set('isStart', false);
+            this.set('isGoal', false);
 
             this._type = 'node';
         }
@@ -80,16 +85,14 @@
             return true;
         }
 
-        clear() {
+        start() {
             this.set('done', false);
             this.set('cost', -1);
             this.set('adoption', false);
             this.set('previousNode', null);
-            this.set('isStart', false);
-            this.set('isGoal', false);
 
             this.edges.forEach((edge, i) => {
-                edge.clear();
+                edge.start();
             });
         }
 
@@ -168,14 +171,14 @@
             this._nodeB = nodeB;
             this._cost  = 1;
 
-            this.clear();
+            this.set('adoption', false);
 
             this._id = EdgeManager.getInstance().generateId(nodeA, nodeB);
 
             this._type = 'edge';
         }
 
-        clear() {
+        start() {
             this.set('adoption', false);
         }
 
