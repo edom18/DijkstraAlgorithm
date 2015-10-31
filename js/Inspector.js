@@ -30,6 +30,11 @@
         }
     }
 
+    /**
+     * Model renderer base class.
+     *
+     * @param {Model} Want to be shown a model.
+     */
     class ModelRenderer {
         constructor(model) {
             this._model   = model;
@@ -46,10 +51,25 @@
             this._model.addListener(this._modelListener);
         }
 
+        /**
+         * This is a virtual method.
+         * Render the model data.
+         */
         render() { }
+
+        /**
+         * Set up each events for DOMs.
+         */
         setupEvents() { }
+
+        /**
+         * Update if the model is updated.
+         */
         update() { }
 
+        /**
+         * Clear all events.
+         */
         clearEvents() {
             this._model.removeListener(this._modelErrorListener);
             this._modelErrorListener = null;
@@ -73,6 +93,9 @@
             return this._element;
         }
 
+        /**
+         * Dispose. Call for discard this class.
+         */
         dispose() {
             this.clearEvents();
         }
