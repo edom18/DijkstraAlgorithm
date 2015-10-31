@@ -109,11 +109,12 @@
         }
 
         clearEvents() {
+            super.clearEvents();
+
             if (!this.element) {
                 return;
             }
 
-            super.clearEvents();
             this._startCheckbox.removeEventListener('change', this.changeHandler);
             this._goalCheckbox.removeEventListener('change',  this.changeHandler);
         }
@@ -162,11 +163,11 @@
         }
 
         clearEvents() {
+            super.clearEvents();
+
             if (!this.element) {
                 return;
             }
-
-            super.clearEvents();
 
             this._costField.removeEventListener('change', this.changeHandler);
         }
