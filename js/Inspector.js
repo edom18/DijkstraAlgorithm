@@ -63,6 +63,10 @@
         constructor(model) {
             super(model);
 
+            this._modelListener = new Listener('error', (target, referData) => {
+                console.log(target, referData);
+            });
+            this._model.addListener(this._modelListener);
             this.updateHandler = this._updateHandler.bind(this);
         }
 
@@ -74,21 +78,30 @@
         }
 
         update() {
-            this._typeField    = this.element.querySelector('.typeField');
-            this._costField    = this.element.querySelector('.costField');
-            this._updateButton = this.element.querySelector('.updateButton');
+            this._typeField     = this.element.querySelector('.typeField');
+            this._costField     = this.element.querySelector('.costField');
+            this._updateButton  = this.element.querySelector('.updateButton');
+            this._startCheckbox = this.element.querySelector('.startNodeCheckbox');
+            this._goalCheckbox  = this.element.querySelector('.goalNodeCheckbox');
         }
 
         _updateHandler(evt) {
-            console.log(this);
+            var isStart = this._startCheckbox.checked;
+            var isGoal  = this._goalCheckbox.checked;
+            this._model.set('isStart', isStart);
+            this._model.set('isGoal', isGoal);
         }
 
         setupEvents() {
             this._updateButton.addEventListener('click', this.updateHandler, false);
         }
+
         render() {
             this._typeField.innerHTML = this._model.type;
-            this._costField.innerHTML = this._model.cost;
+            this._costField.value     = this._model.cost;
+
+            this._startCheckbox.checked = this._model.isStart;
+            this._goalCheckbox.checked  = this._model.isGoal;
         }
     }
 
