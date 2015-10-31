@@ -92,6 +92,8 @@
 
             this.setupEvents();
 
+            this.setupScene();
+
             this.searchBtn = document.getElementById('searchBtn');
             this.searchBtn.addEventListener('click', this.searchHandler.bind(this), false);
         }
@@ -114,6 +116,15 @@
             dijkstraSearch(this.getNodes(), startNode, goalNode);
         }
 
+        setupScene() {
+            this.edgeViews.forEach((edgeView, i) => {
+                edgeView.addToScene(this.scene);
+            });
+            this.nodeViews.forEach((nodeView, i) => {
+                nodeView.addToScene(this.scene);
+            });
+        }
+
         setupDOMEvents() {
             this.renderer.element.addEventListener('mousemove', this.mousemoveHandler.bind(this), false);
             this.renderer.element.addEventListener('click',     this.clickHandler.bind(this),     false);
@@ -121,7 +132,6 @@
 
         setupEvents() {
             this.edgeViews.forEach((edgeView, i) => {
-                edgeView.addToScene(this.scene);
                 var listener = new Listener('click', (target) => {
                     target.selected = true;
                     this.inspector.selectedItem = target.model;
@@ -130,7 +140,6 @@
             });
 
             this.nodeViews.forEach((nodeView, i) => {
-                nodeView.addToScene(this.scene);
                 var listener = new Listener('click', (target) => {
                     target.selected = true;
                     this.inspector.selectedItem = target.model;
