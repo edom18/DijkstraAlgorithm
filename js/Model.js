@@ -52,11 +52,41 @@
             this._type = 'node';
         }
 
+        set(key, value) {
+            if (!this.validate(key, value)) {
+                this._dispatcher.dispatch('error', this, {
+                    reason: 'Cannot set true to both flags.',
+                    key: key,
+                    value: value
+                })
+                return;
+            }
+
+            super.set(key, value);
+        }
+
+        validate(key, value) {
+            if (key === 'isStart') {
+                if (value && this.isGoal) {
+                    return false;
+                }
+            }
+            if (key === 'isGoal') {
+                if (value && this.isStart) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
         clear() {
             this.set('done', false);
             this.set('cost', -1);
             this.set('adoption', false);
             this.set('previousNode', null);
+            this.set('isStart', false);
+            this.set('isGoal', false);
 
             this.edges.forEach((edge, i) => {
                 edge.clear();
