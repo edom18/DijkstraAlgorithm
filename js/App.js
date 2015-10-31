@@ -132,10 +132,7 @@
          */
         searchHandler() {
             this.clear();
-
-            var startNode = 0;
-            var goalNode  = 5;
-            dijkstraSearch(this.getNodes(), startNode, goalNode);
+            dijkstraSearch(this.getNodes());
         }
 
         /**
