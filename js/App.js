@@ -10,6 +10,10 @@
             document.body.appendChild(this.renderer.element);
             this.setupDOMEvents();
         }
+
+        /**
+         * Get instance (This class is singleton)
+         */
         static getInstance() {
             if (!this._instance) {
                 this._instance = new Application();
@@ -56,6 +60,9 @@
             ];
         }
 
+        /**
+         * Create edgeViews with nodes.
+         */
         createEdgeViews() {
             var edgeViews = [];
             EdgeManager.getInstance().edges.forEach((edge, i) => {
@@ -67,6 +74,9 @@
             return edgeViews;
         }
 
+        /**
+         * Fetch node from nodeViews by id.
+         */
         fetchNodeViewById(id) {
             var node = null;
             var hasNode = this.nodeViews.some((n, i) => {
@@ -78,6 +88,9 @@
             return node;
         }
 
+        /**
+         * Get all nodes from node views.
+         */
         getNodes() {
             var nodes = [];
             this.nodeViews.forEach((nodeView, i) => {
@@ -86,6 +99,9 @@
             return nodes;
         }
 
+        /**
+         * Launch application.
+         */
         launch() {
             this.nodeViews = this.createNodes();
             this.edgeViews = this.createEdgeViews();
@@ -99,6 +115,9 @@
         }
 
 
+        /**
+         * Clear style to all items.
+         */
         clear() {
             this.nodeViews.forEach((nodeView, i) => {
                 nodeView.appearance.color = 'black';
@@ -108,6 +127,9 @@
             });
         }
 
+        /**
+         * Search node path with Dijkstra algorithm.
+         */
         searchHandler() {
             this.clear();
 
@@ -116,6 +138,10 @@
             dijkstraSearch(this.getNodes(), startNode, goalNode);
         }
 
+        /**
+         * Set up scene.
+         * Add all items(edgeView / nodeView) to the scene.
+         */
         setupScene() {
             this.edgeViews.forEach((edgeView, i) => {
                 edgeView.addToScene(this.scene);
@@ -125,11 +151,17 @@
             });
         }
 
+        /**
+         * Set up dom events to renderer(a.k.a Canvas)
+         */
         setupDOMEvents() {
             this.renderer.element.addEventListener('mousemove', this.mousemoveHandler.bind(this), false);
             this.renderer.element.addEventListener('click',     this.clickHandler.bind(this),     false);
         }
 
+        /**
+         * Set up each views event.
+         */
         setupEvents() {
             this.edgeViews.forEach((edgeView, i) => {
                 var listener = new Listener('click', (target) => {
@@ -148,6 +180,10 @@
             });
         }
 
+        /**
+         * Mouse move handler.
+         * Track mouse move event from the canvas.
+         */
         mousemoveHandler(evt) {
             var rect = evt.target.getBoundingClientRect();
             var x = evt.clientX - rect.left;
@@ -155,6 +191,10 @@
             this.scene.hover(x, y);
         }
 
+        /**
+         * Click handler.
+         * Track click event from the canvas.
+         */
         clickHandler(evt) {
             this.unselect();
 
@@ -164,6 +204,9 @@
             this.scene.click(x, y);
         }
 
+        /**
+         * Unselect all item.
+         */
         unselect() {
             this.edgeViews.forEach((edgeView, i) => {
                 edgeView.selected = false;
@@ -173,10 +216,17 @@
             });
         }
 
+        /**
+         * Run loop
+         */
         runLoop() {
             this.renderer.render(this.scene);
         }
     }
+
+
+
+
 
     function main() {
 
