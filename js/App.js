@@ -165,6 +165,8 @@
         setupEvents() {
             this.edgeViews.forEach((edgeView, i) => {
                 var listener = new Listener('click', (target) => {
+                    this.unselect();
+
                     target.selected = true;
                     this.inspector.selectedItem = target.model;
                 });
@@ -173,6 +175,8 @@
 
             this.nodeViews.forEach((nodeView, i) => {
                 var listener = new Listener('click', (target) => {
+                    this.unselect();
+
                     target.selected = true;
                     this.inspector.selectedItem = target.model;
                 });
@@ -196,8 +200,6 @@
          * Track click event from the canvas.
          */
         clickHandler(evt) {
-            this.unselect();
-
             var rect = evt.target.getBoundingClientRect();
             var x = evt.clientX - rect.left;
             var y = evt.clientY - rect.top;
