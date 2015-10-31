@@ -34,11 +34,29 @@
         constructor(model) {
             this._model   = model;
             this._element = null;
+
+            this._modelErrorListener = new Listener('error', (target, referData) => {
+                console.log(target, referData);
+            });
+            this._model.addListener(this._modelErrorListener);
+
+            this._modelListener = new Listener('change', (target, referData) => {
+                this.update();
+            });
+            this._model.addListener(this._modelListener);
         }
+
         render() { }
         setupEvents() { }
-        clearEvents() { }
         update() { }
+
+        clearEvents() {
+            this._model.removeListener(this._modelErrorListener);
+            this._modelErrorListener = null;
+
+            this._model.removeListener(this._modelListener);
+            this._modelListener = null;
+        }
 
         set element(value) {
             if (this._element === value) {
@@ -64,17 +82,7 @@
         constructor(model) {
             super(model);
 
-            this._modelErrorListener = new Listener('error', (target, referData) => {
-                console.log(target, referData);
-            });
-            this._model.addListener(this._modelErrorListener);
-
-            this._modelListener = new Listener('change', (target, referData) => {
-                console.log(referData);
-            });
-            this._model.addListener(this._modelListener);
-
-            this.updateHandler = this._updateHandler.bind(this);
+            this.changeHandler = this._changeHandler.bind(this);
         }
 
         clearEvents() {
@@ -82,16 +90,12 @@
                 return;
             }
 
-            this._typeField.removeEventListener('change',     this.updateHandler);
-            this._costField.removeEventListener('change',     this.updateHandler);
-            this._startCheckbox.removeEventListener('change', this.updateHandler);
-            this._goalCheckbox.removeEventListener('change',  this.updateHandler);
+            super.clearEvents();
 
-            this._model.removeListener(this._modelErrorListener);
-            this._modelErrorListener = null;
-
-            this._model.removeListener(this._modelListener);
-            this._modelListener = null;
+            this._typeField.removeEventListener('change',     this.changeHandler);
+            this._costField.removeEventListener('change',     this.changeHandler);
+            this._startCheckbox.removeEventListener('change', this.changeHandler);
+            this._goalCheckbox.removeEventListener('change',  this.changeHandler);
         }
 
         setupElements() {
@@ -101,22 +105,26 @@
             this._goalCheckbox  = this.element.querySelector('.goalNodeCheckbox');
         }
 
-        _updateHandler(evt) {
-            this.update();
+        _changeHandler(evt) {
+            this.change();
         }
 
-        update() {
+        change() {
             var isStart = this._startCheckbox.checked;
             var isGoal  = this._goalCheckbox.checked;
             this._model.set('isStart', isStart);
             this._model.set('isGoal', isGoal);
         }
 
+        update() {
+            this.render();
+        }
+
         setupEvents() {
-            this._typeField.addEventListener('change',     this.updateHandler, false);
-            this._costField.addEventListener('change',     this.updateHandler, false);
-            this._startCheckbox.addEventListener('change', this.updateHandler, false);
-            this._goalCheckbox.addEventListener('change',  this.updateHandler, false);
+            this._typeField.addEventListener('change',     this.changeHandler, false);
+            this._costField.addEventListener('change',     this.changeHandler, false);
+            this._startCheckbox.addEventListener('change', this.changeHandler, false);
+            this._goalCheckbox.addEventListener('change',  this.changeHandler, false);
         }
 
         render() {
@@ -132,7 +140,7 @@
         constructor(model) {
             super(model);
 
-            this.updateHandler = this._updateHandler.bind(this);
+            this.changeHandler = this._changeHandler.bind(this);
         }
 
         clearEvents() {
@@ -140,16 +148,22 @@
                 return;
             }
 
-            this._costField.removeEventListener('change', this.updateHandler);
+            super.clearEvents();
+
+            this._costField.removeEventListener('change', this.changeHandler);
         }
 
-        _updateHandler(evt) {
-            this.update();
+        _changeHandler(evt) {
+            this.change();
+        }
+
+        change() {
+            var cost = +this._costField.value;
+            this._model.set('cost', cost);
         }
 
         update() {
-            var cost = +this._costField.value;
-            this._model.set('cost', cost);
+            this.render();
         }
 
         setupElements() {
