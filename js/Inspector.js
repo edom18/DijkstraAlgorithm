@@ -38,6 +38,7 @@
         render() { }
         setupEvents() { }
         clearEvents() { }
+        update() { }
 
         set element(value) {
             if (this._element === value) {
@@ -47,7 +48,7 @@
             this.clearEvents();
             this._element = value;
 
-            this.update();
+            this.setupElements();
             this.setupEvents();
         }
         get element() {
@@ -80,7 +81,12 @@
             if (!this.element) {
                 return;
             }
-            this._updateButton.removeEventListener('click', this.updateHandler, false);
+
+            this._typeField.removeEventListener('change',     this.updateHandler);
+            this._costField.removeEventListener('change',     this.updateHandler);
+            this._startCheckbox.removeEventListener('change', this.updateHandler);
+            this._goalCheckbox.removeEventListener('change',  this.updateHandler);
+
             this._model.removeListener(this._modelErrorListener);
             this._modelErrorListener = null;
 
@@ -88,15 +94,18 @@
             this._modelListener = null;
         }
 
-        update() {
+        setupElements() {
             this._typeField     = this.element.querySelector('.typeField');
             this._costField     = this.element.querySelector('.costField');
-            this._updateButton  = this.element.querySelector('.updateButton');
             this._startCheckbox = this.element.querySelector('.startNodeCheckbox');
             this._goalCheckbox  = this.element.querySelector('.goalNodeCheckbox');
         }
 
         _updateHandler(evt) {
+            this.update();
+        }
+
+        update() {
             var isStart = this._startCheckbox.checked;
             var isGoal  = this._goalCheckbox.checked;
             this._model.set('isStart', isStart);
@@ -104,7 +113,10 @@
         }
 
         setupEvents() {
-            this._updateButton.addEventListener('click', this.updateHandler, false);
+            this._typeField.addEventListener('change',     this.updateHandler, false);
+            this._costField.addEventListener('change',     this.updateHandler, false);
+            this._startCheckbox.addEventListener('change', this.updateHandler, false);
+            this._goalCheckbox.addEventListener('change',  this.updateHandler, false);
         }
 
         render() {
@@ -127,22 +139,26 @@
             if (!this.element) {
                 return;
             }
-            this._updateButton.removeEventListener('click', this.updateHandler, false);
+
+            this._costField.removeEventListener('change', this.updateHandler);
         }
 
         _updateHandler(evt) {
+            this.update();
+        }
+
+        update() {
             var cost = +this._costField.value;
             this._model.set('cost', cost);
         }
 
-        update() {
-            this._typeField    = this.element.querySelector('.typeField');
-            this._costField    = this.element.querySelector('.costField');
-            this._updateButton = this.element.querySelector('.updateButton');
+        setupElements() {
+            this._typeField = this.element.querySelector('.typeField');
+            this._costField = this.element.querySelector('.costField');
         }
 
         setupEvents() {
-            this._updateButton.addEventListener('click', this.updateHandler, false);
+            this._costField.addEventListener('change', this.updateHandler, false);
         }
 
         render() {
