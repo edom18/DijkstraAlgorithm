@@ -112,13 +112,16 @@
 
             this.searchBtn = document.getElementById('searchBtn');
             this.searchBtn.addEventListener('click', this.searchHandler.bind(this), false);
+
+            this.clearBtn = document.getElementById('clearBtn');
+            this.clearBtn.addEventListener('click', this.clearHandler.bind(this), false);
         }
 
 
         /**
          * Clear style to all items.
          */
-        clear() {
+        start() {
             this.nodeViews.forEach((nodeView, i) => {
                 nodeView.appearance.color = 'black';
             });
@@ -127,12 +130,28 @@
             });
         }
 
+        clear() {
+            this.getNodes().forEach((node, i) => {
+                node.clear();
+            });
+            EdgeManager.getInstance().edges.forEach((edge, i) => {
+                edge.clear();
+            });
+        }
+
         /**
          * Search node path with Dijkstra algorithm.
          */
         searchHandler() {
-            this.clear();
+            this.start();
             dijkstraSearch(this.getNodes());
+        }
+
+        /**
+         * Clear data
+         */
+        clearHandler() {
+            this.clear();
         }
 
         /**
