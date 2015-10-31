@@ -114,9 +114,6 @@
             }
 
             super.clearEvents();
-
-            this._typeField.removeEventListener('change',     this.changeHandler);
-            this._costField.removeEventListener('change',     this.changeHandler);
             this._startCheckbox.removeEventListener('change', this.changeHandler);
             this._goalCheckbox.removeEventListener('change',  this.changeHandler);
         }
@@ -144,8 +141,6 @@
         }
 
         setupEvents() {
-            this._typeField.addEventListener('change',     this.changeHandler, false);
-            this._costField.addEventListener('change',     this.changeHandler, false);
             this._startCheckbox.addEventListener('change', this.changeHandler, false);
             this._goalCheckbox.addEventListener('change',  this.changeHandler, false);
         }
