@@ -1,20 +1,38 @@
 (function (namespace) {
     'use strict';
 
+    function getEdgeNode(nodes) {
+        var result = {};
+        nodes.forEach((node, i) => {
+            if (node.isStart) {
+                result.startNode = node;
+            }
+            if (node.isGoal) {
+                result.goalNode = node;
+            }
+        });
+        return result;
+    }
+
     /**
      * Dijkstra path search
      *
      * @param {Array.<Node>} nodes
      */
-    function dijkstraSearch(nodes, startId, goalId) {
+    function dijkstraSearch(nodes) {
 
         // initialize costs
         nodes.forEach((node, i) => {
-            node.clear()
+            node.start()
         });
 
-        var startNode = nodes[startId];
-        var goalNode  = nodes[goalId];
+        var edgeNode  = getEdgeNode(nodes);
+        if (!(edgeNode.startNode && edgeNode.goalNode)) {
+            console.log('Must set start and goal node.');
+            return;
+        }
+        var startNode = edgeNode.startNode;
+        var goalNode  = edgeNode.goalNode;
         
         // start node is first node
         startNode.cost = 0;
