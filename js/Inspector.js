@@ -14,7 +14,8 @@
             }
             this._renderer = this.choiseRenderer(model);
             this._renderer.element = this._element;
-            this._renderer.render();
+
+            this.render();
         }
         choiseRenderer(model) {
             if (model.type === 'edge') {
