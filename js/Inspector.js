@@ -75,6 +75,8 @@
                 return;
             }
             this._updateButton.removeEventListener('click', this.updateHandler, false);
+            this._model.removeListener(this._modelListener);
+            this._modelListener = null;
         }
 
         update() {
