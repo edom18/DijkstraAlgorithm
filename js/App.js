@@ -56,6 +56,17 @@
             ];
         }
 
+        createEdgeViews() {
+            var edgeViews = [];
+            EdgeManager.getInstance().edges.forEach((edge, i) => {
+                var nodeA = this.fetchNodeViewById(edge.nodeA.id);
+                var nodeB = this.fetchNodeViewById(edge.nodeB.id);
+                var edgeView = new EdgeView(edge, nodeA, nodeB);
+                edgeViews.push(edgeView);
+            });
+            return edgeViews;
+        }
+
         fetchNodeViewById(id) {
             var node = null;
             var hasNode = this.nodeViews.some((n, i) => {
@@ -77,7 +88,7 @@
 
         launch() {
             this.nodeViews = this.createNodes();
-            this.edgeViews = [];
+            this.edgeViews = this.createEdgeViews();
 
             this.setupEvents();
 
@@ -109,16 +120,13 @@
         }
 
         setupEvents() {
-            EdgeManager.getInstance().edges.forEach((edge, i) => {
-                var nodeA = this.fetchNodeViewById(edge.nodeA.id);
-                var nodeB = this.fetchNodeViewById(edge.nodeB.id);
-                var edgeView = new EdgeView(edge, nodeA, nodeB);
+            this.edgeViews.forEach((edgeView, i) => {
                 edgeView.addToScene(this.scene);
-                edgeView.addListener(new Listener('click', (target) => {
+                var listener = new Listener('click', (target) => {
                     target.selected = true;
                     this.inspector.selectedItem = target.model;
-                }));
-                this.edgeViews.push(edgeView);
+                });
+                edgeView.addListener(listener);
             });
 
             this.nodeViews.forEach((nodeView, i) => {
