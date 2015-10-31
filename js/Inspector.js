@@ -153,6 +153,16 @@
             this._startCheckbox.checked = this._model.isStart;
             this._goalCheckbox.checked  = this._model.isGoal;
         }
+
+        dispose() {
+            super.dispose();
+
+            this._typeField.innerHTML = '';
+            this._costField.value = '';
+
+            this._startCheckbox.checked = false;
+            this._goalCheckbox.checked  = false;
+        }
     }
 
     class EdgeModelRenderer extends ModelRenderer {
@@ -197,6 +207,13 @@
         render() {
             this._typeField.innerHTML = this._model.type;
             this._costField.value     = this._model.cost;
+        }
+
+        dispose() {
+            super.dispose();
+
+            this._typeField.innerHTML = '';
+            this._costField.value = '';
         }
     }
 
