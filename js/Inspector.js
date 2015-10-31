@@ -63,10 +63,16 @@
         constructor(model) {
             super(model);
 
-            this._modelListener = new Listener('error', (target, referData) => {
+            this._modelErrorListener = new Listener('error', (target, referData) => {
                 console.log(target, referData);
             });
+            this._model.addListener(this._modelErrorListener);
+
+            this._modelListener = new Listener('change', (target, referData) => {
+                console.log(referData);
+            });
             this._model.addListener(this._modelListener);
+
             this.updateHandler = this._updateHandler.bind(this);
         }
 
@@ -75,6 +81,9 @@
                 return;
             }
             this._updateButton.removeEventListener('click', this.updateHandler, false);
+            this._model.removeListener(this._modelErrorListener);
+            this._modelErrorListener = null;
+
             this._model.removeListener(this._modelListener);
             this._modelListener = null;
         }
