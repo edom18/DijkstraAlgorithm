@@ -38,6 +38,13 @@
                 oldValue: oldValue
             });
         }
+
+        /**
+         * Dispose this model
+         */
+        dispose() {
+            this._dispatcher.dispose();
+        }
     }
 
     /**
@@ -135,6 +142,8 @@
             return this._nodes;
         }
 
+
+
         /**
          * Create a node
          * This is a factory method.
@@ -168,9 +177,16 @@
             });
 
             if (hasNode) {
-                this._nodes.splice(index, 1);
+                var removedModel = this._nodes.splice(index, 1)[0];
+                removedModel.dispose();
             }
         }
+
+        /**
+         * Fetch a model by id
+         *
+         * @param {String} id
+         */
         fetchById(id) {
             var model = null;
             this._nodes.some((node, i) => {
