@@ -51,6 +51,9 @@
                 listener.fire(context, referData);
             });
         }
+        dispose() {
+            this._listeners = null;
+        }
     }
 
     /**
