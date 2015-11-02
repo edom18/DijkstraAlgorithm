@@ -142,47 +142,59 @@
             return this._nodes;
         }
 
+        checkStartFlag(targetNode, referData) {
+            if (referData.name !== 'isStart') {
+                return;
+            }
+
+            if (referData.newValue === false) {
+                return;
+            }
+
+            var existStart = this._nodes.some((node, i) => {
+                if (node === targetNode) {
+                    return false;
+                }
+
+                if (node.isStart === true) {
+                    return true;
+                }
+            });
+            if (existStart) {
+                console.log('Must set start flag to just one node.');
+
+                targetNode.set('isStart', false);
+            }
+        }
+
+        checkGoalFlag(targetNode, referData) {
+            if (referData.name !== 'isGoal') {
+                return;
+            }
+
+            if (referData.newValue === false) {
+                return;
+            }
+
+            var existGoal = this._nodes.some((node, i) => {
+                if (node === targetNode) {
+                    return false;
+                }
+
+                if (node.isGoal === true) {
+                    return true;
+                }
+            });
+            if (existGoal) {
+                console.log('Must set goal flag to just one node.');
+
+                targetNode.set('isGoal', false);
+            }
+        }
+
         changeHandler(target, referData) {
-            if (referData.name === 'isStart') {
-                if (referData.newValue === false) {
-                    return;
-                }
-
-                var existStart = this._nodes.some((node, i) => {
-                    if (node === target) {
-                        return false;
-                    }
-
-                    if (node.isStart === true) {
-                        return true;
-                    }
-                });
-                if (existStart) {
-                    console.log('Must set start flag to just one node.');
-
-                    target.set('isStart', false);
-                }
-            }
-            if (referData.name === 'isGoal') {
-                if (referData.newValue === false) {
-                    return;
-                }
-
-                var existGoal = this._nodes.some((node, i) => {
-                    if (node === target) {
-                        return false;
-                    }
-
-                    if (node.isGoal === true) {
-                        return true;
-                    }
-                });
-                if (existGoal) {
-                    console.log('Must set goal flag to just one node.');
-
-                    target.set('isGoal', false);
-                }
-            }
+            this.checkStartFlag(target, referData);
+            this.checkGoalFlag(target, referData);
         }
 
 
