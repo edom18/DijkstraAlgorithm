@@ -142,6 +142,48 @@
             return this._nodes;
         }
 
+        changeHandler(target, referData) {
+            if (referData.name === 'isStart') {
+                if (referData.newValue === false) {
+                    return;
+                }
+
+                var existStart = this._nodes.some((node, i) => {
+                    if (node === target) {
+                        return false;
+                    }
+
+                    if (node.isStart === true) {
+                        return true;
+                    }
+                });
+                if (existStart) {
+                    console.log('Must set start flag to just one node.');
+
+                    target.set('isStart', false);
+                }
+            }
+            if (referData.name === 'isGoal') {
+                if (referData.newValue === false) {
+                    return;
+                }
+
+                var existGoal = this._nodes.some((node, i) => {
+                    if (node === target) {
+                        return false;
+                    }
+
+                    if (node.isGoal === true) {
+                        return true;
+                    }
+                });
+                if (existGoal) {
+                    console.log('Must set goal flag to just one node.');
+
+                    target.set('isGoal', false);
+                }
+            }
+        }
 
 
         /**
@@ -152,6 +194,7 @@
             var model = this.fetchById(id);
             if (!model) {
                 model = new Node(id);
+                model.addListener(new Listener('change', this.changeHandler.bind(this)));
                 this.add(model);
             }
             return model;
