@@ -127,13 +127,18 @@
         }
         static getInstance() {
             if (!this._instance) {
-                this._instance = new NodeManager();
+                this._instance = new this();
             }
             return this._instance;
         }
         get nodes() {
             return this._nodes;
         }
+
+        /**
+         * Create a node
+         * This is a factory method.
+         */
         create(id) {
             var model = this.fetchById(id);
             if (!model) {
@@ -142,9 +147,17 @@
             }
             return model;
         }
+
+        /**
+         * Add a model
+         */
         add(model) {
             this._nodes.push(model);
         }
+
+        /**
+         * Remove a model
+         */
         remove(model) {
             var index = -1;
             var hasNode = this._nodes.some((node, i) => {
