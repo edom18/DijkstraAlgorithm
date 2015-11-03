@@ -13,6 +13,18 @@
 
         clear() { }
 
+        /**
+         * Validate key and value
+         *
+         * @param {String} key Key name.
+         * @param {String} value Value of the key.
+         *
+         * @return {Object} result object
+         */
+        validate(key, value) {
+            return true;
+        }
+
         get type() {
             return this._type;
         }
