@@ -63,9 +63,10 @@
         }
 
         set(key, value) {
-            if (!this.validate(key, value)) {
+            var result = this.validate(key, value);
+            if (!result.isValid) {
                 this._dispatcher.dispatch('error', this, {
-                    reason: 'Cannot set true to both flags.',
+                    reason: result.reason,
                     key: key,
                     value: value
                 })
@@ -75,19 +76,36 @@
             super.set(key, value);
         }
 
+        /**
+         * Validate key and value
+         *
+         * @param {String} key Key name.
+         * @param {String} value Value of the key.
+         *
+         * @return {Object} result object
+         */
         validate(key, value) {
+            var result = {
+                isValid: true,
+                reason: null
+            };
+
             if (key === 'isStart') {
                 if (value && this.isGoal) {
-                    return false;
+                    result.isValid = false;
+                    result.reason = 'Cannot set true to both flags.';
+                    return result;
                 }
             }
             if (key === 'isGoal') {
                 if (value && this.isStart) {
-                    return false;
+                    result.isValid = false;
+                    result.reason = 'Cannot set true to both flags.';
+                    return result;
                 }
             }
 
-            return true;
+            return result;
         }
 
         start() {
