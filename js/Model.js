@@ -287,6 +287,45 @@
             this._type = 'edge';
         }
 
+        set(key, value) {
+            var result = this.validate(key, value);
+            if (!result.isValid) {
+                this._dispatcher.dispatch('error', this, {
+                    reason: result.reason,
+                    key: key,
+                    value: value
+                })
+                return;
+            }
+
+            super.set(key, value);
+        }
+
+        /**
+         * Validate key and value
+         *
+         * @param {String} key Key name.
+         * @param {String} value Value of the key.
+         *
+         * @return {Object} result object
+         */
+        validate(key, value) {
+            var result = {
+                isValid: true,
+                reason: null
+            };
+
+            if (key === 'cost') {
+                if (value < 0) {
+                    result.isValid = false;
+                    result.reason  = 'Cannnot set the value under 0.';
+                    return result;
+                }
+            }
+
+            return result;
+        }
+
         clear() {
             this.set('adoption', false);
         }
