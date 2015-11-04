@@ -5,6 +5,44 @@
         var t = x * x * x;
         return b * t + (1.0 - t) * a;
     }
+
+    class Timer {
+        constructor() {
+            this.time = Date.now();
+            this.deltaTime = 0;
+        }
+
+        static getInstance() {
+            if (!this._instance) {
+                this._instance = new Timer();
+            }
+            return this._instance;
+        }
+
+        static tick() {
+            if (!this._instance) {
+                this.getInstance();
+            }
+            var now = Date.now();
+            this._instance.deltaTime = now - this.time;
+            this._instance.time = now;
+        }
+
+        static get time() {
+            if (!this._instance) {
+                this.getInstance();
+            }
+            return this._instance.time;
+        }
+
+        static get deltaTime() {
+            if (!this._instance) {
+                this.getInstance();
+            }
+            return this._instance.deltaTime;
+        }
+    }
+
     /**
      * An event dispatcher
      */
@@ -483,6 +521,7 @@
     }
 
     // Exports
+    namespace.Timer      = Timer;
     namespace.Dispatcher = Dispatcher;
     namespace.Listener   = Listener;
     namespace.Point      = Point;
