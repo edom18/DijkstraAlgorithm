@@ -1,6 +1,10 @@
 (function (namespace) {
     'use strict';
 
+    function easing(x, a, b) {
+        var t = x * x * x;
+        return b * t + (1.0 - t) * a;
+    }
     /**
      * An event dispatcher
      */
