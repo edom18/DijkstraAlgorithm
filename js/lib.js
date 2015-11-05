@@ -299,6 +299,11 @@
         _doAnimate() {
             this.animationTime += Timer.deltaTime;
             this._animationProgress = this.animationTime / this.duration;
+
+            if (this._animationProgress > 1.0) {
+                this._animationProgress = 1.0;
+                this._endAnimate();
+            }
         }
 
         _endAnimate() {
@@ -360,16 +365,7 @@
             super._doAnimate();
 
             var t = this._animationProgress;
-
-            // Done the animation.
-            if (t > 1.0) {
-                t = 1.0;
-                this._endAnimate();
-                this.presentation = easing(t, this.fromValue, this.nextValue);
-            }
-            else {
-                this.presentation = easing(t, this.fromValue, this.nextValue);
-            }
+            this.presentation = easing(t, this.fromValue, this.nextValue);
         }
 
         draw(context) {
