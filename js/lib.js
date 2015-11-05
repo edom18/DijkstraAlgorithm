@@ -295,6 +295,10 @@
             this.duration      = duration;
         }
 
+        _doAnimate() {
+            //
+        }
+
         draw(context) {
             //
         }
