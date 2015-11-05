@@ -147,11 +147,17 @@
         add(point) {
             this.x += point.x;
             this.y += point.y;
+            return this;
         }
 
         sub(point) {
             this.x -= point.x;
             this.y -= point.y;
+            return this;
+        }
+
+        clone() {
+            return new Point(this.x, this.y);
         }
     }
 
