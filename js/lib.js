@@ -337,13 +337,39 @@
 
             this._point = point;
             this.radius = radius || 5;
+
+            this.presentation = 0;
         }
+
         set point(value) {
             this._point = point;
         }
         get point() {
             return this._point;
         }
+
+        animate(value, duration) {
+            super.animate(value, duration);
+            this.fromValue = this.radius;
+            this.radius    = this.nextValue;
+        }
+
+        _doAnimate() {
+            super._doAnimate();
+
+            var t = this._animationProgress;
+
+            // Done the animation.
+            if (t > 1.0) {
+                t = 1.0;
+                this._endAnimate();
+                this.presentation = easing(t, this.fromValue, this.nextValue);
+            }
+            else {
+                this.presentation = easing(t, this.fromValue, this.nextValue);
+            }
+        }
+
         draw(context) {
             super.draw(context);
 
@@ -351,7 +377,16 @@
             context.beginPath();
             context.translate(this.point.x, this.point.y);
             this.decorate(context);
-            context.arc(0, 0, this.radius, Math.PI * 2, false);
+
+            var radius = 0;
+            if (this.isAnimating) {
+                this._doAnimate();
+                radius = this.presentation;
+            }
+            else {
+                radius = this.radius;
+            }
+            context.arc(0, 0, radius, Math.PI * 2, false);
             context.closePath();
 
             context.fill();
