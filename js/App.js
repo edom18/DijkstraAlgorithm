@@ -191,10 +191,6 @@
 
             this.nodeViews.forEach((nodeView, i) => {
                 var listener = new Listener('click', (target) => {
-
-                    Shape.animationWithDuration(3000, () => {
-                        target.point = new Point(300, 500);
-                    });
                     this.unselect();
 
                     target.selected = true;
