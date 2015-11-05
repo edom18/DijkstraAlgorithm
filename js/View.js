@@ -146,6 +146,20 @@
             scene.add(this.shape);
             scene.add(this.text);
         }
+
+        set start(value) {
+            this.shape.start = value;
+        }
+        get start() {
+            return this.shap.start;
+        }
+
+        set end(value) {
+            this.shape.end = value;
+        }
+        get end() {
+            return this.shap.end;
+        }
     }
 
     // Exports
