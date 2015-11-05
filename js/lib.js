@@ -2,8 +2,9 @@
     'use strict';
 
     function easing(x, a, b) {
-        var t = x * x * x;
-        return b * t + (1.0 - t) * a;
+        var t = 1.0 - x;
+        var f = t * t * t;
+        return a * f + b * (1.0 - f);
     }
 
     class Timer {
