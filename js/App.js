@@ -238,6 +238,7 @@
          * Run loop
          */
         runLoop() {
+            Timer.tick();
             this.renderer.render(this.scene);
         }
     }
