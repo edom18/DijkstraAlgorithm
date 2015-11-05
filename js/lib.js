@@ -1,12 +1,26 @@
 (function (namespace) {
     'use strict';
 
+    /**
+     * Easing function take a float value
+     *
+     * @param {Number} x progress 0.0 to 1.0
+     * @param {Number} a start value
+     * @param {Number} b end value
+     */
     function floatEasing(x, a, b) {
         var t = 1.0 - x;
         var f = t * t * t;
         return a * f + b * (1.0 - f);
     }
 
+    /**
+     * Easing function take a point value
+     *
+     * @param {Number} x progress 0.0 to 1.0
+     * @param {Number} a start value
+     * @param {Number} b end value
+     */
     function pointEasing(x, p1, p2) {
         var t = 1.0 - x;
         var f = t * t * t;
@@ -64,6 +78,12 @@
         constructor() {
             this._listeners = {};
         }
+
+        /**
+         * Add a listener
+         *
+         * @param {Listener} listener
+         */
         addListener(listener) {
             if (!(listener instanceof Listener)) {
                 return;
@@ -76,6 +96,12 @@
 
             this._listeners[type].push(listener);
         }
+
+        /**
+         * Remove a listener
+         *
+         * @param {Listener} listener
+         */
         removeListener(listener) {
             var type = listener.type;
             var listeners = this._listeners[type];
@@ -97,6 +123,14 @@
 
             listeners.splice(index, 1);
         }
+
+        /**
+         * Dispatch an event
+         *
+         * @param {String} type The event type
+         * @param {Object} context context object
+         * @param {Object} referData
+         */
         dispatch(type, context, referData) {
             var listeners = this._listeners[type];
             if (!listeners) {
@@ -107,6 +141,10 @@
                 listener.fire(context, referData);
             });
         }
+
+        /**
+         * Dispose this class
+         */
         dispose() {
             this._listeners = null;
         }
@@ -130,6 +168,13 @@
         }
     }
 
+    /**
+     * Event listener intercepter
+     * Intercept any event
+     *
+     * @param {Listener} listener
+     * @param {Function} intercepter Intercept function
+     */
     class ListenerIntercepter extends Listener {
         constructor(listener, intercepter) {
             super();
@@ -176,6 +221,9 @@
 
     //////////////////////////////////////////////////
 
+    /**
+     * Represent appearance of shapes
+     */
     class Appearance {
         constructor() {
             this._color       = 'black';
@@ -208,18 +256,21 @@
         get color() {
             return this._color;
         }
+
         set hoverColor(value) {
             this._hoverColor = value;
         }
         get hoverColor() {
             return this._hoverColor;
         }
+
         set strokeColor(value) {
             this._strokeColor = value;
         }
         get strokeColor() {
             return this._strokeColor;
         }
+
         set hoverStrokeColor(value) {
             this._hoverStrokeColor = value;
         }
@@ -230,15 +281,21 @@
 
     //////////////////////////////////////////////////
 
+    /**
+     * Decorator base class
+     *
+     * @param {Shape} shape target shape
+     */
     class Decorator {
         constructor(shape) {
             this._shape = shape;
         }
-        decorate(context) {
-            //
-        }
+        decorate(context) { }
     }
 
+    /**
+     * Normal style decorator
+     */
     class NormalDecorator extends Decorator {
         decorate(context) {
             context.fillStyle   = this._shape.appearance.color;
@@ -246,6 +303,9 @@
         }
     }
 
+    /**
+     * Hovering style decorator
+     */
     class HoverDecorator extends Decorator {
         decorate(context) {
             context.fillStyle   = this._shape.appearance.hoverColor;
@@ -253,6 +313,9 @@
         }
     }
 
+    /**
+     * Selected style decorator
+     */
     class SelectedDecorator extends Decorator {
         decorate(context) {
             context.fillStyle   = this._shape.appearance.selectedColor;
@@ -262,6 +325,10 @@
 
     //////////////////////////////////////////////////
 
+    /**
+     * Presentation for a shape
+     * This class provide animation's presentation.
+     */
     class PresentationShape {
         constructor(shape) {
             this._shape = shape;
@@ -339,6 +406,11 @@
             }
         }
 
+        /**
+         * Perform animation
+         *
+         * Main task is calcurate animation progress and to check ended.
+         */
         _doAnimate() {
             this.animationTime += Timer.deltaTime;
             this._animationProgress = this.animationTime / this.duration;
@@ -349,6 +421,17 @@
             }
         }
 
+        /**
+         * Start animation
+         */
+        startAnimation() {
+            this.isAnimating = true;
+            this.duration = Shape.animationDuration;
+        }
+
+        /**
+         * End animation
+         */
         _endAnimate() {
             this.isAnimating        = false;
             this.animationTime      = 0;
@@ -356,33 +439,52 @@
             this.presentationShape  = null;
         }
 
+        /**
+         * Drawing to the canvas
+         */
         draw(context) {
             if (this.isAnimating) {
                 this._doAnimate();
             }
         }
 
+        /**
+         * Hit test by mouse
+         * This is virtual method.
+         * This method return always false.
+         */
         hitTest(x, y) {
             return false;
         }
 
+        /**
+         * Turn on hovering flag.
+         */
         hover() {
             this.isHovering = true;
         }
 
+        /**
+         * Turn off hovering flag.
+         */
         unhover() {
             this.isHovering = false;
         }
 
+        /**
+         * Raize a click event
+         */
         click() {
             this._dispatcher.dispatch('click', this);
         }
 
-        startAnimation() {
-            this.isAnimating = true;
-            this.duration = Shape.animationDuration;
-        }
 
+        /**
+         * Static method
+         *
+         * This method provide animation start point.
+         * When setting up any parameter in the shape, will animate the shape by duration.
+         */
         static animationWithDuration(duration, capture) {
             this.animationDuration = duration;
             this.isAnimationCapturing = true;
@@ -465,6 +567,7 @@
 
             context.restore();
         }
+
         hitTest(x, y) {
             super.hitTest(x, y);
 
@@ -556,6 +659,10 @@
 
             context.restore();
         }
+
+        /**
+         * Check if the mouse is riding the line
+         */
         checkShotenPoint(px, py) {
             if (this.a === 0) {
                 var _x = this.start.x - px;
@@ -581,6 +688,7 @@
 
             return Math.sqrt(rx * rx + ry * ry);
         }
+
         hitTest(x, y) {
             var distance  = this.checkShotenPoint(x, y);
             return distance < this.detectDistance;
@@ -593,15 +701,6 @@
 
             this.text = text;
             this._point = point;
-        }
-
-        _doAnimate() {
-            super._doAnimate();
-
-            var t = this._animationProgress;
-            var x = easing(t, this.fromValue.x, this.nextValue.x);
-            var y = easing(t, this.fromValue.y, this.nextValue.y);
-            this.presentation = new Point(x, y);
         }
 
         draw(context) {
