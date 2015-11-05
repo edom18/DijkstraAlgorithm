@@ -11,6 +11,10 @@
             this._selected   = false;
             this._map = new Map();
         }
+
+        animate(value, duration) {
+            this.shape.animate(value, duration);
+        }
         
         addListener(listener) {
             var intercepter = new ListenerIntercepter(listener, (context, referData) => {
