@@ -248,8 +248,15 @@
      */
     class Shape {
         constructor(appearance) {
-            this.isHovering = false;
-            this.isSelected = false;
+            this.isHovering   = false;
+            this.isSelected   = false;
+            this.isAnimating  = false;
+            this.presentation = null;
+            this.nextValue    = null;
+
+            this.animationTime = 0;
+            this.duration      = 300;
+
             this._dispatcher = new Dispatcher();
 
             this.appearance = appearance || new Appearance();
@@ -279,6 +286,13 @@
             else {
                 this.normalDecorator.decorate(context);
             }
+        }
+
+        animate(value, duration) {
+            this.isAnimating   = true;
+            this.animationTime = 0;
+            this.nextValue     = value;
+            this.duration      = duration;
         }
 
         draw(context) {
