@@ -1,4 +1,4 @@
-(function () {
+(function (namespace) {
     'use strict';
 
     class Application {
@@ -241,8 +241,8 @@
             this.renderer.render(this.scene);
         }
     }
-
-
+    
+    namespace.Application = Application;
 
 
 
@@ -259,4 +259,5 @@
 
     // Start this program.
     main();
-}());
+
+}(window));
