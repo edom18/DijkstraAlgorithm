@@ -308,7 +308,9 @@
         }
 
         draw(context) {
-            //
+            if (this.isAnimating) {
+                this._doAnimate();
+            }
         }
 
         hitTest(x, y) {
@@ -378,14 +380,8 @@
             context.translate(this.point.x, this.point.y);
             this.decorate(context);
 
-            var radius = 0;
-            if (this.isAnimating) {
-                this._doAnimate();
-                radius = this.presentation;
-            }
-            else {
-                radius = this.radius;
-            }
+            var radius = this.isAnimating ? this.presentation : this.radius;
+
             context.arc(0, 0, radius, Math.PI * 2, false);
             context.closePath();
 
