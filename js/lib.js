@@ -289,8 +289,8 @@
         }
     }
     PresentationShape.type = {
-        FROM_VALUE: 0,
-        TO_VALUE: 1,
+        FROM_VALUE : 0,
+        TO_VALUE   : 1,
         EASING_FUNC: 2,
     };
 
