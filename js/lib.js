@@ -412,12 +412,33 @@
 
             this.start = start;
             this.end   = end;
+            this.update();
 
-            this.dx = this.end.x - this.start.x;
-            this.dy = this.end.y - this.start.y;
-            this.a  = this.dx * this.dx + this.dy * this.dy;
             this.detectDistance = 20;
         } 
+
+        update() {
+            this.d = this.end.clone().sub(this.start);
+            this.a = this.d.x * this.d.x + this.d.y * this.d.y;
+        }
+
+        animate(value, duration) {
+            super.animate(value, duration);
+            this.fromValue = this.d;
+            this.end       = this.nextValue;
+            this.update();
+            this.nextValue = this.d;
+        }
+
+        _doAnimate() {
+            super._doAnimate();
+
+            var t = this._animationProgress;
+            var x = easing(t, this.fromValue.x, this.nextValue.x);
+            var y = easing(t, this.fromValue.y, this.nextValue.y);
+            this.presentation = new Point(x, y);
+        }
+
         draw(context) {
             super.draw(context);
             
@@ -425,8 +446,11 @@
             context.beginPath();
             context.translate(this.start.x, this.start.y);
             this.decorate(context);
+
+            var point = this.isAnimating ? this.presentation : this.d;
+
             context.moveTo(0, 0);
-            context.lineTo(this.dx, this.dy);
+            context.lineTo(point.x, point.y);
             context.closePath();
 
             context.fill();
@@ -441,7 +465,7 @@
                 return Math.sqrt(_x * _x + _y * _y);
             }
 
-            var b = this.dx * (this.start.x - px) + this.dy * (this.start.y - py);
+            var b = this.d.x * (this.start.x - px) + this.d.y * (this.start.y - py);
             var t = -(b / this.a);
 
             if (t < 0.0) {
@@ -451,8 +475,8 @@
                 t = 1.0;
             }
 
-            var x = t * this.dx + this.start.x;
-            var y = t * this.dy + this.start.y;
+            var x = t * this.d.x + this.start.x;
+            var y = t * this.d.y + this.start.y;
 
             var rx = x - px;
             var ry = y - py;
