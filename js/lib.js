@@ -497,11 +497,27 @@
             this._point = point;
         }
 
+        animate(value, duration) {
+            super.animate(value, duration);
+            this.fromValue = this._point;
+            this._point    = this.nextValue;
+        }
+
+        _doAnimate() {
+            super._doAnimate();
+
+            var t = this._animationProgress;
+            var x = easing(t, this.fromValue.x, this.nextValue.x);
+            var y = easing(t, this.fromValue.y, this.nextValue.y);
+            this.presentation = new Point(x, y);
+        }
+
         draw(context) {
             super.draw(context);
 
             context.save();
-            context.translate(this._point.x, this._point.y);
+            var point = this.isAnimating ? this.presentation : this._point;
+            context.translate(point.x, point.y);
             this.decorate(context);
             context.fillText(this.text, 0, 0);
             context.restore();
