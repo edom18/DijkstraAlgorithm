@@ -1,10 +1,18 @@
 (function (namespace) {
     'use strict';
 
-    function easing(x, a, b) {
+    function floatEasing(x, a, b) {
         var t = 1.0 - x;
         var f = t * t * t;
         return a * f + b * (1.0 - f);
+    }
+
+    function pointEasing(x, p1, p2) {
+        var t = 1.0 - x;
+        var f = t * t * t;
+        var px = p1.x * f + p2.x * (1.0 - f);
+        var py = p1.y * f + p2.y * (1.0 - f);
+        return new Point(px, py);
     }
 
     /**
@@ -254,19 +262,51 @@
 
     //////////////////////////////////////////////////
 
+    class PresentationShape {
+        constructor(shape) {
+            this._shape = shape;
+            this._properties = {};
+        }
+
+        get(key, position) {
+            if (this._properties[key]) {
+                var easing = this._properties[key][PresentationShape.type.EASING_FUNC];
+                var from   = this._properties[key][PresentationShape.type.FROM_VALUE];
+                var to     = this._properties[key][PresentationShape.type.TO_VALUE];
+                return easing(position, from, to);
+            }
+
+            return null;
+        }
+
+        set(key, fromValue, toValue, easingFunc) {
+            if (!this._properties[key]) {
+                this._properties[key] = [];
+            }
+            this._properties[key][PresentationShape.type.FROM_VALUE ] = fromValue;
+            this._properties[key][PresentationShape.type.TO_VALUE   ] = toValue;
+            this._properties[key][PresentationShape.type.EASING_FUNC] = easingFunc;
+        }
+    }
+    PresentationShape.type = {
+        FROM_VALUE: 0,
+        TO_VALUE: 1,
+        EASING_FUNC: 2,
+    };
+
     /**
      * Shape base class.
      */
     class Shape {
         constructor(appearance) {
-            this.isHovering   = false;
-            this.isSelected   = false;
-            this.isAnimating  = false;
-            this.presentation = null;
-            this.nextValue    = null;
+            this.isHovering    = false;
+            this.isSelected    = false;
+            this.isAnimating   = false;
 
             this.animationTime = 0;
             this.duration      = 300;
+
+            this.presentationShape = null;
 
             this._dispatcher = new Dispatcher();
 
@@ -299,14 +339,6 @@
             }
         }
 
-        animate(value, duration) {
-            this.isAnimating   = true;
-            this.animationTime = 0;
-            this.nextValue     = value;
-            this.duration      = duration;
-            this._animationProgress = 0;
-        }
-
         _doAnimate() {
             this.animationTime += Timer.deltaTime;
             this._animationProgress = this.animationTime / this.duration;
@@ -321,6 +353,7 @@
             this.isAnimating        = false;
             this.animationTime      = 0;
             this._animationProgress = 0;
+            this.presentationShape  = null;
         }
 
         draw(context) {
@@ -344,7 +377,22 @@
         click() {
             this._dispatcher.dispatch('click', this);
         }
+
+        startAnimation() {
+            this.isAnimating = true;
+            this.duration = Shape.animationDuration;
+        }
+
+        static animationWithDuration(duration, capture) {
+            this.animationDuration = duration;
+            this.isAnimationCapturing = true;
+            capture();
+            this.isAnimationCapturing = false;
+        }
     }
+    Shape.isAnimationCapturing = false;
+    Shape.animationDuration = 0;
+
 
     /**
      * A represent dot.
@@ -353,30 +401,52 @@
         constructor(point, radius, appearnce) {
             super(appearnce);
 
-            this._point = point;
-            this.radius = radius || 5;
-
-            this.presentation = 0;
+            this._point  = point;
+            this._radius = radius || 5;
         }
 
         set point(value) {
-            this._point = point;
+            if (Shape.isAnimationCapturing) {
+                if (!this.presentationShape) {
+                    this.presentationShape = new PresentationShape(this);
+                    this.startAnimation();
+                }
+                this.presentationShape.set('point', this._point, value, pointEasing);
+            }
+
+            this._point = value;
         }
         get point() {
+            if (this.isAnimating) {
+                var point = this.presentationShape.get('point', this._animationProgress);
+                if (point !== null) {
+                    return point;
+                }
+            }
+
             return this._point;
         }
 
-        animate(value, duration) {
-            super.animate(value, duration);
-            this.fromValue = this.radius;
-            this.radius    = this.nextValue;
+        set radius(value) {
+            if (Shape.isAnimationCapturing) {
+                if (!this.presentationShape) {
+                    this.presentationShape = new PresentationShape(this);
+                    this.startAnimation();
+                }
+                this.presentationShape.set('radius', this._radius, value, floatEasing);
+            }
+
+            this._radius = value;
         }
+        get radius() {
+            if (this.isAnimating) {
+                var radius = this.presentationShape.get('radius', this._animationProgress);
+                if (radius !== null) {
+                    return radius;
+                }
+            }
 
-        _doAnimate() {
-            super._doAnimate();
-
-            var t = this._animationProgress;
-            this.presentation = easing(t, this.fromValue, this.nextValue);
+            return this._radius;
         }
 
         draw(context) {
@@ -387,9 +457,7 @@
             context.translate(this.point.x, this.point.y);
             this.decorate(context);
 
-            var radius = this.isAnimating ? this.presentation : this.radius;
-
-            context.arc(0, 0, radius, Math.PI * 2, false);
+            context.arc(0, 0, this.radius, Math.PI * 2, false);
             context.closePath();
 
             context.fill();
@@ -425,14 +493,6 @@
         update() {
             this.d = this.end.clone().sub(this.start);
             this.a = this.d.x * this.d.x + this.d.y * this.d.y;
-        }
-
-        animate(value, duration) {
-            super.animate(value, duration);
-            this.fromValue = this.d;
-            this.end       = this.nextValue;
-            this.update();
-            this.nextValue = this.d;
         }
 
         _doAnimate() {
@@ -500,12 +560,6 @@
 
             this.text = text;
             this._point = point;
-        }
-
-        animate(value, duration) {
-            super.animate(value, duration);
-            this.fromValue = this._point;
-            this._point    = this.nextValue;
         }
 
         _doAnimate() {
