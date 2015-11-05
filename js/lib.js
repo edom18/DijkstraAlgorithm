@@ -491,7 +491,7 @@
         } 
 
         update() {
-            this.d = this.end.clone().sub(this.start);
+            this.d = this._end.clone().sub(this._start);
             this.a = this.d.x * this.d.x + this.d.y * this.d.y;
         }
 
