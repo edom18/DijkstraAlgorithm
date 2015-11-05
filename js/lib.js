@@ -7,6 +7,11 @@
         return a * f + b * (1.0 - f);
     }
 
+    /**
+     * Timer class
+     *
+     * This class provide time as application core.
+     */
     class Timer {
         constructor() {
             this.time = Date.now();
