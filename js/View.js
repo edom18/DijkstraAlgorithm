@@ -90,7 +90,14 @@
             return this.shape.point;
         }
         set point(value) {
-            this.shape.point = point;
+            this.shape.point = value;
+        }
+
+        get radius() {
+            this.shape.radius;
+        }
+        set radius(value) {
+            this.shape.radius = value;
         }
     }
 
