@@ -293,10 +293,18 @@
             this.animationTime = 0;
             this.nextValue     = value;
             this.duration      = duration;
+            this._animationProgress = 0;
         }
 
         _doAnimate() {
-            //
+            this.animationTime += Timer.deltaTime;
+            this._animationProgress = this.animationTime / this.duration;
+        }
+
+        _endAnimate() {
+            this.isAnimating        = false;
+            this.animationTime      = 0;
+            this._animationProgress = 0;
         }
 
         draw(context) {
