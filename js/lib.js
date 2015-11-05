@@ -483,8 +483,8 @@
         constructor(start, end, appearnce) {
             super(appearnce);
 
-            this.start = start;
-            this.end   = end;
+            this._start = start;
+            this._end   = end;
             this.update();
 
             this.detectDistance = 20;
@@ -495,13 +495,50 @@
             this.a = this.d.x * this.d.x + this.d.y * this.d.y;
         }
 
-        _doAnimate() {
-            super._doAnimate();
+        set start(value) {
+            if (Shape.isAnimationCapturing) {
+                if (!this.presentationShape) {
+                    this.presentationShape = new PresentationShape(this);
+                    this.startAnimation();
+                }
+                this.presentationShape.set('start', this._start, value, pointEasing);
+            }
 
-            var t = this._animationProgress;
-            var x = easing(t, this.fromValue.x, this.nextValue.x);
-            var y = easing(t, this.fromValue.y, this.nextValue.y);
-            this.presentation = new Point(x, y);
+            this._start = value;
+            this.update();
+        }
+        get start() {
+            if (this.isAnimating) {
+                var start = this.presentationShape.get('start', this._animationProgress);
+                if (start !== null) {
+                    return start;
+                }
+            }
+
+            return this._start;
+        }
+
+        set end(value) {
+            if (Shape.isAnimationCapturing) {
+                if (!this.presentationShape) {
+                    this.presentationShape = new PresentationShape(this);
+                    this.startAnimation();
+                }
+                this.presentationShape.set('end', this._end, value, pointEasing);
+            }
+
+            this._end = value;
+            this.update();
+        }
+        get end() {
+            if (this.isAnimating) {
+                var end = this.presentationShape.get('end', this._animationProgress);
+                if (end !== null) {
+                    return end;
+                }
+            }
+
+            return this._end;
         }
 
         draw(context) {
@@ -509,13 +546,9 @@
             
             context.save();
             context.beginPath();
-            context.translate(this.start.x, this.start.y);
             this.decorate(context);
-
-            var point = this.isAnimating ? this.presentation : this.d;
-
-            context.moveTo(0, 0);
-            context.lineTo(point.x, point.y);
+            context.moveTo(this.start.x, this.start.y);
+            context.lineTo(this.end.x, this.end.y);
             context.closePath();
 
             context.fill();
