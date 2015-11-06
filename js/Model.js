@@ -169,7 +169,7 @@
             return this._instance;
         }
         get nodes() {
-            return this._nodes;
+            return this._nodes.slice();
         }
 
         checkStartFlag(targetNode, referData) {
