@@ -258,6 +258,131 @@
             this._dispatcher.dispatch('click', this);
         }
 
+        set selectedColor(value) {
+            if (Shape.isAnimationCapturing) {
+                if (!this.presentationShape) {
+                    this.presentationShape = new PresentationShape(this);
+                    this.startAnimation();
+                }
+                this.presentationShape.set('selectedColor', this.appearance.selectedColor, value, colorEasing);
+            }
+
+            this.appearance.selectedColor = value;
+        }
+        get selectedColor() {
+            if (this.isAnimating) {
+                var color = this.presentationShape.get('selectedColor', this._animationProgress);
+                if (color !== null) {
+                    return color;
+                }
+            }
+            return this.appearance.selectedColor;
+        }
+
+        set selectedStrokeColor(value) {
+            if (Shape.isAnimationCapturing) {
+                if (!this.presentationShape) {
+                    this.presentationShape = new PresentationShape(this);
+                    this.startAnimation();
+                }
+                this.presentationShape.set('selectedStrokeColor', this.appearance.selectedStrokeColor, value, colorEasing);
+            }
+
+            this.appearance.selectedStrokeColor = value;
+        }
+        get selectedStrokeColor() {
+            if (this.isAnimating) {
+                var color = this.presentationShape.get('selectedStrokeColor', this._animationProgress);
+                if (color !== null) {
+                    return color;
+                }
+            }
+            return this.appearance.selectedStrokeColor;
+        }
+
+        set color(value) {
+            if (Shape.isAnimationCapturing) {
+                if (!this.presentationShape) {
+                    this.presentationShape = new PresentationShape(this);
+                    this.startAnimation();
+                }
+                this.presentationShape.set('color', this.appearance.color, value, colorEasing);
+            }
+
+            this.appearance.color = value;
+        }
+        get color() {
+            if (this.isAnimating) {
+                var color = this.presentationShape.get('color', this._animationProgress);
+                if (color !== null) {
+                    return color;
+                }
+            }
+            return this.appearance.color;
+        }
+
+        set hoverColor(value) {
+            if (Shape.isAnimationCapturing) {
+                if (!this.presentationShape) {
+                    this.presentationShape = new PresentationShape(this);
+                    this.startAnimation();
+                }
+                this.presentationShape.set('hoverColor', this.appearance.hoverColor, value, colorEasing);
+            }
+
+            this.appearance.hoverColor = value;
+        }
+        get hoverColor() {
+            if (this.isAnimating) {
+                var color = this.presentationShape.get('hoverColor', this._animationProgress);
+                if (color !== null) {
+                    return color;
+                }
+            }
+            return this.appearance.hoverColor;
+        }
+
+        set strokeColor(value) {
+            if (Shape.isAnimationCapturing) {
+                if (!this.presentationShape) {
+                    this.presentationShape = new PresentationShape(this);
+                    this.startAnimation();
+                }
+                this.presentationShape.set('strokeColor', this.appearance.strokeColor, value, colorEasing);
+            }
+
+            this.appearance.strokeColor = value;
+        }
+        get strokeColor() {
+            if (this.isAnimating) {
+                var color = this.presentationShape.get('strokeColor', this._animationProgress);
+                if (color !== null) {
+                    return color;
+                }
+            }
+            return this.appearance.strokeColor;
+        }
+
+        set hoverStrokeColor(value) {
+            if (Shape.isAnimationCapturing) {
+                if (!this.presentationShape) {
+                    this.presentationShape = new PresentationShape(this);
+                    this.startAnimation();
+                }
+                this.presentationShape.set('hoverStrokeColor', this.appearance.hoverStrokeColor, value, colorEasing);
+            }
+
+            this.appearance.hoverStrokeColor = value;
+        }
+        get hoverStrokeColor() {
+            if (this.isAnimating) {
+                var color = this.presentationShape.get('hoverStrokeColor', this._animationProgress);
+                if (color !== null) {
+                    return color;
+                }
+            }
+            return this.appearance.hoverStrokeColor;
+        }
 
         /**
          * Static method
