@@ -92,11 +92,7 @@
          * Get all nodes from node views.
          */
         getNodes() {
-            var nodes = [];
-            this.nodeViews.forEach((nodeView, i) => {
-                nodes.push(nodeView.model);
-            });
-            return nodes;
+            return NodeManager.getInstance().nodes;
         }
 
         /**
