@@ -50,6 +50,26 @@
             return this.constructor.getHue(this.r, this.g, this.b);
         }
 
+        static get red() {
+            return new Color(0xff0000);
+        }
+
+        static get green() {
+            return new Color(0x00ff00);
+        }
+
+        static get blue() {
+            return new Color(0x0000ff);
+        }
+
+        static get black() {
+            return new Color(0x000000);
+        }
+
+        static get white() {
+            return new Color(0xffffff);
+        }
+
         static getHue(r, g, b) {
             var h = 0;
 
