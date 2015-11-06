@@ -9,7 +9,6 @@
      * @param {Number} b end value
      */
     function colorEasing(x, c1, c2) {
-        debugger;
         var t = 1.0 - x;
         var f = t * t * t;
 
@@ -38,7 +37,7 @@
         }
 
         toString() {
-            return `rgb(${this.r}, ${this.g}, ${this.b})`;
+            return `rgb(${this.r|0}, ${this.g|0}, ${this.b|0})`;
         }
 
         parse(num) {
