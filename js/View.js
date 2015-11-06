@@ -48,13 +48,6 @@
         get selected() {
             return this.shape.isSelected;
         }
-
-        set appearance(value) {
-            this.shape.appearance = value;
-        }
-        get appearance() {
-            return this.shape.appearance;
-        }
     }
 
     /**
@@ -78,10 +71,10 @@
         changeHandler(target, changedData) {
             if (changedData.name === 'adoption') {
                 if (changedData.newValue) {
-                    this.appearance.color = 'red';
+                    this.shape.color = 'red';
                 }
                 else {
-                    this.appearance.color = 'black';
+                    this.shape.color = 'black';
                 }
             }
         }
@@ -130,10 +123,10 @@
         changeHandler(target, changedData) {
             if (changedData.name === 'adoption') {
                 if (changedData.newValue) {
-                    this.appearance.strokeColor = 'red';
+                    this.shape.strokeColor = 'red';
                 }
                 else {
-                    this.appearance.strokeColor = 'black';
+                    this.shape.strokeColor = 'black';
                 }
             }
 
