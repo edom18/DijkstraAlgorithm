@@ -1,15 +1,54 @@
 (function (namespace) {
     'use strict';
 
+    /**
+     * Easing function take a color value
+     *
+     * @param {Number} x progress 0.0 to 1.0
+     * @param {Number} a start value
+     * @param {Number} b end value
+     */
+    function colorEasing(x, c1, c2) {
+        debugger;
+        var t = 1.0 - x;
+        var f = t * t * t;
+
+        var hsb1 = c1.convertToHSB();
+        var hsb2 = c2.convertToHSB();
+
+        var h = hsb1.h * f + hsb2.h * (1.0 - f);
+        var s = hsb1.s * f + hsb2.s * (1.0 - f);
+        var b = hsb1.b * f + hsb2.b * (1.0 - f);
+
+        var tmp = Color.convertHSB2RGB(h, s, b);
+
+        return new Color(tmp.r, tmp.g, tmp.b);
+    }
+
     class Color {
-        constructor(num) {
-            this.parse(num);
+        constructor() {
+            if (arguments.length === 1) {
+                this.parse(arguments[0]);
+            }
+            else if (arguments.length === 3) {
+                this.r = arguments[0];
+                this.g = arguments[1];
+                this.b = arguments[2];
+            }
+        }
+
+        toString() {
+            return `rgb(${this.r}, ${this.g}, ${this.b})`;
         }
 
         parse(num) {
             this.b = (num >>  0) & 0x0000ff;
             this.g = (num >>  8) & 0x0000ff;
             this.r = (num >> 16) & 0x0000ff;
+        }
+
+        getHue() {
+            return this.constructor.getHue(this.r, this.g, this.b);
         }
 
         static getHue(r, g, b) {
@@ -28,11 +67,19 @@
                 h = 60 * ((r - g) / (max - min)) + 240;
             }
 
+            if (Number.isNaN(h)) {
+                return 0;
+            }
+
             if (h < 0) {
                 h += 360;
             }
 
             return h;
+        }
+
+        getSaturation() {
+            return this.constructor.getSaturation(this.r, this.g, this.b);
         }
 
         static getSaturation(r, g, b) {
@@ -42,9 +89,17 @@
             return ((max - min) / max) * 100;
         }
 
+        getBrightness() {
+            return this.constructor.getBrightness(this.r, this.g, this.b);
+        }
+
         static getBrightness(r, g, b) {
             var max = Math.max(r, g, b);
             return (max / 255) * 100;
+        }
+
+        convertToHSB() {
+            return this.constructor.convertRGB2HSB(this.r, this.g, this.b);
         }
 
         /**
@@ -54,23 +109,20 @@
          * @param {number} g
          * @param {number} b
          *
-         * return {Object} h, s, v
+         * return {Object} h, s, b
          */
-         static convertRGB2HSV(r, g, b) {
-            var h = getHue(r, g, b);
-            var s = getSaturation(r, g, b);
-            var v = getBrightness(r, g, b);
+        static convertRGB2HSB(r, g, b) {
+            var h = this.getHue(r, g, b);
+            var s = this.getSaturation(r, g, b);
+            var _b = this.getBrightness(r, g, b);
 
             return {
                 h: h,
                 s: s,
-                v: v
+                b: _b
             };
         }
 
-
-        ////////////////////////////////////////////////////////////////////////////////////////
-    
         static getRange(h, s, b) {
             s = (s / 100) * 255;
             b = (b / 100) * 255;
@@ -93,9 +145,9 @@
          *
          * return {Object} r, g, b
          */
-        static convertHSV2RGB(h, s, v) {
+        static convertHSB2RGB(h, s, b) {
             var r, g, b;
-            var range = getRange(h, s, v);
+            var range = this.getRange(h, s, b);
             var max = range.max;
             var min = range.min;
             if (h <= 60) {
@@ -139,4 +191,6 @@
 
     // Exports
     namespace.Color = Color;
+    namespace.colorEasing = colorEasing;
+
 }(window));
