@@ -507,9 +507,9 @@
     }
 
     // Exports
-    namespace.Shape      = Shape;
-    namespace.Dot        = Dot;
-    namespace.Line       = Line;
-    namespace.Text       = Text;
+    namespace.Shape = Shape;
+    namespace.Dot   = Dot;
+    namespace.Line  = Line;
+    namespace.Text  = Text;
 
 }(window));
