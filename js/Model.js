@@ -172,6 +172,30 @@
             return this._nodes.slice();
         }
 
+        get startNode() {
+            var startNode = null;
+            this.nodes.forEach((node, i) => {
+                if (node.isStart) {
+                    startNode = node;
+                    return true;
+                }
+            });
+
+            return startNode;
+        }
+
+        get goalNode() {
+            var goalNode = null;
+            this.nodes.forEach((node, i) => {
+                if (node.isGoal) {
+                    goalNode = node;
+                    return true;
+                }
+            });
+
+            return goalNode;
+        }
+
         checkStartFlag(targetNode, referData) {
             if (referData.name !== 'isStart') {
                 return;
