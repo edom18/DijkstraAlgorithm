@@ -1,19 +1,6 @@
 (function (namespace) {
     'use strict';
 
-    function getEdgeNode(nodes) {
-        var result = {};
-        nodes.forEach((node, i) => {
-            if (node.isStart) {
-                result.startNode = node;
-            }
-            if (node.isGoal) {
-                result.goalNode = node;
-            }
-        });
-        return result;
-    }
-
     /**
      * Dijkstra path search
      *
@@ -26,13 +13,14 @@
             node.start()
         });
 
-        var edgeNode  = getEdgeNode(nodes);
-        if (!(edgeNode.startNode && edgeNode.goalNode)) {
+        var manager   = NodeManager.getInstance();
+        var startNode = manager.startNode;
+        var goalNode  = manager.goalNode;
+
+        if (!(startNode && goalNode)) {
             console.log('Must set start and goal node.');
             return;
         }
-        var startNode = edgeNode.startNode;
-        var goalNode  = edgeNode.goalNode;
         
         // start node is first node
         startNode.cost = 0;
