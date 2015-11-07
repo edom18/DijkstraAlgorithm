@@ -455,18 +455,14 @@
 
         set point(value) {
             if (Shape.isAnimationCapturing) {
-                if (!this.presentationShape) {
-                    this.presentationShape = new PresentationShape(this);
-                    this.startAnimation();
-                }
-                this.presentationShape.set('point', this._point, value, pointEasing);
+                this.presentationShape.set('point', Shape.animationDuration, this._point, value, pointEasing);
             }
 
             this._point = value;
         }
         get point() {
-            if (this.isAnimating) {
-                var point = this.presentationShape.get('point', this._animationProgress);
+            if (this.presentationShape.isAnimating('point')) {
+                var point = this.presentationShape.get('point');
                 if (point !== null) {
                     return point;
                 }
@@ -477,18 +473,14 @@
 
         set radius(value) {
             if (Shape.isAnimationCapturing) {
-                if (!this.presentationShape) {
-                    this.presentationShape = new PresentationShape(this);
-                    this.startAnimation();
-                }
-                this.presentationShape.set('radius', this._radius, value, floatEasing);
+                this.presentationShape.set('radius', Shape.animationDuration, this._radius, value, floatEasing);
             }
 
             this._radius = value;
         }
         get radius() {
-            if (this.isAnimating) {
-                var radius = this.presentationShape.get('radius', this._animationProgress);
+            if (this.presentationShape.isAnimating('radius')) {
+                var radius = this.presentationShape.get('radius');
                 if (radius !== null) {
                     return radius;
                 }
@@ -546,19 +538,15 @@
 
         set start(value) {
             if (Shape.isAnimationCapturing) {
-                if (!this.presentationShape) {
-                    this.presentationShape = new PresentationShape(this);
-                    this.startAnimation();
-                }
-                this.presentationShape.set('start', this._start, value, pointEasing);
+                this.presentationShape.set('start', Shape.animationDuration, this._start, value, pointEasing);
             }
 
             this._start = value;
             this.update();
         }
         get start() {
-            if (this.isAnimating) {
-                var start = this.presentationShape.get('start', this._animationProgress);
+            if (this.presentationShape.isAnimating('start')) {
+                var start = this.presentationShape.get('start');
                 if (start !== null) {
                     return start;
                 }
@@ -569,19 +557,15 @@
 
         set end(value) {
             if (Shape.isAnimationCapturing) {
-                if (!this.presentationShape) {
-                    this.presentationShape = new PresentationShape(this);
-                    this.startAnimation();
-                }
-                this.presentationShape.set('end', this._end, value, pointEasing);
+                this.presentationShape.set('end', Shape.animationDuration, this._end, value, pointEasing);
             }
 
-            this._end = value;
+            this._start = value;
             this.update();
         }
         get end() {
-            if (this.isAnimating) {
-                var end = this.presentationShape.get('end', this._animationProgress);
+            if (this.presentationShape.isAnimating('end')) {
+                var end = this.presentationShape.get('end');
                 if (end !== null) {
                     return end;
                 }
