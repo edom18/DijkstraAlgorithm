@@ -105,6 +105,58 @@
 
     //////////////////////////////////////////////////
 
+    class Animator {
+        constructor(key, duration, fromValue, toValue, easingFunc) {
+            this.duration   = duration
+            this.fromValue  = fromValue;
+            this.toValue    = toValue;
+            this.easingFunc = easingFunc;
+
+            this.isAnimated = false;
+            this.time = 0;
+
+            this._dispatcher = new Dispatcher();
+        }
+
+        get value() {
+            if (this.isAnimated) {
+                return this.toValue;
+            }
+
+            this.time += Timer.deltaTime;
+            var t = this.time / this.duration;
+
+            if (t >= 1.0) {
+                this.isAnimated = true;
+                t = 1.0;
+                var val = this.easingFunc(t, this.fromValue, this.toValue);
+                this._dispatcher.dispatch('animationend', this, {
+                    name: this.key
+                });
+                return val;
+            }
+
+            return this.easingFunc(t, this.fromValue, this.toValue);
+        }
+
+        addListener(listener) {
+            this._dispatcher.addListener(listener);
+        }
+
+        /**
+         * Remove a listener
+         *
+         * @param {Listener} listener
+         */
+        removeListener(listener) {
+            this._dispatcher.removeListener(listener);
+        }
+
+        dispose() {
+            this._dispatcher.dispose();
+        }
+    }
+
     /**
      * Presentation for a shape
      * This class provide animation's presentation.
@@ -112,34 +164,40 @@
     class PresentationShape {
         constructor(shape) {
             this._shape = shape;
+            this.clear();
+        }
+
+        isAnimating(key) {
+            var isAnimating = !!this._properties[key];
+            return isAnimating;
+        }
+
+        clear() {
             this._properties = {};
         }
 
-        get(key, position) {
+        get(key) {
             if (this._properties[key]) {
-                var easing = this._properties[key][PresentationShape.type.EASING_FUNC];
-                var from   = this._properties[key][PresentationShape.type.FROM_VALUE];
-                var to     = this._properties[key][PresentationShape.type.TO_VALUE];
-                return easing(position, from, to);
+                return this._properties[key].value;
             }
 
             return null;
         }
 
-        set(key, fromValue, toValue, easingFunc) {
-            if (!this._properties[key]) {
-                this._properties[key] = [];
+        set(key, duration, fromValue, toValue, easingFunc) {
+            if (this._properties[key]) {
+                return;
             }
-            this._properties[key][PresentationShape.type.FROM_VALUE ] = fromValue;
-            this._properties[key][PresentationShape.type.TO_VALUE   ] = toValue;
-            this._properties[key][PresentationShape.type.EASING_FUNC] = easingFunc;
+
+            var animator = new Animator(key, duration, fromValue, toValue, easingFunc);
+            animator.addListener(new Listener('animationend', () => {
+                animator.dispose();
+                animator = null;
+                this._properties[key] = null;
+            }));
+            this._properties[key] = animator;
         }
     }
-    PresentationShape.type = {
-        FROM_VALUE : 0,
-        TO_VALUE   : 1,
-        EASING_FUNC: 2,
-    };
 
     /**
      * Shape base class.
@@ -153,7 +211,7 @@
             this.animationTime = 0;
             this.duration      = 300;
 
-            this.presentationShape = null;
+            this.presentationShape = new PresentationShape(this);
 
             this._dispatcher = new Dispatcher();
 
@@ -216,7 +274,8 @@
             this.isAnimating        = false;
             this.animationTime      = 0;
             this._animationProgress = 0;
-            this.presentationShape  = null;
+            this.presentationShape.clear();
+            // this.presentationShape  = null;
         }
 
         /**
@@ -260,127 +319,109 @@
 
         set selectedColor(value) {
             if (Shape.isAnimationCapturing) {
-                if (!this.presentationShape) {
-                    this.presentationShape = new PresentationShape(this);
-                    this.startAnimation();
-                }
-                this.presentationShape.set('selectedColor', this.appearance.selectedColor, value, colorEasing);
+                this.presentationShape.set('selectedColor', Shape.animationDuration, this.appearance.selectedColor, value, colorEasing);
             }
 
             this.appearance.selectedColor = value;
         }
         get selectedColor() {
-            if (this.isAnimating) {
-                var color = this.presentationShape.get('selectedColor', this._animationProgress);
-                if (color !== null) {
-                    return color;
+            if (this.presentationShape.isAnimating('selectedColor')) {
+                var selectedColor = this.presentationShape.get('selectedColor');
+                if (selectedColor !== null) {
+                    return selectedColor;
                 }
             }
+
             return this.appearance.selectedColor;
         }
 
         set selectedStrokeColor(value) {
             if (Shape.isAnimationCapturing) {
-                if (!this.presentationShape) {
-                    this.presentationShape = new PresentationShape(this);
-                    this.startAnimation();
-                }
-                this.presentationShape.set('selectedStrokeColor', this.appearance.selectedStrokeColor, value, colorEasing);
+                this.presentationShape.set('selectedStrokeColor', Shape.animationDuration, this.appearance.selectedStrokeColor, value, colorEasing);
             }
 
             this.appearance.selectedStrokeColor = value;
         }
         get selectedStrokeColor() {
-            if (this.isAnimating) {
-                var color = this.presentationShape.get('selectedStrokeColor', this._animationProgress);
-                if (color !== null) {
-                    return color;
+            if (this.presentationShape.isAnimating('selectedStrokeColor')) {
+                var selectedStrokeColor = this.presentationShape.get('selectedStrokeColor');
+                if (selectedStrokeColor !== null) {
+                    return selectedStrokeColor;
                 }
             }
+
             return this.appearance.selectedStrokeColor;
         }
 
         set color(value) {
             if (Shape.isAnimationCapturing) {
-                if (!this.presentationShape) {
-                    this.presentationShape = new PresentationShape(this);
-                    this.startAnimation();
-                }
-                this.presentationShape.set('color', this.appearance.color, value, colorEasing);
+                this.presentationShape.set('color', Shape.animationDuration, this.appearance.color, value, colorEasing);
             }
 
             this.appearance.color = value;
         }
         get color() {
-            if (this.isAnimating) {
-                var color = this.presentationShape.get('color', this._animationProgress);
+            if (this.presentationShape.isAnimating('color')) {
+                var color = this.presentationShape.get('color');
                 if (color !== null) {
                     return color;
                 }
             }
+
             return this.appearance.color;
         }
 
         set hoverColor(value) {
             if (Shape.isAnimationCapturing) {
-                if (!this.presentationShape) {
-                    this.presentationShape = new PresentationShape(this);
-                    this.startAnimation();
-                }
-                this.presentationShape.set('hoverColor', this.appearance.hoverColor, value, colorEasing);
+                this.presentationShape.set('hoverColor', Shape.animationDuration, this.appearance.hoverColor, value, colorEasing);
             }
 
             this.appearance.hoverColor = value;
         }
         get hoverColor() {
-            if (this.isAnimating) {
-                var color = this.presentationShape.get('hoverColor', this._animationProgress);
-                if (color !== null) {
-                    return color;
+            if (this.presentationShape.isAnimating('hoverColor')) {
+                var hoverColor = this.presentationShape.get('hoverColor');
+                if (hoverColor !== null) {
+                    return hoverColor;
                 }
             }
+
             return this.appearance.hoverColor;
         }
 
         set strokeColor(value) {
             if (Shape.isAnimationCapturing) {
-                if (!this.presentationShape) {
-                    this.presentationShape = new PresentationShape(this);
-                    this.startAnimation();
-                }
-                this.presentationShape.set('strokeColor', this.appearance.strokeColor, value, colorEasing);
+                this.presentationShape.set('strokeColor', Shape.animationDuration, this.appearance.strokeColor, value, colorEasing);
             }
 
             this.appearance.strokeColor = value;
         }
         get strokeColor() {
-            if (this.isAnimating) {
-                var color = this.presentationShape.get('strokeColor', this._animationProgress);
-                if (color !== null) {
-                    return color;
+            if (this.presentationShape.isAnimating('strokeColor')) {
+                var strokeColor = this.presentationShape.get('strokeColor');
+                if (strokeColor !== null) {
+                    return strokeColor;
                 }
             }
+
             return this.appearance.strokeColor;
         }
 
         set hoverStrokeColor(value) {
             if (Shape.isAnimationCapturing) {
-                if (!this.presentationShape) {
-                    this.presentationShape = new PresentationShape(this);
-                    this.startAnimation();
-                }
-                this.presentationShape.set('hoverStrokeColor', this.appearance.hoverStrokeColor, value, colorEasing);
+                this.presentationShape.set('hoverStrokeColor', Shape.animationDuration, this.appearance.hoverStrokeColor, value, colorEasing);
             }
 
             this.appearance.hoverStrokeColor = value;
         }
         get hoverStrokeColor() {
-            if (this.isAnimating) {
-                var color = this.presentationShape.get('hoverStrokeColor', this._animationProgress);
-                if (color !== null) {
-                    return color;
+            if (this.presentationShape.isAnimating('hoverStrokeColor')) {
+                var hoverStrokeColor = this.presentationShape.get('hoverStrokeColor');
+                if (hoverStrokeColor !== null) {
+                    return hoverStrokeColor;
                 }
             }
+
             return this.appearance.hoverStrokeColor;
         }
 
