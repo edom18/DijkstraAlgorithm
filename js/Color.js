@@ -105,6 +105,10 @@
             var max = Math.max(r, g, b);
             var min = Math.min(r, g, b);
 
+            if (max === 0) {
+                return 0;
+            }
+
             return ((max - min) / max) * 100;
         }
 
