@@ -315,4 +315,7 @@
     namespace.Renderer   = Renderer;
     namespace.ListenerIntercepter = ListenerIntercepter;
 
+    namespace.floatEasing = floatEasing;
+    namespace.pointEasing = pointEasing;
+
 }(window));
