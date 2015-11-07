@@ -560,7 +560,7 @@
                 this.presentationShape.set('end', Shape.animationDuration, this._end, value, pointEasing);
             }
 
-            this._start = value;
+            this._end = value;
             this.update();
         }
         get end() {
