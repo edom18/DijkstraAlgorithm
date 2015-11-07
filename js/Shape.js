@@ -206,10 +206,6 @@
         constructor(appearance) {
             this.isHovering    = false;
             this.isSelected    = false;
-            this.isAnimating   = false;
-
-            this.animationTime = 0;
-            this.duration      = 300;
 
             this.presentationShape = new PresentationShape(this);
 
@@ -245,46 +241,17 @@
         }
 
         /**
-         * Perform animation
-         *
-         * Main task is calcurate animation progress and to check ended.
-         */
-        _doAnimate() {
-            this.animationTime += Timer.deltaTime;
-            this._animationProgress = this.animationTime / this.duration;
-
-            if (this._animationProgress > 1.0) {
-                this._animationProgress = 1.0;
-                this._endAnimate();
-            }
-        }
-
-        /**
-         * Start animation
-         */
-        startAnimation() {
-            this.isAnimating = true;
-            this.duration = Shape.animationDuration;
-        }
-
-        /**
          * End animation
          */
         _endAnimate() {
-            this.isAnimating        = false;
-            this.animationTime      = 0;
-            this._animationProgress = 0;
-            this.presentationShape.clear();
-            // this.presentationShape  = null;
+            //
         }
 
         /**
          * Drawing to the canvas
          */
         draw(context) {
-            if (this.isAnimating) {
-                this._doAnimate();
-            }
+            //
         }
 
         /**
