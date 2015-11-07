@@ -173,6 +173,10 @@
         }
 
         clear() {
+            for(var key in this._properties) {
+                var property = this._properties[key];
+                property.dispose();
+            }
             this._properties = {};
         }
 
