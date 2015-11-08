@@ -6,14 +6,14 @@
      */
     class Appearance {
         constructor() {
-            this._color       = Color.black;
-            this._strokeColor = Color.black;
+            this._color       = namespace.Color.black;
+            this._strokeColor = namespace.Color.black;
 
-            this._hoverColor       = Color.black;
-            this._hoverStrokeColor = Color.black;
+            this._hoverColor       = namespace.Color.black;
+            this._hoverStrokeColor = namespace.Color.black;
 
-            this._selectedColor = Color.green;
-            this._selectedStrokeColor = Color.red;
+            this._selectedColor = namespace.Color.green;
+            this._selectedStrokeColor = namespace.Color.red;
         }
 
         set selectedColor(value) {
