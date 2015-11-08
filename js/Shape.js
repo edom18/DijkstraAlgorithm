@@ -105,6 +105,40 @@
 
     //////////////////////////////////////////////////
 
+    class AnimatorGroup {
+        constructor(id) {
+            this.id = id;
+            this._animators = new Set();
+            this._listeners = new Map();
+            this._dispatcher = new namespace.Dispatcher();
+        }
+        addAnimator(animator) {
+            if (this._animators.has(animator)) {
+                return;
+            }
+
+            var listener = new Listener('animationend', this.animationendHandler.bind(this));
+            animator.addListener(listener);
+            this._animators.add(animator);
+            this._listeners.set(animator, listener);
+        }
+        removeAnimator(animator) {
+            this._listeners.delete(animator);
+            this._animators.delete(animator);
+        }
+
+        animationendHandler() {
+            for (let animator of this._animators.entries()) {
+                if (!animator[0].isAnimated) {
+                    return;
+                }
+            }
+
+            console.log('animation group has been ended.');
+            // do end.
+        }
+    }
+
     class Animator {
         constructor(key, duration, fromValue, toValue, easingFunc) {
             this.duration   = duration
@@ -201,6 +235,11 @@
                 this._properties[key] = null;
             }));
             this._properties[key] = animator;
+
+            // TODO: もっと簡潔に
+            Shape.animatorGroup[Shape.animationGroupId].addAnimator(animator);
+
+            return animator;
         }
     }
 
@@ -403,15 +442,25 @@
          * This method provide animation start point.
          * When setting up any parameter in the shape, will animate the shape by duration.
          */
-        static animationWithDuration(duration, capture) {
+        static animationWithDuration(duration, capture, completion) {
             this.animationDuration = duration;
             this.isAnimationCapturing = true;
+            var id = this.animationGroupId = this.generateId();
+            var animatorGroup = new AnimatorGroup(id);
+            Shape.animatorGroup[id] = animatorGroup;
             capture();
             this.isAnimationCapturing = false;
+        }
+
+        static generateId() {
+            var id = `id-${Math.random()}`;
+            return id;
         }
     }
     Shape.isAnimationCapturing = false;
     Shape.animationDuration = 0;
+    Shape.animationGroupId = null;
+    Shape.animatorGroup = {};
 
 
     /**
