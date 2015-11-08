@@ -251,8 +251,7 @@
             }));
             this._properties[key] = animator;
 
-            // TODO: もっと簡潔に
-            Shape.animatorGroup[Shape.animationGroupId].addAnimator(animator);
+            Shape.addAnimatorToCurrentContext(animator);
 
             return animator;
         }
@@ -487,6 +486,10 @@
         static generateId() {
             var id = `id-${Math.random()}`;
             return id;
+        }
+
+        static addAnimatorToCurrentContext(animator) {
+            this.animatorGroup[this.animationGroupId].addAnimator(animator);
         }
     }
     Shape.isAnimationCapturing = false;
