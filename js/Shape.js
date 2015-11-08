@@ -135,7 +135,22 @@
             }
 
             console.log('animation group has been ended.');
-            // do end.
+
+            this._dispatcher.dispatch('animationgroupend', this, {
+
+            });
+        }
+
+        addListener(listener) {
+            this._dispatcher.addListener(listener);
+        }
+
+        removeListener(listener) {
+            this._dispatcher.removeListener(listener);
+        }
+
+        dispose() {
+            this._dispatcher.dispose();
         }
     }
 
@@ -445,10 +460,21 @@
         static animationWithDuration(duration, capture, completion) {
             this.animationDuration = duration;
             this.isAnimationCapturing = true;
+
+            // Create an animator group.
             var id = this.animationGroupId = this.generateId();
             var animatorGroup = new AnimatorGroup(id);
             Shape.animatorGroup[id] = animatorGroup;
+            animatorGroup.addListener(new Listener('animationgroupend', (target, referData) => {
+                Shape.animatorGroup[id].dispose();
+                delete Shape.animatorGroup[id];
+                completion();
+                completion = null;
+            }));
+
+            // Capture values as animation.
             capture();
+
             this.isAnimationCapturing = false;
         }
 
