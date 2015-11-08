@@ -451,17 +451,7 @@
             return this.appearance.hoverStrokeColor;
         }
 
-        /**
-         * Static method
-         *
-         * This method provide animation start point.
-         * When setting up any parameter in the shape, will animate the shape by duration.
-         */
-        static animationWithDuration(duration, capture, completion) {
-            this.animationDuration = duration;
-            this.isAnimationCapturing = true;
-
-            // Create an animator group.
+        static setupAnimatorGroup(completion) {
             var id = this.animationGroupId = this.generateId();
             var animatorGroup = new AnimatorGroup(id);
             Shape.animatorGroup[id] = animatorGroup;
@@ -471,6 +461,22 @@
                 completion();
                 completion = null;
             }));
+        }
+
+        /**
+         * Static method
+         *
+         * This method provide animation start point.
+         * When setting up any parameter in the shape, will animate the shape by duration.
+         */
+        static animationWithDuration(duration, capture, completion) {
+            this.animationDuration = duration;
+
+            // Capture start.
+            this.isAnimationCapturing = true;
+
+            // Create an animator group.
+            this.setupAnimatorGroup(completion);
 
             // Capture values as animation.
             capture();
