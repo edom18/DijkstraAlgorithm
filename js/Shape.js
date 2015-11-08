@@ -115,7 +115,7 @@
             this.isAnimated = false;
             this.time = 0;
 
-            this._dispatcher = new Dispatcher();
+            this._dispatcher = new namespace.Dispatcher();
         }
 
         get value() {
@@ -190,6 +190,7 @@
 
         set(key, duration, fromValue, toValue, easingFunc) {
             if (this._properties[key]) {
+                return this._properties[key];
                 return;
             }
 
@@ -213,7 +214,7 @@
 
             this.presentationShape = new PresentationShape(this);
 
-            this._dispatcher = new Dispatcher();
+            this._dispatcher = new namespace.Dispatcher();
 
             this.appearance = appearance || new Appearance();
 
