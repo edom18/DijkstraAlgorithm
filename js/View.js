@@ -12,6 +12,20 @@
             this._map = new Map();
         }
         
+        //////////////////////////////////////////////////
+        // Getter / Setter
+
+        set selected(value) {
+            if (this._selected === value) {
+                return;
+            }
+
+            this._selected = true;
+        }
+        get selected() {
+            return this._selected;
+        }
+        
         addListener(listener) {
             var intercepter = new ListenerIntercepter(listener, (context, referData) => {
                 this._dispatcher.dispatch(listener.type, this, referData);
@@ -37,13 +51,6 @@
         addToScene(scene) {
             scene.add(this.shape);
         }
-
-        set selected(value) {
-            this.shape.isSelected = value;
-        }
-        get selected() {
-            return this.shape.isSelected;
-        }
     }
 
     /**
@@ -58,6 +65,12 @@
             var radius = 10;
 
             this.shape = new Dot(point, radius);
+
+            this._appearance         = new namespace.Appearance();
+            this._hoverppearance     = new namespace.Appearance();
+            this._selectedAppearance = new namespace.Appearance();
+
+            this._selectedAppearance.color = Color.blue;
 
             this.model = NodeManager.getInstance().create(id);
             this._changeListener = new Listener('change', this.changeHandler.bind(this));
@@ -87,6 +100,26 @@
         }
         set radius(value) {
             this.shape.radius = value;
+        }
+
+        // @override
+        set selected(value) {
+            if (this._selected === value) {
+                return;
+            }
+
+            this._selected = value;
+
+            if (value === true) {
+                Shape.animationWithDuration(3000, () => {
+                    this.shape.color = this._selectedAppearance.color;
+                });
+            }
+            else {
+                Shape.animationWithDuration(3000, () => {
+                    this.shape.color = this._appearance.color;
+                });
+            }
         }
     }
 
