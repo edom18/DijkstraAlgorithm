@@ -151,6 +151,10 @@
             this._properties = {};
         }
 
+        has(key) {
+            return !!this._properties[key];
+        }
+
         get(key) {
             if (this._properties[key]) {
                 return this._properties[key].value;
@@ -160,9 +164,10 @@
         }
 
         set(key, duration, fromValue, toValue, easingFunc) {
-            if (this._properties[key]) {
-                return this._properties[key];
-                return;
+            if (this.has(key)) {
+                fromValue = this.get(key);
+                this._properties[key].dispose();
+                this._properties[key] = null;
             }
 
             var animator = new Animator(key, duration, fromValue, toValue, easingFunc);
