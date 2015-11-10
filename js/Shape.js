@@ -8,26 +8,6 @@
         constructor() {
             this._color       = namespace.Color.black;
             this._strokeColor = namespace.Color.black;
-
-            this._hoverColor       = namespace.Color.black;
-            this._hoverStrokeColor = namespace.Color.black;
-
-            this._selectedColor = namespace.Color.green;
-            this._selectedStrokeColor = namespace.Color.red;
-        }
-
-        set selectedColor(value) {
-            this._selectedColor = value;
-        }
-        get selectedColor() {
-            return this._selectedColor;
-        }
-
-        set selectedStrokeColor(value) {
-            this._selectedStrokeColor = value;
-        }
-        get selectedStrokeColor() {
-            return this._selectedStrokeColor;
         }
 
         set color(value) {
@@ -37,25 +17,11 @@
             return this._color;
         }
 
-        set hoverColor(value) {
-            this._hoverColor = value;
-        }
-        get hoverColor() {
-            return this._hoverColor;
-        }
-
         set strokeColor(value) {
             this._strokeColor = value;
         }
         get strokeColor() {
             return this._strokeColor;
-        }
-
-        set hoverStrokeColor(value) {
-            this._hoverStrokeColor = value;
-        }
-        get hoverStrokeColor() {
-            return this._hoverStrokeColor;
         }
     }
 
@@ -78,8 +44,8 @@
      */
     class NormalDecorator extends Decorator {
         decorate(context) {
-            context.fillStyle   = this._shape.color.toString();
-            context.strokeStyle = this._shape.strokeColor.toString();
+            context.fillStyle   = this._shape.appearance.color.toString();
+            context.strokeStyle = this._shape.appearance.strokeColor.toString();
         }
     }
 
@@ -88,8 +54,8 @@
      */
     class HoverDecorator extends Decorator {
         decorate(context) {
-            context.fillStyle   = this._shape.hoverColor.toString();
-            context.strokeStyle = this._shape.hoverStrokeColor.toString();
+            context.fillStyle   = this._shape.hoverAppearance.color.toString();
+            context.strokeStyle = this._shape.hoverAppearance.strokeColor.toString();
         }
     }
 
@@ -98,8 +64,8 @@
      */
     class SelectedDecorator extends Decorator {
         decorate(context) {
-            context.fillStyle   = this._shape.selectedColor.toString();
-            context.strokeStyle = this._shape.selectedStrokeColor.toString();
+            context.fillStyle   = this._shape.selectedAppearance.color.toString();
+            context.strokeStyle = this._shape.selectedAppearance.strokeColor.toString();
         }
     }
 
@@ -261,7 +227,7 @@
      * Shape base class.
      */
     class Shape {
-        constructor(appearance) {
+        constructor() {
             this.isHovering    = false;
             this.isSelected    = false;
 
@@ -269,7 +235,13 @@
 
             this._dispatcher = new namespace.Dispatcher();
 
-            this.appearance = appearance || new Appearance();
+            this.appearance         = new Appearance();
+            this.hoverAppearance    = new Appearance();
+            this.selectedAppearance = new Appearance();
+
+            // for debug
+            this.hoverAppearance.color = Color.red;
+            this.selectedAppearance.color = Color.blue;
 
             this.normalDecorator   = new NormalDecorator(this);
             this.hoverDecorator    = new HoverDecorator(this);
