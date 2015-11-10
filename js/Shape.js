@@ -457,8 +457,11 @@
             animatorGroup.addListener(new Listener('animationgroupend', (target, referData) => {
                 Shape.animatorGroup[id].dispose();
                 delete Shape.animatorGroup[id];
-                completion();
-                completion = null;
+
+                if (completion) {
+                    completion();
+                    completion = null;
+                }
             }));
         }
 
