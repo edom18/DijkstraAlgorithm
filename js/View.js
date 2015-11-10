@@ -92,10 +92,11 @@
             this.shape = new Dot(point, radius);
 
             this._appearance         = new namespace.Appearance();
-            this._hoverppearance     = new namespace.Appearance();
+            this._hoverAppearance    = new namespace.Appearance();
             this._selectedAppearance = new namespace.Appearance();
 
             this._selectedAppearance.color = Color.blue;
+            this._hoverAppearance.color = Color.white;
 
             this.model = NodeManager.getInstance().create(id);
             this._changeListener = new Listener('change', this.changeHandler.bind(this));
