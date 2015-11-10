@@ -15,6 +15,9 @@
         //////////////////////////////////////////////////
         // Getter / Setter
 
+        /**
+         * Selected flag
+         */
         set selected(value) {
             if (this._selected === value) {
                 return;
@@ -48,6 +51,11 @@
             this._map.delete(listener);
         }
 
+        /**
+         * Add this view to the scene
+         *
+         * @param {Scene} scene
+         */
         addToScene(scene) {
             scene.add(this.shape);
         }
