@@ -183,16 +183,37 @@
                     this.inspector.selectedItem = target.model;
                 });
                 edgeView.addListener(listener);
+
+                var hoverListener = new Listener('hover', (target) => {
+                    target.hover();
+                });
+                edgeView.addListener(hoverListener);
+
+                var unhoverListener = new Listener('unhover', (target) => {
+                    target.unhover();
+                });
+                edgeView.addListener(unhoverListener);
             });
 
+
             this.nodeViews.forEach((nodeView, i) => {
-                var listener = new Listener('click', (target) => {
+                var clickListener = new Listener('click', (target) => {
                     this.unselect();
 
                     target.selected = true;
                     this.inspector.selectedItem = target.model;
                 });
-                nodeView.addListener(listener);
+                nodeView.addListener(clickListener);
+
+                var hoverListener = new Listener('hover', (target) => {
+                    target.hover();
+                });
+                nodeView.addListener(hoverListener);
+
+                var unhoverListener = new Listener('unhover', (target) => {
+                    target.unhover();
+                });
+                nodeView.addListener(unhoverListener);
             });
         }
 
