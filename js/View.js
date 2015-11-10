@@ -147,6 +147,32 @@
                 });
             }
         }
+
+        // @override
+        hover() {
+            if (this._isHovering) {
+                return;
+            }
+
+            this._isHovering = true;
+
+            Shape.animationWithDuration(3000, () => {
+                this.shape.color = this._hoverAppearance.color;
+            });
+        }
+
+        // @override
+        unhover() {
+            if (!this._isHovering) {
+                return;
+            }
+
+            this._isHovering = false;
+
+            Shape.animationWithDuration(3000, () => {
+                this.shape.color = this._appearance.color;
+            });
+        }
     }
 
     /**
