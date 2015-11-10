@@ -184,7 +184,7 @@
      */
     class Shape {
         constructor(appearance) {
-            this.isHovering = false;
+            this._isHovering = false;
 
             this.presentationShape = new PresentationShape(this);
 
@@ -240,14 +240,26 @@
          * Turn on hovering flag.
          */
         hover() {
-            this.isHovering = true;
+            if (this._isHovering) {
+                return;
+            }
+
+            this._isHovering = true;
+
+            this._dispatcher.dispatch('hover', this);
         }
 
         /**
          * Turn off hovering flag.
          */
         unhover() {
-            this.isHovering = false;
+            if (!this._isHovering) {
+                return;
+            }
+
+            this._isHovering = false;
+
+            this._dispatcher.dispatch('unhover', this);
         }
 
         /**

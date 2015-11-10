@@ -9,6 +9,7 @@
             this.shape       = new Shape();
             this._dispatcher = new Dispatcher();
             this._selected   = false;
+            this._isHovering = false;
             this._map = new Map();
         }
         
@@ -58,6 +59,22 @@
          */
         addToScene(scene) {
             scene.add(this.shape);
+        }
+
+        hover() {
+            if (this._isHovering) {
+                return;
+            }
+
+            this._isHovering = true;
+        }
+
+        unhover() {
+            if (!this._isHovering) {
+                return;
+            }
+
+            this._isHovering = false;
         }
     }
 

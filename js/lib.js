@@ -266,14 +266,12 @@
         }
 
         hover(x, y) {
-            this.shapes.forEach((shape, i) => {
-                shape.unhover();
-            });
-
             this.each((shape, i) => {
                 if (shape.hitTest(x, y)) {
                     shape.hover();
-                    return true;
+                }
+                else {
+                    shape.unhover();
                 }
             });
         }
