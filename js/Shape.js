@@ -27,50 +27,6 @@
 
     //////////////////////////////////////////////////
 
-    /**
-     * Decorator base class
-     *
-     * @param {Shape} shape target shape
-     */
-    class Decorator {
-        constructor(shape) {
-            this._shape = shape;
-        }
-        decorate(context) { }
-    }
-
-    /**
-     * Normal style decorator
-     */
-    class NormalDecorator extends Decorator {
-        decorate(context) {
-            context.fillStyle   = this._shape.appearance.color.toString();
-            context.strokeStyle = this._shape.appearance.strokeColor.toString();
-        }
-    }
-
-    /**
-     * Hovering style decorator
-     */
-    class HoverDecorator extends Decorator {
-        decorate(context) {
-            context.fillStyle   = this._shape.hoverAppearance.color.toString();
-            context.strokeStyle = this._shape.hoverAppearance.strokeColor.toString();
-        }
-    }
-
-    /**
-     * Selected style decorator
-     */
-    class SelectedDecorator extends Decorator {
-        decorate(context) {
-            context.fillStyle   = this._shape.selectedAppearance.color.toString();
-            context.strokeStyle = this._shape.selectedAppearance.strokeColor.toString();
-        }
-    }
-
-    //////////////////////////////////////////////////
-
     class AnimatorGroup {
         constructor(id) {
             this.id = id;
@@ -227,25 +183,14 @@
      * Shape base class.
      */
     class Shape {
-        constructor() {
-            this.isHovering    = false;
-            this.isSelected    = false;
+        constructor(appearance) {
+            this.isHovering = false;
 
             this.presentationShape = new PresentationShape(this);
 
             this._dispatcher = new namespace.Dispatcher();
 
-            this.appearance         = new Appearance();
-            this.hoverAppearance    = new Appearance();
-            this.selectedAppearance = new Appearance();
-
-            // for debug
-            this.hoverAppearance.color = Color.red;
-            this.selectedAppearance.color = Color.blue;
-
-            this.normalDecorator   = new NormalDecorator(this);
-            this.hoverDecorator    = new HoverDecorator(this);
-            this.selectedDecorator = new SelectedDecorator(this);
+            this.appearance = appearance || new Appearance();
 
             this.zIndex = 0;
         }
@@ -259,15 +204,13 @@
         }
 
         decorate(context) {
-            if (this.isHovering) {
-                this.hoverDecorator.decorate(context);
-            }
-            else if (this.isSelected){
-                this.selectedDecorator.decorate(context);
-            }
-            else {
-                this.normalDecorator.decorate(context);
-            }
+            var color       = this.presentationShape.get('color');
+            var strokeColor = this.presentationShape.get('strokeColor');
+            color = color ? color : this.appearance.color;
+            strokeColor = strokeColor ? strokeColor : this.appearance.strokeColor;
+
+            context.fillStyle   = color.toString();
+            context.strokeStyle = strokeColor.toString();
         }
 
         /**
@@ -314,42 +257,9 @@
             this._dispatcher.dispatch('click', this);
         }
 
-        set selectedColor(value) {
-            if (Shape.isAnimationCapturing) {
-                this.presentationShape.set('selectedColor', Shape.animationDuration, this.appearance.selectedColor, value, colorEasing);
-            }
-
-            this.appearance.selectedColor = value;
-        }
-        get selectedColor() {
-            if (this.presentationShape.isAnimating('selectedColor')) {
-                var selectedColor = this.presentationShape.get('selectedColor');
-                if (selectedColor !== null) {
-                    return selectedColor;
-                }
-            }
-
-            return this.appearance.selectedColor;
-        }
-
-        set selectedStrokeColor(value) {
-            if (Shape.isAnimationCapturing) {
-                this.presentationShape.set('selectedStrokeColor', Shape.animationDuration, this.appearance.selectedStrokeColor, value, colorEasing);
-            }
-
-            this.appearance.selectedStrokeColor = value;
-        }
-        get selectedStrokeColor() {
-            if (this.presentationShape.isAnimating('selectedStrokeColor')) {
-                var selectedStrokeColor = this.presentationShape.get('selectedStrokeColor');
-                if (selectedStrokeColor !== null) {
-                    return selectedStrokeColor;
-                }
-            }
-
-            return this.appearance.selectedStrokeColor;
-        }
-
+        /**
+         * Color for the canvas.
+         */
         set color(value) {
             if (Shape.isAnimationCapturing) {
                 this.presentationShape.set('color', Shape.animationDuration, this.appearance.color, value, colorEasing);
@@ -358,34 +268,13 @@
             this.appearance.color = value;
         }
         get color() {
-            if (this.presentationShape.isAnimating('color')) {
-                var color = this.presentationShape.get('color');
-                if (color !== null) {
-                    return color;
-                }
-            }
-
             return this.appearance.color;
         }
 
-        set hoverColor(value) {
-            if (Shape.isAnimationCapturing) {
-                this.presentationShape.set('hoverColor', Shape.animationDuration, this.appearance.hoverColor, value, colorEasing);
-            }
 
-            this.appearance.hoverColor = value;
-        }
-        get hoverColor() {
-            if (this.presentationShape.isAnimating('hoverColor')) {
-                var hoverColor = this.presentationShape.get('hoverColor');
-                if (hoverColor !== null) {
-                    return hoverColor;
-                }
-            }
-
-            return this.appearance.hoverColor;
-        }
-
+        /**
+         * Stroke color for the canvas.
+         */
         set strokeColor(value) {
             if (Shape.isAnimationCapturing) {
                 this.presentationShape.set('strokeColor', Shape.animationDuration, this.appearance.strokeColor, value, colorEasing);
@@ -394,32 +283,7 @@
             this.appearance.strokeColor = value;
         }
         get strokeColor() {
-            if (this.presentationShape.isAnimating('strokeColor')) {
-                var strokeColor = this.presentationShape.get('strokeColor');
-                if (strokeColor !== null) {
-                    return strokeColor;
-                }
-            }
-
             return this.appearance.strokeColor;
-        }
-
-        set hoverStrokeColor(value) {
-            if (Shape.isAnimationCapturing) {
-                this.presentationShape.set('hoverStrokeColor', Shape.animationDuration, this.appearance.hoverStrokeColor, value, colorEasing);
-            }
-
-            this.appearance.hoverStrokeColor = value;
-        }
-        get hoverStrokeColor() {
-            if (this.presentationShape.isAnimating('hoverStrokeColor')) {
-                var hoverStrokeColor = this.presentationShape.get('hoverStrokeColor');
-                if (hoverStrokeColor !== null) {
-                    return hoverStrokeColor;
-                }
-            }
-
-            return this.appearance.hoverStrokeColor;
         }
 
         static setupAnimatorGroup(completion) {
@@ -688,9 +552,10 @@
     }
 
     // Exports
-    namespace.Shape = Shape;
-    namespace.Dot   = Dot;
-    namespace.Line  = Line;
-    namespace.Text  = Text;
+    namespace.Appearance = Appearance;
+    namespace.Shape      = Shape;
+    namespace.Dot        = Dot;
+    namespace.Line       = Line;
+    namespace.Text       = Text;
 
 }(window));
