@@ -27,6 +27,11 @@
 
     //////////////////////////////////////////////////
 
+    /**
+     * Animator group
+     *
+     * This class manage several animators, provide grouping animators.
+     */
     class AnimatorGroup {
         constructor(id) {
             this.id = id;
@@ -34,6 +39,12 @@
             this._listeners = new Map();
             this._dispatcher = new namespace.Dispatcher();
         }
+
+        /**
+         * Add an animator to the group
+         *
+         * @param {Animator} animator
+         */
         addAnimator(animator) {
             if (this._animators.has(animator)) {
                 return;
@@ -44,11 +55,21 @@
             this._animators.add(animator);
             this._listeners.set(animator, listener);
         }
+
+        /**
+         * Remove an animator from the group
+         *
+         * @param {Animator} animator
+         */
         removeAnimator(animator) {
             this._listeners.delete(animator);
             this._animators.delete(animator);
         }
 
+        /**
+         * Animation end handler
+         * Raise animation group end event when all animators has been ended.
+         */
         animationendHandler() {
             for (let animator of this._animators.entries()) {
                 if (!animator[0].isAnimated) {
@@ -63,19 +84,37 @@
             });
         }
 
+        /**
+         * Add a listener to the dispather
+         *
+         * @param {Listener} listener
+         */
         addListener(listener) {
             this._dispatcher.addListener(listener);
         }
 
+        /**
+         * Remove a listener from the dispather
+         *
+         * @param {Listener} listener
+         */
         removeListener(listener) {
             this._dispatcher.removeListener(listener);
         }
 
+        /**
+         * Dispose this class
+         */
         dispose() {
             this._dispatcher.dispose();
         }
     }
 
+    /**
+     * Animator
+     *
+     * This class represent an animation for the shape.
+     */
     class Animator {
         constructor(key, duration, fromValue, toValue, easingFunc) {
             this.duration   = duration
@@ -89,6 +128,11 @@
             this._dispatcher = new namespace.Dispatcher();
         }
 
+        /**
+         * Get the value
+         *
+         * @return current value with easing.
+         */
         get value() {
             if (this.isAnimated) {
                 return this.toValue;
@@ -110,6 +154,11 @@
             return this.easingFunc(t, this.fromValue, this.toValue);
         }
 
+        /**
+         * Add a listener to the dispathcer
+         *
+         * @param {Listener} listener
+         */
         addListener(listener) {
             this._dispatcher.addListener(listener);
         }
@@ -123,6 +172,9 @@
             this._dispatcher.removeListener(listener);
         }
 
+        /**
+         * Dispose this class
+         */
         dispose() {
             this._dispatcher.dispose();
         }
@@ -138,11 +190,21 @@
             this.clear();
         }
 
+        /**
+         * Checking animation
+         * 
+         * @param {String} key check to the key
+         *
+         * @return {boolean} is animating
+         */
         isAnimating(key) {
             var isAnimating = !!this._properties[key];
             return isAnimating;
         }
 
+        /**
+         * Clear animations
+         */
         clear() {
             for(var key in this._properties) {
                 var property = this._properties[key];
@@ -151,10 +213,24 @@
             this._properties = {};
         }
 
+        /**
+         * Check the key
+         *
+         * @param {String} key
+         *
+         * @return {boolean} return true if key is exist.
+         */
         has(key) {
             return !!this._properties[key];
         }
 
+        /**
+         * Get the value
+         *
+         * @param {String} key
+         *
+         * @return {Object} any value for current.
+         */
         get(key) {
             if (this._properties[key]) {
                 return this._properties[key].value;

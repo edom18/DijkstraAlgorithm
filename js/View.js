@@ -30,6 +30,9 @@
             return this._selected;
         }
         
+        /**
+         * Add listener to the dispather.
+         */
         addListener(listener) {
             var intercepter = new ListenerIntercepter(listener, (context, referData) => {
                 this._dispatcher.dispatch(listener.type, this, referData);
@@ -40,6 +43,9 @@
             this._map.set(listener, intercepter);
         }
         
+        /**
+         * Remove listener from the dispather.
+         */
         removeListener(listener) {
             if (!this._map.has(listener)) {
                 return;
@@ -61,6 +67,10 @@
             scene.add(this.shape);
         }
 
+        /**
+         * Perform hover action.
+         * This is just virtual method.
+         */
         hover() {
             if (this._isHovering) {
                 return;
@@ -69,6 +79,10 @@
             this._isHovering = true;
         }
 
+        /**
+         * Perform unhover action.
+         * This is just virtual method.
+         */
         unhover() {
             if (!this._isHovering) {
                 return;
@@ -77,6 +91,8 @@
             this._isHovering = false;
         }
     }
+
+    //////////////////////////////////////////////////
 
     /**
      * Node view class
@@ -103,6 +119,9 @@
             this.model.addListener(this._changeListener);
         }
 
+        /**
+         * Change handler for the model.
+         */
         changeHandler(target, changedData) {
             if (changedData.name === 'adoption') {
                 if (changedData.newValue) {
@@ -114,6 +133,9 @@
             }
         }
 
+        /**
+         * Point
+         */
         get point() {
             return this.shape.point;
         }
@@ -121,6 +143,9 @@
             this.shape.point = value;
         }
 
+        /**
+         * Radius
+         */
         get radius() {
             this.shape.radius;
         }
@@ -175,6 +200,8 @@
         }
     }
 
+    //////////////////////////////////////////////////
+
     /**
      * Edge view class
      * 
@@ -201,6 +228,9 @@
             this.text  = new Text(new Point(x, y), model.cost);
         }
 
+        /**
+         * Change handler for the model.
+         */
         changeHandler(target, changedData) {
             if (changedData.name === 'adoption') {
                 if (changedData.newValue) {
@@ -216,11 +246,17 @@
             }
         }
 
+        /**
+         * Add this to the scene.
+         */
         addToScene(scene) {
             scene.add(this.shape);
             scene.add(this.text);
         }
 
+        /**
+         * Start edge.
+         */
         set start(value) {
             this.shape.start = value;
         }
@@ -228,6 +264,9 @@
             return this.shap.start;
         }
 
+        /**
+         * End edge.
+         */
         set end(value) {
             this.shape.end = value;
         }
