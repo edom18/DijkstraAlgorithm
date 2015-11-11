@@ -117,20 +117,51 @@
             this.model = NodeManager.getInstance().create(id);
             this._changeListener = new Listener('change', this.changeHandler.bind(this));
             this.model.addListener(this._changeListener);
+
+            this._startNodeColor = new Color(0x26a9e1);
+            this._goalNodeColor  = new Color(0xf8903b);
         }
+
+        get currentColor() {
+            if (this._isHovering) {
+                return this._hoverAppearance.color;
+            }
+            else if (this.model.isStart) {
+                return this._startNodeColor;
+            }
+            else if (this.model.isGoal) {
+                return this._goalNodeColor;
+            }
+            else if (this._selected) {
+                return this._selectedAppearance.color;
+            }
+
+            return this._appearance.color;
+        }
+
+        handleChangeModel(changedData) {
+            namespace.Shape.animationWithDuration(500, () => {
+                this.shape.color = this.currentColor;
+            });
+        }
+
+        // handleAdoption(changedData) {
+        //     if (changedData.name === 'adoption') {
+        //         if (changedData.newValue) {
+        //             this.shape.color = 'red';
+        //         }
+        //         else {
+        //             this.shape.color = 'black';
+        //         }
+        //     }
+        // }
 
         /**
          * Change handler for the model.
          */
         changeHandler(target, changedData) {
-            if (changedData.name === 'adoption') {
-                if (changedData.newValue) {
-                    this.shape.color = 'red';
-                }
-                else {
-                    this.shape.color = 'black';
-                }
-            }
+            this.handleChangeModel(changedData);
+            // this.handleAdoption(changedData);
         }
 
         /**
@@ -161,16 +192,20 @@
 
             this._selected = value;
 
-            if (value === true) {
-                Shape.animationWithDuration(3000, () => {
-                    this.shape.color = this._selectedAppearance.color;
-                });
-            }
-            else {
-                Shape.animationWithDuration(3000, () => {
-                    this.shape.color = this._appearance.color;
-                });
-            }
+            Shape.animationWithDuration(3000, () => {
+                this.shape.color = this.currentColor;
+            });
+
+            // if (value === true) {
+            //     Shape.animationWithDuration(3000, () => {
+            //         this.shape.color = this._selectedAppearance.color;
+            //     });
+            // }
+            // else {
+            //     Shape.animationWithDuration(3000, () => {
+            //         this.shape.color = this._appearance.color;
+            //     });
+            // }
         }
 
         // @override
@@ -182,7 +217,7 @@
             this._isHovering = true;
 
             Shape.animationWithDuration(3000, () => {
-                this.shape.color = this._hoverAppearance.color;
+                this.shape.color = this.currentColor;
             });
         }
 
@@ -195,7 +230,7 @@
             this._isHovering = false;
 
             Shape.animationWithDuration(3000, () => {
-                this.shape.color = this._appearance.color;
+                this.shape.color = this.currentColor;
             });
         }
     }
