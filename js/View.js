@@ -103,9 +103,10 @@
         constructor(id, point) {
             super();
 
-            var radius = 10;
+            this.normalRadius = 10;
+            this.hoverRadius  = 15;
 
-            this.shape = new Dot(point, radius);
+            this.shape = new Dot(point, this.normalRadius);
 
             this._appearance         = new namespace.Appearance();
             this._hoverAppearance    = new namespace.Appearance();
@@ -205,8 +206,8 @@
 
             this._isHovering = true;
 
-            Shape.animationWithDuration(3000, () => {
-                this.shape.color = this.currentColor;
+            Shape.animationWithDuration(500, () => {
+                this.shape.radius = this.hoverRadius;
             });
         }
 
@@ -218,8 +219,8 @@
 
             this._isHovering = false;
 
-            Shape.animationWithDuration(3000, () => {
-                this.shape.color = this.currentColor;
+            Shape.animationWithDuration(500, () => {
+                this.shape.radius = this.normalRadius;
             });
         }
     }
