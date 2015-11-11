@@ -104,16 +104,12 @@
             super();
 
             this.normalRadius = 10;
-            this.hoverRadius  = 15;
+            this.hoverRadius  = 13;
 
-            this.shape = new Dot(point, this.normalRadius);
+            this._appearance         = new namespace.Appearance(Color.white);
+            this._selectedAppearance = new namespace.Appearance(Color.black, new Color(0xd4311e));
 
-            this._appearance         = new namespace.Appearance();
-            this._hoverAppearance    = new namespace.Appearance();
-            this._selectedAppearance = new namespace.Appearance();
-
-            this._selectedAppearance.color = Color.blue;
-            this._hoverAppearance.color = Color.white;
+            this.shape = new Dot(point, this.normalRadius, this._appearance);
 
             this.model = NodeManager.getInstance().create(id);
             this._changeListener = new Listener('change', this.changeHandler.bind(this));
@@ -124,10 +120,7 @@
         }
 
         get currentColor() {
-            if (this._isHovering) {
-                return this._hoverAppearance.color;
-            }
-            else if (this.model.isStart) {
+            if (this.model.isStart) {
                 return this._startNodeColor;
             }
             else if (this.model.isGoal) {
@@ -193,8 +186,9 @@
 
             this._selected = value;
 
-            Shape.animationWithDuration(3000, () => {
-                this.shape.color = this.currentColor;
+            var color = value ? this._selectedAppearance.strokeColor : Color.black;
+            Shape.animationWithDuration(500, () => {
+                this.shape.strokeColor = color;
             });
         }
 
@@ -206,7 +200,7 @@
 
             this._isHovering = true;
 
-            Shape.animationWithDuration(500, () => {
+            Shape.animationWithDuration(800, () => {
                 this.shape.radius = this.hoverRadius;
             });
         }
@@ -219,7 +213,7 @@
 
             this._isHovering = false;
 
-            Shape.animationWithDuration(500, () => {
+            Shape.animationWithDuration(800, () => {
                 this.shape.radius = this.normalRadius;
             });
         }
