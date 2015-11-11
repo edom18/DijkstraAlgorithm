@@ -195,17 +195,6 @@
             Shape.animationWithDuration(3000, () => {
                 this.shape.color = this.currentColor;
             });
-
-            // if (value === true) {
-            //     Shape.animationWithDuration(3000, () => {
-            //         this.shape.color = this._selectedAppearance.color;
-            //     });
-            // }
-            // else {
-            //     Shape.animationWithDuration(3000, () => {
-            //         this.shape.color = this._appearance.color;
-            //     });
-            // }
         }
 
         // @override
