@@ -5,9 +5,9 @@
      * Represent appearance of shapes
      */
     class Appearance {
-        constructor() {
-            this._color       = namespace.Color.black;
-            this._strokeColor = namespace.Color.black;
+        constructor(color, strokeColor) {
+            this._color       = color       || namespace.Color.black;
+            this._strokeColor = strokeColor || namespace.Color.black;
         }
 
         set color(value) {
