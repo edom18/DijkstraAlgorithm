@@ -52,7 +52,7 @@
 
         start() {
             return new Promise((resolve, reject) => {
-                Shape.animationWithDuration(this._duration, () => {
+                namespace.Shape.animationWithDuration(this._duration, () => {
                     this._animation();
                 }, () => {
                     this.completion(resolve, reject);
