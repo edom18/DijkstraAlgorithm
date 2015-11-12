@@ -29,6 +29,16 @@
         get selected() {
             return this._selected;
         }
+
+        //////////////////////////////////////////////////
+
+        get currentColor() {
+            return Color.black;
+        }
+
+        clear() {
+            this.shape.color = this.currentColor;
+        }
         
         /**
          * Add listener to the dispather.
@@ -119,6 +129,7 @@
             this._goalNodeColor  = new Color(0xf8903b);
         }
 
+        // @override
         get currentColor() {
             if (this.model.isStart) {
                 return this._startNodeColor;
