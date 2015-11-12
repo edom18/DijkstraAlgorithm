@@ -106,7 +106,7 @@
             this.normalRadius = 10;
             this.hoverRadius  = 13;
 
-            this._appearance         = new namespace.Appearance(Color.white);
+            this._appearance         = new namespace.Appearance(Color.white, Color.black);
             this._selectedAppearance = new namespace.Appearance(Color.white, new Color(0xd4311e));
 
             this.shape = new Dot(point, this.normalRadius, this._appearance);
@@ -186,7 +186,7 @@
 
             this._selected = value;
 
-            var color = value ? this._selectedAppearance.strokeColor : Color.black;
+            var color = value ? this._selectedAppearance.strokeColor : this._appearance.strokeColor;
             Shape.animationWithDuration(500, () => {
                 this.shape.strokeColor = color;
             });
