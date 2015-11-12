@@ -253,10 +253,10 @@
         changeHandler(target, changedData) {
             if (changedData.name === 'adoption') {
                 if (changedData.newValue) {
-                    this.shape.strokeColor = 'red';
+                    this.shape.strokeColor = Color.red;
                 }
                 else {
-                    this.shape.strokeColor = 'black';
+                    this.shape.strokeColor = Color.black;
                 }
             }
 
