@@ -205,6 +205,10 @@
                 b: b
             };
         }
+
+        copy() {
+            return new Color(this.r, this.g, this.b);
+        }
     }
 
     // Exports

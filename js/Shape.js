@@ -23,6 +23,13 @@
         get strokeColor() {
             return this._strokeColor;
         }
+
+        copy() {
+            var color = this._color.copy();
+            var strokeColor = this._strokeColor.copy();
+
+            return new this.constructor(color, strokeColor);
+        }
     }
 
     //////////////////////////////////////////////////
