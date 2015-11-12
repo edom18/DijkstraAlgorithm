@@ -8,11 +8,6 @@
      */
     function dijkstraSearch(nodes) {
 
-        // initialize costs
-        nodes.forEach((node, i) => {
-            node.start()
-        });
-
         var manager   = NodeManager.getInstance();
         var startNode = manager.startNode;
         var goalNode  = manager.goalNode;
@@ -21,6 +16,11 @@
             console.log('Must set start and goal node.');
             return;
         }
+
+        // initialize costs
+        nodes.forEach((node, i) => {
+            node.start()
+        });
         
         // start node is first node
         startNode.cost = 0;
