@@ -12,16 +12,11 @@
         var t = 1.0 - x;
         var f = t * t * t;
 
-        var hsb1 = c1.convertToHSB();
-        var hsb2 = c2.convertToHSB();
+        var r = c1.r * f + c2.r * (1.0 - f);
+        var g = c1.g * f + c2.g * (1.0 - f);
+        var b = c1.b * f + c2.b * (1.0 - f);
 
-        var h = hsb1.h * f + hsb2.h * (1.0 - f);
-        var s = hsb1.s * f + hsb2.s * (1.0 - f);
-        var b = hsb1.b * f + hsb2.b * (1.0 - f);
-
-        var tmp = Color.convertHSB2RGB(h, s, b);
-
-        return new Color(tmp.r, tmp.g, tmp.b);
+        return new Color(r, g, b);
     }
 
     class Color {
