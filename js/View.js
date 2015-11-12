@@ -107,7 +107,7 @@
             this.hoverRadius  = 13;
 
             this._appearance         = new namespace.Appearance(Color.white);
-            this._selectedAppearance = new namespace.Appearance(Color.black, new Color(0xd4311e));
+            this._selectedAppearance = new namespace.Appearance(Color.white, new Color(0xd4311e));
 
             this.shape = new Dot(point, this.normalRadius, this._appearance);
 
