@@ -278,7 +278,7 @@
 
             this._dispatcher = new namespace.Dispatcher();
 
-            this.appearance = appearance || new Appearance();
+            this.appearance = appearance ? appearance.copy() : new Appearance();
 
             this.zIndex = 0;
         }
