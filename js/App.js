@@ -119,10 +119,10 @@
          */
         start() {
             this.nodeViews.forEach((nodeView, i) => {
-                nodeView.shape.color = Color.black;
+                nodeView.clear();
             });
             this.edgeViews.forEach((edgeView, i) => {
-                edgeView.shape.strokeColor = Color.black;
+                edgeView.clear();
             });
         }
 
