@@ -271,7 +271,7 @@
 
         (function loop() {
             app.runLoop();
-            setTimeout(loop, 100);
+            setTimeout(loop, 32);
         }());
     }
 
