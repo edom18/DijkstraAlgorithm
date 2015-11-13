@@ -303,9 +303,12 @@
         decorate(context) {
             var color       = this.presentationShape.get('color');
             var strokeColor = this.presentationShape.get('strokeColor');
-            color = color ? color : this.appearance.color;
+            var lineWidth   = this.presentationShape.get('lineWidth');
+            color       = color ? color : this.appearance.color;
             strokeColor = strokeColor ? strokeColor : this.appearance.strokeColor;
+            lineWidth   = lineWidth ? lineWidth : this.appearance.lineWidth;
 
+            context.lineWidth   = lineWidth;
             context.fillStyle   = color.toString();
             context.strokeStyle = strokeColor.toString();
         }
@@ -393,6 +396,20 @@
         }
         get strokeColor() {
             return this.appearance.strokeColor;
+        }
+
+        /**
+         * Line width for the canvas.
+         */
+        set lineWidth(value) {
+            if (Shape.isAnimationCapturing) {
+                this.presentationShape.set('lineWidth', Shape.animationDuration, this._lineWidth, value, floatEasing);
+            }
+
+            this.appearance.lineWidth = value;
+        }
+        get lineWidth() {
+            this.appearance.lineWidth;
         }
 
         static setupAnimatorGroup(completion) {
@@ -580,24 +597,6 @@
             return this._end;
         }
 
-        set lineWidth(value) {
-            if (Shape.isAnimationCapturing) {
-                this.presentationShape.set('lineWidth', Shape.animationDuration, this._lineWidth, value, floatEasing);
-            }
-
-            this._lineWidth = value;
-        }
-        get lineWidth() {
-            if (this.presentationShape.isAnimating('lineWidth')) {
-                var lineWidth = this.presentationShape.get('lineWidth');
-                if (lineWidth !== null) {
-                    return lineWidth;
-                }
-            }
-
-            return this._lineWidth;
-        }
-
         draw(context) {
             super.draw(context);
             
@@ -608,7 +607,6 @@
             context.lineTo(this.end.x, this.end.y);
             context.closePath();
 
-            context.lineWidth = this._lineWidth;
             context.fill();
             context.stroke();
 
