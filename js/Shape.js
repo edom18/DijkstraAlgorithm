@@ -34,10 +34,14 @@
         }
 
         copy() {
-            var color = this._color.copy();
+            var color       = this._color.copy();
             var strokeColor = this._strokeColor.copy();
+            var lineWidth   = this._lineWidth;
 
-            return new this.constructor(color, strokeColor);
+            var appearance = new this.constructor(color, strokeColor);
+            appearance.lineWidth = lineWidth;
+
+            return appearance;
         }
     }
 
