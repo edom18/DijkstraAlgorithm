@@ -326,6 +326,32 @@
                 this.shape.strokeColor = color;
             });
         }
+
+        // @override
+        hover() {
+            if (this._isHovering) {
+                return;
+            }
+
+            this._isHovering = true;
+
+            Shape.animationWithDuration(800, () => {
+                this.shape.lineWidth = 5;
+            });
+        }
+
+        // @override
+        unhover() {
+            if (!this._isHovering) {
+                return;
+            }
+
+            this._isHovering = false;
+
+            Shape.animationWithDuration(800, () => {
+                this.shape.lineWidth = 1;
+            });
+        }
     }
 
     // Exports
