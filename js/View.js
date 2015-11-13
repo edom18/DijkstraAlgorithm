@@ -251,7 +251,7 @@
             this._changeListener = new Listener('change', this.changeHandler.bind(this));
             this.model.addListener(this._changeListener);
 
-            this.shape = new Line(nodeA.point, nodeB.point);
+            this.shape = new Line(nodeA.point, nodeB.point, this._appearance);
 
             var x = (nodeA.point.x + nodeB.point.x) / 2;
             x += 10;
