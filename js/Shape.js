@@ -8,6 +8,8 @@
         constructor(color, strokeColor) {
             this._color       = color       || namespace.Color.black;
             this._strokeColor = strokeColor || namespace.Color.black;
+
+            this._lineWidth = 0;
         }
 
         set color(value) {
@@ -22,6 +24,13 @@
         }
         get strokeColor() {
             return this._strokeColor;
+        }
+
+        set lineWidth(value) {
+            this._lineWidth = value;
+        }
+        get lineWidth() {
+            return this._lineWidth;
         }
 
         copy() {
@@ -521,6 +530,8 @@
 
             this._start = start;
             this._end   = end;
+            this._lineWidth = 1;
+
             this.update();
 
             this.detectDistance = 20;
@@ -569,6 +580,24 @@
             return this._end;
         }
 
+        set lineWidth(value) {
+            if (Shape.isAnimationCapturing) {
+                this.presentationShape.set('lineWidth', Shape.animationDuration, this._lineWidth, value, floatEasing);
+            }
+
+            this._lineWidth = lineWidth;
+        }
+        get lineWidth() {
+            if (this.presentationShape.isAnimating('lineWidth')) {
+                var lineWidth = this.presentationShape.get('lineWidth');
+                if (lineWidth !== null) {
+                    return lineWidth;
+                }
+            }
+
+            return this._lineWidth;
+        }
+
         draw(context) {
             super.draw(context);
             
@@ -579,6 +608,7 @@
             context.lineTo(this.end.x, this.end.y);
             context.closePath();
 
+            context.lineWidth = this._lineWidth;
             context.fill();
             context.stroke();
 
