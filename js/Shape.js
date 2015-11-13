@@ -403,7 +403,7 @@
          */
         set lineWidth(value) {
             if (Shape.isAnimationCapturing) {
-                this.presentationShape.set('lineWidth', Shape.animationDuration, this._lineWidth, value, floatEasing);
+                this.presentationShape.set('lineWidth', Shape.animationDuration, this.appearance.lineWidth, value, floatEasing);
             }
 
             this.appearance.lineWidth = value;
