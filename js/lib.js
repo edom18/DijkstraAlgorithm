@@ -265,10 +265,28 @@
             }
         }
 
-        hover(x, y) {
+        map(func) {
+            var results = [];
             this.each((shape, i) => {
+                var result = func(shape, i);
+                if (result) {
+                    results.push(result);
+                }
+            });
+            return results;
+        }
+
+        hover(x, y) {
+            var detectHovering = false;
+            this.each((shape, i) => {
+                if (detectHovering) {
+                    shape.unhover();
+                    return;
+                }
+
                 if (shape.hitTest(x, y)) {
                     shape.hover();
+                    detectHovering = true;
                 }
                 else {
                     shape.unhover();
