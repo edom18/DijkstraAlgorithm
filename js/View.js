@@ -245,6 +245,9 @@
             this._nodeA = nodeA;
             this._nodeB = nodeB;
 
+            this._appearance         = new namespace.Appearance(Color.white, Color.black);
+            this._selectedAppearance = new namespace.Appearance(Color.white, new Color(0xd4311e));
+
             this._changeListener = new Listener('change', this.changeHandler.bind(this));
             this.model.addListener(this._changeListener);
 
@@ -308,6 +311,20 @@
         }
         get end() {
             return this.shap.end;
+        }
+
+        // @override
+        set selected(value) {
+            if (this._selected === value) {
+                return;
+            }
+
+            this._selected = value;
+
+            var color = value ? this._selectedAppearance.strokeColor : this._appearance.strokeColor;
+            Shape.animationWithDuration(500, () => {
+                this.shape.strokeColor = color;
+            });
         }
     }
 
