@@ -585,7 +585,7 @@
                 this.presentationShape.set('lineWidth', Shape.animationDuration, this._lineWidth, value, floatEasing);
             }
 
-            this._lineWidth = lineWidth;
+            this._lineWidth = value;
         }
         get lineWidth() {
             if (this.presentationShape.isAnimating('lineWidth')) {
