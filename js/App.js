@@ -27,12 +27,12 @@
          * Create nodes (as demo)
          */
         createNodes() {
-            var node1Point = new Point(30, 150);
-            var node2Point = new Point(200, 10);
-            var node3Point = new Point(180, 160);
-            var node4Point = new Point(100, 300);
-            var node5Point = new Point(210, 310);
-            var node6Point = new Point(350, 140);
+            var node1Point = new Point(280, 130);
+            var node2Point = new Point(410, 40);
+            var node3Point = new Point(490, 380);
+            var node4Point = new Point(120, 450);
+            var node5Point = new Point(765, 530);
+            var node6Point = new Point(850, 180);
 
             var node1 = new NodeView(1, node1Point); // start
             var node2 = new NodeView(2, node2Point); // top
@@ -52,6 +52,7 @@
 
             edgeManager.connect(node3.model, node4.model, 3);
             edgeManager.connect(node3.model, node5.model, 2);
+            edgeManager.connect(node3.model, node6.model, 10);
 
             edgeManager.connect(node4.model, node5.model, 6);
 
