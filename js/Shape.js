@@ -653,8 +653,9 @@
     }
 
     class Text extends Shape {
-        constructor(point, text, appearnce) {
-            super(appearnce);
+        constructor(point, text, appearance) {
+            appearance || (appearance = new Appearance(Color.white));
+            super(appearance);
 
             this.text = text;
             this._point = point;
@@ -667,6 +668,7 @@
             var point = this.isAnimating ? this.presentation : this._point;
             context.translate(point.x, point.y);
             this.decorate(context);
+            context.font = 'bold 18px sans-seif';
             context.fillText(this.text, 0, 0);
             context.restore();
         }
