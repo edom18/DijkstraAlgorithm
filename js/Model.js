@@ -168,6 +168,31 @@
             }
             return this._instance;
         }
+
+        getPaths() {
+            var goalNode = this.goalNode;
+            if (!goalNode) {
+                console.log('Not found goal node.');
+                return null;
+            }
+
+            if (!goalNode.adoption) {
+                console.log('Do not complete to search.');
+                return null;
+            }
+
+            var result = [];
+            var currentNode = goalNode;
+            while(true) {
+                if (!currentNode) {
+                    break;
+                }
+                result.unshift(currentNode);
+                currentNode = currentNode.previousNode;
+            }
+            return result;
+        }
+
         get nodes() {
             return this._nodes.slice();
         }
