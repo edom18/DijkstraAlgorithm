@@ -3,15 +3,27 @@
   padding: 0;
 }
 
-.node {
-    position: absolute;
-    left: 0;
-    top: 0;
+body, html {
+    height: 100%;
+}
 
-    width: 30px;
-    height: 30px;
-    border-radius: 15px;
-    border: solid 1px #666;
+body {
+    background: #111;
+    color: #fff;
+}
+
+.container {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.content {
+    position: relative;
+    width: 1225px;
+    height: 840px;
+    background: url(img/map.jpg) no-repeat;
 }
 
 #inspector {
@@ -21,5 +33,9 @@
     bottom: 0;
     padding: 15px;
     width: 250px;
-    border: solid 1px #999;
+    background: rgba(0, 0, 0, 0.65);
+}
+
+.ctrl {
+    position: absolute;
 }

@@ -2,32 +2,38 @@
 <html>
 <head>
 <meta charset="UTF-8" />
-<title>ダイクストラ法を実装してみる - js do it</title>
+<title>ダイクストラ法を実装してみる</title>
 <meta name="Description" content="" />
 <meta name="Keywords"  content="" />
 <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-    <p><input type="button" value="Search" id="searchBtn" /></p>
-    <p><input type="button" value="Clear" id="clearBtn" /></p>
+    <div class="container">
+        <div class="content">
+            <div id="inspector">
+                <p>
+                <span>Type: </span><span class="typeField"></span>
+                </p>
+                <p>
+                <span>Cost: </span><input type="text" class="costField" />
+                </p>
+                <p>
+                <span>is start node: </span>
+                <input type="checkbox" class="startNodeCheckbox" value="false" />
+                </p>
+                <p>
+                <span>is goal node: </span>
+                <input type="checkbox" class="goalNodeCheckbox" value="false" />
+                </p>
+            <!-- /#inspector --></div>
 
-    <div id="inspector">
-        <p>
-            <span>Type: </span><span class="typeField"></span>
-        </p>
-        <p>
-            <span>Cost: </span><input type="text" class="costField" />
-        </p>
-        <p>
-            <span>is start node: </span>
-            <input type="checkbox" class="startNodeCheckbox" value="false" />
-        </p>
-        <p>
-            <span>is goal node: </span>
-            <input type="checkbox" class="goalNodeCheckbox" value="false" />
-        </p>
-    <!-- /#inspector --></div>
+            <div class="ctrl">
+                <p><input type="button" value="Search" id="searchBtn" /></p>
+                <p><input type="button" value="Clear" id="clearBtn" /></p>
+            <!-- /.ctrl --></div>
+        <!-- /.content --></div>
+    <!-- /.container --></div>
 
 <script src="js/lib.js"></script>
 <script src="js/Color.js"></script>

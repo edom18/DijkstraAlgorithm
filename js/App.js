@@ -4,10 +4,10 @@
     class Application {
         constructor() {
             this.scene     = new Scene();
-            this.renderer  = new Renderer(window.innerWidth, window.innerHeight);
+            this.renderer  = new Renderer(1225, 840);
             this.inspector = new Inspector();
 
-            document.body.appendChild(this.renderer.element);
+            document.querySelector('.content').appendChild(this.renderer.element);
             this.setupDOMEvents();
 
             this.animationQueue = null;
