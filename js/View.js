@@ -119,7 +119,10 @@
             this._appearance         = new namespace.Appearance(Color.white, Color.black);
             this._selectedAppearance = new namespace.Appearance(Color.white, new Color(0xd4311e));
 
+            this._normalLineWidth = 2;
+            this._hoverLineWidth  = 4;
             this.shape = new Dot(point, this.normalRadius, this._appearance);
+            this.shape.lineWidth = this._normalLineWidth;
 
             this.model = NodeManager.getInstance().create(id);
             this._changeListener = new Listener('change', this.changeHandler.bind(this));
@@ -213,6 +216,7 @@
 
             Shape.animationWithDuration(800, () => {
                 this.shape.radius = this.hoverRadius;
+                this.shape.lineWidth = this._hoverLineWidth;
             });
         }
 
@@ -226,6 +230,7 @@
 
             Shape.animationWithDuration(800, () => {
                 this.shape.radius = this.normalRadius;
+                this.shape.lineWidth = this._normalLineWidth;
             });
         }
     }
@@ -251,7 +256,10 @@
             this._changeListener = new Listener('change', this.changeHandler.bind(this));
             this.model.addListener(this._changeListener);
 
+            this._normalLineWidth = 2;
+            this._hoverLineWidth  = 4;
             this.shape = new Line(nodeA.point, nodeB.point, this._appearance);
+            this.shape.lineWidth = this._normalLineWidth;
 
             var x = (nodeA.point.x + nodeB.point.x) / 2;
             x += 10;
@@ -336,7 +344,7 @@
             this._isHovering = true;
 
             Shape.animationWithDuration(800, () => {
-                this.shape.lineWidth = 5;
+                this.shape.lineWidth = this._hoverLineWidth;
             });
         }
 
@@ -349,7 +357,7 @@
             this._isHovering = false;
 
             Shape.animationWithDuration(800, () => {
-                this.shape.lineWidth = 1;
+                this.shape.lineWidth = this._normalLineWidth;
             });
         }
     }
