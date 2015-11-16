@@ -9,6 +9,8 @@
 
             document.body.appendChild(this.renderer.element);
             this.setupDOMEvents();
+
+            this.animationQueue = null;
         }
 
         /**
@@ -88,6 +90,17 @@
             return node;
         }
 
+        fetchEdgeViewById(id) {
+            var edge = null;
+            var hasEdge = this.edgeViews.some((e, i) => {
+                if (e.model.id === id) {
+                    edge = e;
+                    return true;
+                }
+            });
+            return edge;
+        }
+
         /**
          * Get all nodes from node views.
          */
@@ -111,6 +124,14 @@
 
             this.clearBtn = document.getElementById('clearBtn');
             this.clearBtn.addEventListener('click', this.clearHandler.bind(this), false);
+
+            setTimeout(() => {
+                // for debug
+                var manager   = NodeManager.getInstance();
+                var nodes = manager.nodes;
+                nodes[0].set('isStart', true);
+                nodes[5].set('isGoal', true);
+            }, 1000);
         }
 
 
@@ -133,6 +154,15 @@
             EdgeManager.getInstance().edges.forEach((edge, i) => {
                 edge.clear();
             });
+
+            Shape.animationWithDuration(500, () => {
+                this.nodeViews.forEach((nodeView, i) => {
+                    nodeView.shape.radius = nodeView.normalRadius;;
+                });
+                this.edgeViews.forEach((edgeView, i) => {
+                    edgeView.shape.lineWidth = 1;
+                });
+            });
         }
 
         /**
@@ -140,7 +170,57 @@
          */
         searchHandler() {
             this.start();
-            dijkstraSearch(this.getNodes());
+            namespace.dijkstraSearch(this.getNodes());
+            this.createAnimationSequence();
+        }
+
+        createAnimationSequence() {
+            this.animationQueue = new namespace.AnimationQueue();
+
+            var nodeManager = NodeManager.getInstance();
+            var paths = nodeManager.getPaths();
+            if (!paths) {
+                return;
+            }
+
+            var edgeManager  = EdgeManager.getInstance();
+            var route        = [];
+            var previousNode = null;
+            for (var i = 0, l = paths.length; i < l; i++) {
+                var node = paths[i];
+                var nodeView = this.fetchNodeViewById(node.id);
+
+                if (previousNode) {
+                    var edge     = edgeManager.fetchByNode(node, previousNode);
+                    var edgeView = this.fetchEdgeViewById(edge.id);
+                    route.push(edgeView);
+                }
+
+                route.push(nodeView);
+                previousNode = node;
+            }
+
+            route.forEach((view, i) => {
+                var animationItem = null;
+                if (view instanceof NodeView) {
+                    animationItem = new namespace.AnimationQueueItem(() => {
+                        view.shape.radius = 15;
+                    }, 500);
+                }
+                else if (view instanceof EdgeView) {
+                    animationItem = new namespace.AnimationQueueItem(() => {
+                        view.shape.lineWidth = 3;
+                    }, 500);
+                }
+
+                this.animationQueue.add(animationItem);
+            });
+
+            this.startAnimation();
+        }
+
+        startAnimation() {
+            this.animationQueue.start();
         }
 
         /**
