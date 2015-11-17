@@ -82,20 +82,58 @@ body {
 
 #inspector {
     position: absolute;
-    right: 0;
-    top: 0;
-    bottom: 0;
+    right: 10px;
+    top: 10px;
     padding: 15px;
     width: 250px;
     background: rgba(0, 0, 0, 0.65);
+    border: solid 1px rgba(255, 255, 255, 0.4);
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+}
+
+.type {
+    margin-bottom: 10px;
 }
 
 .cost {
-    width: 22px;
     height: 22px;
-    padding-left: 25px;
+    padding-left: 30px;
+    margin-bottom: 10px;
     background: url(img/icn_coin.png) left top no-repeat;
-    background-size: 50% 100%;
+    background-size: 22px 22px;
+}
+
+.costField {
+    border: solid 1px rgba(255, 255, 255, 0.2);
+    height: 22px;
+    background: rgba(0, 0, 0, 0.65);
+    vertical-align: top;
+    color: #fff;
+}
+
+.typeLabel {
+    display: inline-block;
+    height: 52px;
+    vertical-align: middle;
+}
+    .typeLabel img {
+        vertical-align: middle;
+    }
+
+.typeField {
+    display: inline-block;
+    width: 65px;
+    height: 52px;
+    vertical-align: middle;
+    background-repeat: no-repeat;
+    background-position: left top;
+    background-size: 65px 52px;
+}
+.typeField.typeNode {
+    background-image: url(img/icn_node.png);
+}
+.typeField.typeEdge {
+    background-image: url(img/icn_edge.png);
 }
 
 .startFlag {
