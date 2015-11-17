@@ -11,6 +11,8 @@
             this.setupDOMEvents();
 
             this.animationQueue = null;
+
+            this._running = false;
         }
 
         /**
@@ -140,6 +142,7 @@
          * Clear style to all items.
          */
         start() {
+            this._running = true;
             this.nodeViews.forEach((nodeView, i) => {
                 nodeView.clear();
             });
@@ -170,6 +173,10 @@
          * Search node path with Dijkstra algorithm.
          */
         searchHandler() {
+            if (this._running) {
+                return;
+            }
+
             this.start();
             namespace.dijkstraSearch(this.getNodes());
             this.createAnimationSequence();
@@ -228,7 +235,13 @@
         }
 
         startAnimation() {
-            this.animationQueue.start();
+            this.animationQueue.start().then(() => {
+                this.animationEnd();
+            });
+        }
+
+        animationEnd() {
+            this._running = false;
         }
 
         /**
