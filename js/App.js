@@ -161,7 +161,7 @@
                     nodeView.shape.radius = nodeView.normalRadius;;
                 });
                 this.edgeViews.forEach((edgeView, i) => {
-                    edgeView.shape.lineWidth = 1;
+                    edgeView.pathEnd = edgeView.start;
                 });
             });
         }
