@@ -205,7 +205,7 @@
         createAnimationSequence() {
             this.animationQueue = new namespace.AnimationQueue();
 
-            var duration = 800;
+            var duration = 650;
             var route = this.generateRoute();
 
             route.forEach((view, i) => {
