@@ -175,9 +175,7 @@
             this.createAnimationSequence();
         }
 
-        createAnimationSequence() {
-            this.animationQueue = new namespace.AnimationQueue();
-
+        generateRoute() {
             var nodeManager = NodeManager.getInstance();
             var paths = nodeManager.getPaths();
             if (!paths) {
@@ -201,17 +199,27 @@
                 previousNode = node;
             }
 
+            return route;
+        }
+
+        createAnimationSequence() {
+            this.animationQueue = new namespace.AnimationQueue();
+
+            var duration = 800;
+            var route = this.generateRoute();
+
             route.forEach((view, i) => {
                 var animationItem = null;
                 if (view instanceof NodeView) {
                     animationItem = new namespace.AnimationQueueItem(() => {
                         view.shape.radius = 15;
-                    }, 500);
+                    }, duration);
                 }
                 else if (view instanceof EdgeView) {
                     animationItem = new namespace.AnimationQueueItem(() => {
-                        view.shape.lineWidth = 3;
-                    }, 500);
+                        view.pathEnd = view.end; 
+                        // view.shape.lineWidth = 3;
+                    }, duration);
                 }
 
                 this.animationQueue.add(animationItem);

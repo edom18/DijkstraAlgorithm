@@ -261,6 +261,9 @@
             this.shape = new Line(nodeA.point, nodeB.point, this._appearance);
             this.shape.lineWidth = this._normalLineWidth;
 
+            this.pathShape = new Line(nodeA.point, nodeA.point, this._appearance);
+            this.pathShape.lineWidth = 8;
+
             var x = (nodeA.point.x + nodeB.point.x) / 2;
             x += 10;
             var y = (nodeA.point.y + nodeB.point.y) / 2;
@@ -298,6 +301,7 @@
          */
         addToScene(scene) {
             scene.add(this.shape);
+            scene.add(this.pathShape);
             scene.add(this.text);
         }
 
@@ -319,6 +323,26 @@
         }
         get end() {
             return this.shape.end;
+        }
+
+        /**
+         * Path edge start
+         */
+        get pathStart() {
+            return this.pathShape.start;
+        }
+        set pathStart(value) {
+            this.pathShape.start = value;
+        }
+
+        /**
+         * Path edge end
+         */
+        get pathEnd() {
+            return this.pathShape.end;
+        }
+        set pathEnd(value) {
+            this.pathShape.end = value;
         }
 
         // @override
