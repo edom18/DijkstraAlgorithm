@@ -142,6 +142,10 @@
             this.toValue    = toValue;
             this.easingFunc = easingFunc;
 
+            if (easingFunc === namespace.pointEasing) {
+                this.delta = toValue.clone().sub(fromValue);
+            }
+
             this.isAnimated = false;
             this.time = 0;
 
@@ -170,6 +174,13 @@
                 });
                 return val;
             }
+
+            // if (this.delta) {
+            //     var d = namespace.floatEasing(t, 0, 1);
+            //     var vector = this.delta.clone().multiplyScalar(d);
+            //     var result = this.fromValue.clone().add(vector);
+            //     return result;
+            // }
 
             return this.easingFunc(t, this.fromValue, this.toValue);
         }

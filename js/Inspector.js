@@ -114,8 +114,8 @@
                 return;
             }
 
-            this._startCheckbox.removeEventListener('change', this.changeHandler);
-            this._goalCheckbox.removeEventListener('change',  this.changeHandler);
+            this._startCheckbox.removeEventListener('click', this.changeHandler);
+            this._goalCheckbox.removeEventListener('click',  this.changeHandler);
         }
 
         setupElements() {
@@ -126,14 +126,16 @@
         }
 
         _changeHandler(evt) {
-            this.change();
+            this.change(evt);
         }
 
-        change() {
-            var isStart = this._startCheckbox.checked;
-            var isGoal  = this._goalCheckbox.checked;
-            this._model.set('isStart', isStart);
-            this._model.set('isGoal', isGoal);
+        change(evt) {
+            if (evt.target === this._startCheckbox) {
+                this._model.set('isStart', !this.isStart);
+            }
+            else if (evt.target === this._goalCheckbox) {
+                this._model.set('isGoal', !this.isGoal);
+            }
         }
 
         update() {
@@ -141,16 +143,16 @@
         }
 
         setupEvents() {
-            this._startCheckbox.addEventListener('change', this.changeHandler, false);
-            this._goalCheckbox.addEventListener('change',  this.changeHandler, false);
+            this._startCheckbox.addEventListener('click', this.changeHandler, false);
+            this._goalCheckbox.addEventListener('click',  this.changeHandler, false);
         }
 
         render() {
             this._typeField.innerHTML = this._model.type;
             this._costField.value     = this._model.cost;
 
-            this._startCheckbox.checked = this._model.isStart;
-            this._goalCheckbox.checked  = this._model.isGoal;
+            this.isStart = this._model.isStart;
+            this.isGoal  = this._model.isGoal;
         }
 
         dispose() {
@@ -159,8 +161,42 @@
             this._typeField.innerHTML = '';
             this._costField.value = '';
 
-            this._startCheckbox.checked = false;
-            this._goalCheckbox.checked  = false;
+            this.isStart = false;
+            this.isGoal  = false;
+        }
+
+        /**
+         * is start
+         */
+        set isStart(value) {
+            if (value) {
+                this._startCheckbox.dataset.checked = 'true';
+                this._startCheckbox.classList.add('checked');
+            }
+            else {
+                this._startCheckbox.dataset.checked = 'false';
+                this._startCheckbox.classList.remove('checked');
+            }
+        }
+        get isStart() {
+            return this._startCheckbox.dataset.checked === 'true' ? true : false;
+        }
+
+        /**
+         * is goal
+         */
+        set isGoal(value) {
+            if (value) {
+                this._goalCheckbox.dataset.checked = 'true';
+                this._goalCheckbox.classList.add('checked');
+            }
+            else {
+                this._goalCheckbox.dataset.checked = 'false';
+                this._goalCheckbox.classList.remove('checked');
+            }
+        }
+        get isGoal() {
+            return this._goalCheckbox.dataset.checked === 'true' ? true : false;
         }
     }
 

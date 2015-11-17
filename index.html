@@ -13,19 +13,14 @@
         <div class="content">
             <div id="inspector">
                 <p>
-                <span>Type: </span><span class="typeField"></span>
+                <span class="typeLabel"><img src="img/txt_type.png" alt="Type" width="58" height="19" /></span><span class="typeField"></span>
                 </p>
-                <p>
-                <span>Cost: </span><input type="text" class="costField" />
+                <p class="cost">
+                    <input type="text" class="costField" />
                 </p>
-                <p>
-                <span>is start node: </span>
-                <input type="checkbox" class="startNodeCheckbox" value="false" />
-                </p>
-                <p>
-                <span>is goal node: </span>
-                <input type="checkbox" class="goalNodeCheckbox" value="false" />
-                </p>
+
+                <p class="startFlag startNodeCheckbox" data-checked="false"></p>
+                <p class="goalFlag goalNodeCheckbox" data-checked="false"></p>
             <!-- /#inspector --></div>
 
             <div id="searchBtn"></div>

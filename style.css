@@ -90,6 +90,68 @@ body {
     background: rgba(0, 0, 0, 0.65);
 }
 
+.cost {
+    width: 22px;
+    height: 22px;
+    padding-left: 25px;
+    background: url(img/icn_coin.png) left top no-repeat;
+    background-size: 50% 100%;
+}
+
+.startFlag {
+    position: relative;
+    float: left;
+    cursor: pointer;
+    width: 75px;
+    height: 60px;
+    background: url(img/icn_start.png) left top no-repeat;
+    border: none;
+    background-size: 75px 60px;
+}
+.startFlag::after {
+    content: "";
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: url(img/icn_start_on.png) left top no-repeat;
+    background-size: 75px 60px;
+    opacity: 0;
+    transition: all 300ms ease-in-out;
+}
+.startFlag.checked::after {
+    opacity: 1;
+}
+
+.goalFlag  {
+    position: relative;
+    float: left;
+    cursor: pointer;
+    width: 75px;
+    height: 60px;
+    background: url(img/icn_goal.png) left top no-repeat;
+    border: none;
+    background-size: 75px 60px;
+}
+.goalFlag::after {
+    content: "";
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: url(img/icn_goal_on.png) left top no-repeat;
+    background-size: 75px 60px;
+    opacity: 0;
+    transition: all 300ms ease-in-out;
+}
+.goalFlag.checked::after {
+    opacity: 1;
+}
+
 .ctrl {
     position: absolute;
 }

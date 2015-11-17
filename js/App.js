@@ -218,7 +218,6 @@
                 else if (view instanceof EdgeView) {
                     animationItem = new namespace.AnimationQueueItem(() => {
                         view.pathEnd = view.end; 
-                        // view.shape.lineWidth = 3;
                     }, duration);
                 }
 
