@@ -36,8 +36,21 @@ body {
     background: url(img/btn_search.png) no-repeat;
     background-size: 190px;
 }
-#searchBtn:hover {
-    background-position: left bottom;
+#searchBtn::after {
+    content: "";
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: url(img/btn_search_on.png) no-repeat;
+    background-size: 190px;
+    opacity: 0;
+    transition: all 300ms ease-in-out;
+}
+#searchBtn:hover::after {
+    opacity: 1;
 }
 
 #clearBtn {
@@ -50,8 +63,21 @@ body {
     background: url(img/btn_clear.png) no-repeat;
     background-size: 95px;
 }
-#clearBtn:hover {
-    background-position: left bottom;
+#clearBtn::after {
+    content: "";
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: url(img/btn_clear_on.png) no-repeat;
+    background-size: 95px;
+    opacity: 0;
+    transition: all 300ms ease-in-out;
+}
+#clearBtn:hover::after {
+    opacity: 1;
 }
 
 #inspector {
