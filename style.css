@@ -8,7 +8,7 @@ body, html {
 }
 
 body {
-    background: #111;
+    background: #141414;
     color: #fff;
 }
 
@@ -24,6 +24,7 @@ body {
     width: 1225px;
     height: 840px;
     background: url(img/map.jpg) no-repeat;
+    box-shadow: 1px 1px 8px rgba(0, 0, 0, 0.9);
 }
 
 #searchBtn {
