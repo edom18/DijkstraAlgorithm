@@ -214,8 +214,18 @@
             return this;
         }
 
+        multiplyScalar(scalar) {
+            this.x *= scalar;
+            this.y *= scalar;
+            return this;
+        }
+
         clone() {
             return new Point(this.x, this.y);
+        }
+
+        length() {
+            return Math.sqrt(this.x * this.x + this.y * this.y);
         }
     }
 
