@@ -308,7 +308,7 @@
             this.shape.start = value;
         }
         get start() {
-            return this.shap.start;
+            return this.shape.start;
         }
 
         /**
@@ -318,7 +318,7 @@
             this.shape.end = value;
         }
         get end() {
-            return this.shap.end;
+            return this.shape.end;
         }
 
         // @override
