@@ -120,6 +120,7 @@
 
         setupElements() {
             this._typeField     = this.element.querySelector('.typeField');
+            this._costElement   = this.element.querySelector('.cost');
             this._costField     = this.element.querySelector('.costField');
             this._startCheckbox = this.element.querySelector('.startNodeCheckbox');
             this._goalCheckbox  = this.element.querySelector('.goalNodeCheckbox');
@@ -148,8 +149,16 @@
         }
 
         render() {
-            this._typeField.innerHTML = this._model.type;
-            this._costField.value     = this._model.cost;
+            if (this._model.type === 'node') {
+                this._typeField.classList.add('typeNode');
+            }
+            else {
+                this._typeField.classList.remove('typeNode');
+            }
+
+            this._costElement.classList.add('disabled');
+            this._costField.value = '';
+            this._costField.disabled = true;
 
             this.isStart = this._model.isStart;
             this.isGoal  = this._model.isGoal;
@@ -158,8 +167,10 @@
         dispose() {
             super.dispose();
 
-            this._typeField.innerHTML = '';
-            this._costField.value = '';
+            this._costField.value    = '';
+            this._costField.disabled = false;
+            this._typeField.classList.remove('typeNode');
+            this._costElement.classList.remove('disabled');
 
             this.isStart = false;
             this.isGoal  = false;
@@ -200,6 +211,10 @@
         }
     }
 
+
+    /**
+     * Edge model renderer
+     */
     class EdgeModelRenderer extends ModelRenderer {
         constructor(model) {
             super(model);
@@ -231,8 +246,9 @@
         }
 
         setupElements() {
-            this._typeField = this.element.querySelector('.typeField');
-            this._costField = this.element.querySelector('.costField');
+            this._typeField   = this.element.querySelector('.typeField');
+            this._costField   = this.element.querySelector('.costField');
+            this._costElement = this.element.querySelector('.cost');
         }
 
         setupEvents() {
@@ -240,15 +256,24 @@
         }
 
         render() {
-            this._typeField.innerHTML = this._model.type;
-            this._costField.value     = this._model.cost;
+            if (this._model.type === 'edge') {
+                this._typeField.classList.add('typeEdge');
+            }
+            else {
+                this._typeField.classList.remove('typeEdge');
+            }
+
+            this._costField.value = this._model.cost;
+            this._costElement.classList.remove('disabled');
         }
 
         dispose() {
             super.dispose();
 
-            this._typeField.innerHTML = '';
-            this._costField.value = '';
+            this._costField.value    = '';
+            this._costField.disabled = false;
+            this._typeField.classList.remove('typeEdge');
+            this._costElement.classList.remove('disabled');
         }
     }
 
