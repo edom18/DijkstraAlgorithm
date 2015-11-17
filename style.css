@@ -200,3 +200,37 @@ body {
 .ctrl {
     position: absolute;
 }
+
+.dialogContainer {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.65);
+    opacity: 0;
+    transition: all 0.5s ease-in-out;
+
+    display: none;
+}
+
+.dialog {
+    width: 555px;
+    height: 427px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-left: -277px;
+    margin-top: -213px;
+}
+
+.btnOK {
+    position: absolute;
+    bottom: 24px;
+    width: 100%;
+    height: 146px;
+    text-align: center;
+}
+.btnOK img {
+    cursor: pointer;
+}
