@@ -607,8 +607,10 @@
             context.save();
             context.beginPath();
             this.decorate(context);
-            context.moveTo(this.start.x, this.start.y);
-            context.lineTo(this.end.x, this.end.y);
+            var start = this.start;
+            context.moveTo(start.x, start.y);
+            var end = this.end;
+            context.lineTo(end.x, end.y);
             context.closePath();
 
             context.fill();
