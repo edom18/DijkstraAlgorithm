@@ -91,6 +91,8 @@
 
             var adoptionEdge = EdgeManager.getInstance().fetchByNode(currentNode, nextNode);
             adoptionEdge.set('adoption', true);
+            adoptionEdge.set('toNodeId', currentNode.id);
+            adoptionEdge.set('fromNodeId', nextNode.id);
 
             path += nextNode.id + ' -> ';
             currentNode = nextNode;
