@@ -346,6 +346,9 @@
             this._id = EdgeManager.getInstance().generateId(nodeA, nodeB);
 
             this._type = 'edge';
+
+            this._toNodeId   = -1;
+            this._fromNodeId = -1;
         }
 
         set(key, value) {
@@ -389,10 +392,14 @@
 
         clear() {
             this.set('adoption', false);
+            this.set('toNodeId',   -1);
+            this.set('fromNodeId', -1);
         }
 
         start() {
             this.set('adoption', false);
+            this.set('toNodeId',   -1);
+            this.set('fromNodeId', -1);
         }
 
         getOppositeNodeBy(node) {
@@ -419,6 +426,20 @@
         }
         get cost() {
             return this._cost;
+        }
+
+        set toNodeId(value) {
+            this._toNodeId = value;
+        }
+        get toNodeId() {
+            return this._toNodeId;
+        }
+
+        set fromNodeId(value) {
+            this._fromNodeId = value;
+        }
+        get fromNodeId() {
+            return this._fromNodeId;
         }
     }
 
