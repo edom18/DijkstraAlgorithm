@@ -153,23 +153,11 @@
             });
         }
 
-        // handleAdoption(changedData) {
-        //     if (changedData.name === 'adoption') {
-        //         if (changedData.newValue) {
-        //             this.shape.color = 'red';
-        //         }
-        //         else {
-        //             this.shape.color = 'black';
-        //         }
-        //     }
-        // }
-
         /**
          * Change handler for the model.
          */
         changeHandler(target, changedData) {
             this.handleChangeModel(changedData);
-            // this.handleAdoption(changedData);
         }
 
         /**
@@ -273,25 +261,11 @@
             this.text  = new Text(new Point(x, y), model.cost);
         }
 
-        handleAdoption(changedData) {
-            if (changedData.name !== 'adoption') {
-                return;
-            }
-
-            if (changedData.newValue) {
-                this.shape.strokeColor = Color.red;
-            }
-            else {
-                this.shape.strokeColor = Color.black;
-            }
-        }
 
         /**
          * Change handler for the model.
          */
         changeHandler(target, changedData) {
-            // this.handleAdoption(changedData);
-
             if (changedData.name === 'cost') {
                 this.text.text = this.model.cost;
             }
