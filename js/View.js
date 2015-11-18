@@ -254,7 +254,7 @@
             var pathAppearance = new namespace.Appearance(Color.black, new Color(0xb42200));
             this.pathShape = new Line(nodeA.point, nodeA.point, pathAppearance);
             this.pathShape.lineWidth = 8;
-            this.pathShape.zIndex = 20;
+            this.pathShape.zIndex = 10;
 
             var x = (nodeA.point.x + nodeB.point.x) / 2;
             x += 10;
