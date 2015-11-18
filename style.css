@@ -226,12 +226,27 @@ body {
 }
 
 .btnOK {
+    cursor: pointer;
     position: absolute;
+    left: 50%;
     bottom: 24px;
-    width: 100%;
+    width: 146px;
     height: 146px;
+    margin-left: -73px;
     text-align: center;
 }
-.btnOK img {
-    cursor: pointer;
+.btnOK::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url(img/btn_ok_on.png) left top no-repeat;
+    background-size: 146px 146px;
+    opacity: 0;
+    transition: all 0.3s ease-in-out;
+}
+.btnOK:hover::after {
+    opacity: 1;
 }
