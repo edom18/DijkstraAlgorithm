@@ -223,8 +223,15 @@
                     }, duration);
                 }
                 else if (view instanceof EdgeView) {
+                    var model = view.model;
+                    var toNode   = NodeManager.getInstance().fetchById(model.toNodeId);
+                    var fromNode = NodeManager.getInstance().fetchById(model.fromNodeId);
+                    var toNodeView   = this.fetchNodeViewById(toNode.id);
+                    var fromNodeView = this.fetchNodeViewById(fromNode.id);
+                    view.pathStart = fromNodeView.point;
+                    view.pathEnd   = fromNodeView.point;
                     animationItem = new namespace.AnimationQueueItem(() => {
-                        view.pathEnd = view.end; 
+                        view.pathEnd = toNodeView.point;
                     }, duration);
                 }
 
