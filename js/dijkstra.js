@@ -14,7 +14,7 @@
 
         if (!(startNode && goalNode)) {
             console.log('Must set start and goal node.');
-            return;
+            return false;
         }
 
         // initialize costs
@@ -100,6 +100,9 @@
 
         console.log(path);
         console.log('=====================');
+
+        // Success
+        return true;
     }
 
     // Exports

@@ -196,7 +196,10 @@
             }
 
             this.start();
-            namespace.dijkstraSearch(this.getNodes());
+            var success = namespace.dijkstraSearch(this.getNodes());
+            if (!success) {
+                return;
+            }
             this.createAnimationSequence();
         }
 
