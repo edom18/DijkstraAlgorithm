@@ -225,15 +225,9 @@
                     }, duration);
                 }
                 else if (view instanceof EdgeView) {
-                    var model = view.model;
-                    var toNode   = NodeManager.getInstance().fetchById(model.toNodeId);
-                    var fromNode = NodeManager.getInstance().fetchById(model.fromNodeId);
-                    var toNodeView   = this.fetchNodeViewById(toNode.id);
-                    var fromNodeView = this.fetchNodeViewById(fromNode.id);
-                    view.pathStart = fromNodeView.point;
-                    view.pathEnd   = fromNodeView.point;
+                    var points = this.updatePath(view);
                     animationItem = new namespace.AnimationQueueItem(() => {
-                        view.pathEnd = toNodeView.point;
+                        view.pathEnd = points[1];
                     }, duration);
                 }
 
@@ -241,6 +235,18 @@
             });
 
             this.startAnimation();
+        }
+
+        updatePath(view) {
+            var model    = view.model;
+            var toNode   = NodeManager.getInstance().fetchById(model.toNodeId);
+            var fromNode = NodeManager.getInstance().fetchById(model.fromNodeId);
+            var toNodeView   = this.fetchNodeViewById(toNode.id);
+            var fromNodeView = this.fetchNodeViewById(fromNode.id);
+            view.pathStart = fromNodeView.point;
+            view.pathEnd   = fromNodeView.point;
+
+            return [fromNodeView.point, toNodeView.point];
         }
 
         startAnimation() {
