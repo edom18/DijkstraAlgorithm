@@ -123,6 +123,7 @@
             this._hoverLineWidth  = 4;
             this.shape = new Dot(point, this.normalRadius, this._appearance);
             this.shape.lineWidth = this._normalLineWidth;
+            this.shape.zIndex = 100;
 
             this.model = NodeManager.getInstance().create(id);
             this._changeListener = new Listener('change', this.changeHandler.bind(this));
@@ -248,17 +249,20 @@
             this._hoverLineWidth  = 4;
             this.shape = new Line(nodeA.point, nodeB.point, this._appearance);
             this.shape.lineWidth = this._normalLineWidth;
+            this.shape.zIndex = 5;
 
             var pathAppearance = new namespace.Appearance(Color.black, new Color(0xb42200));
             this.pathShape = new Line(nodeA.point, nodeA.point, pathAppearance);
             this.pathShape.lineWidth = 8;
+            this.pathShape.zIndex = 20;
 
             var x = (nodeA.point.x + nodeB.point.x) / 2;
             x += 10;
             var y = (nodeA.point.y + nodeB.point.y) / 2;
             y += 10;
 
-            this.text  = new Text(new Point(x, y), model.cost);
+            this.text  = new namespace.Text(new Point(x, y), model.cost);
+            this.text.zIndex = 20;
         }
 
 
