@@ -272,9 +272,11 @@
 
         set(key, duration, fromValue, toValue, easingFunc) {
             if (this.has(key)) {
+                var property = this._properties[key];
                 fromValue = this.get(key);
-                this._properties[key].dispose();
+                property.dispose();
                 this._properties[key] = null;
+                property = null;
             }
 
             var animator = new Animator(key, duration, fromValue, toValue, easingFunc);
