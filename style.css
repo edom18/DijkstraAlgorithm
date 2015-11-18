@@ -210,8 +210,9 @@ body {
     background: rgba(0, 0, 0, 0.65);
     opacity: 0;
     transition: all 0.5s ease-in-out;
-
-    display: none;
+}
+.dialogContainer.show {
+    opacity: 1;
 }
 
 .dialog {
