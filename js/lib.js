@@ -246,7 +246,13 @@
             this.shapes.push(shape);
 
             this.shapes.sort((a, b) => {
-                return a.zIndex > b.zIndex;
+                if (a.zIndex < b.zIndex) {
+                    return -1;
+                }
+                if (a.zIndex > b.zIndex) {
+                    return 1;
+                }
+                return 0;
             });
         }
 
