@@ -152,6 +152,8 @@
         }
 
         clear() {
+            this._running = false;
+
             this.getNodes().forEach((node, i) => {
                 node.clear();
             });
