@@ -128,6 +128,22 @@
             this.clearBtn = document.getElementById('clearBtn');
             this.clearBtn.addEventListener('click', this.clearHandler.bind(this), false);
 
+            // Keep interval for launching.
+            setTimeout(() => {
+                this.dialog = document.querySelector('.dialogContainer');
+                this.dialog.classList.add('show');
+
+                this.dialogOkButton = document.querySelector('.dialogContainer .btnOK');
+                this.dialogOkButton.addEventListener('click', (evt) => {
+                    this.dialog.addEventListener('transitionend', () => {
+                        this.dialog.parentNode.removeChild(this.dialog);
+                        this.dialogOkButton  = null;
+                        this.dialog = null;
+                    }, false);
+                    this.dialog.classList.remove('show');
+                }, false);
+            }, 500);
+
             setTimeout(() => {
                 // for debug
                 var manager   = NodeManager.getInstance();
