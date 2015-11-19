@@ -357,6 +357,10 @@
          * Track mouse move event from the canvas.
          */
         mousemoveHandler(evt) {
+            if (this._running) {
+                return;
+            }
+
             var rect = evt.target.getBoundingClientRect();
             var x = evt.clientX - rect.left;
             var y = evt.clientY - rect.top;
